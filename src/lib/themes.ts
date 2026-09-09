@@ -50,6 +50,20 @@ export interface ThemeSpec {
  */
 const GROTESQUE = "'Archivo Variable', 'Helvetica Neue', Helvetica, Arial, sans-serif";
 
+/*
+ * Fraunces over Instrument Sans, for the design that sets a headline against a
+ * body face. Fraunces is loaded from its optical-size build, so one file
+ * covers a 110px cover line and a 13px caption and each is drawn for the size
+ * it is set at - `font-optical-sizing: auto` does that on its own, with no
+ * `font-variation-settings` anywhere.
+ *
+ * The fallbacks matter more here than in a one-family design: a display serif
+ * that falls back to a sans changes the page's whole argument, so the chain
+ * stays serif the whole way down.
+ */
+const DISPLAY_SERIF = "'Fraunces Variable', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif";
+const EDITORIAL_SANS = "'Instrument Sans Variable', 'Helvetica Neue', Helvetica, Arial, sans-serif";
+
 const SERIF = "'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif";
 const SANS = "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
 const MONO = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace";
@@ -101,23 +115,55 @@ export const THEMES: ThemeSpec[] = [
   },
   {
     id: 'b',
-    name: 'Modern lab',
-    shortName: 'Modern',
-    description: 'Sans-serif, open, photo-forward. Reads as a contemporary research group.',
-    fonts: { display: SANS, body: SANS },
-    type: { minBase: 16, maxBase: 19, minRatio: 1.25, maxRatio: 1.333 },
-    space: { minBase: 18, maxBase: 28 },
+    name: 'Feature',
+    shortName: 'Feature',
+    description: 'A display serif over an editorial sans, her lavender kept. The science gets told, not listed.',
+    fonts: { display: DISPLAY_SERIF, body: EDITORIAL_SANS },
+    /*
+     * The widest scale of the three. A magazine's argument is made by the
+     * distance between a cover line and the body text under it, so the large
+     * end runs to a 110px step-5 while step-0 stays at a comfortable reading
+     * size - about six times the body, against Record's three.
+     */
+    type: { minBase: 17, maxBase: 19, minRatio: 1.2, maxRatio: 1.42 },
+    /* Margins are the other half of it: the most generous space base here. */
+    space: { minBase: 16, maxBase: 30 },
+    /*
+     * Warm off-white rather than white, and her existing lavender carried
+     * forward - this is the one direction that keeps continuity with the site
+     * she has, so that continuity is something she chooses rather than
+     * something she loses. `#7b4b8a` is her accent, unchanged.
+     *
+     * Two tints, not one: `surface` is the quiet panel, `wash` the stronger
+     * lavender that mounts a figure and backs an annotation. Both are warm -
+     * neutral greys next to this ground read as dirty.
+     */
     colors: {
-      bg: '#ffffff',
-      surface: '#f2f6f8',
-      text: '#2b333d',
-      muted: '#5f6b78',
-      heading: '#101820',
-      accent: '#0d7d8c',
+      bg: '#faf6f1',
+      surface: '#f4ecf2',
+      wash: '#eddfe9',
+      text: '#3a3038',
+      muted: '#6b5f68',
+      heading: '#1f151f',
+      accent: '#7b4b8a',
       accentText: '#ffffff',
-      border: '#dde5ea',
+      border: '#cbb8c6',
     },
-    shape: { radius: '12px', rule: '1px', measure: '72ch' },
+    /*
+     * Square, like print. Rounding is the one shape choice all three designs
+     * happen to agree on, and inventing a radius here to look different from
+     * Record would be a difference nobody asked for: this design separates
+     * itself by type, colour and column, not by corners.
+     */
+    shape: { radius: '0', rule: '1px', measure: '64ch' },
+    thesis:
+      'The site tells the science rather than listing it. A question in display type carries the page, a published figure carries the evidence, and every image says where it came from.',
+    saysAboutYou:
+      'That you can explain what you work on to someone who does not already know, and that you think that is worth the space. It reads as a person with an argument rather than as a department.',
+    cost:
+      'Editing time, forever. A question has to be written and rewritten as the work moves, figures have to be chosen and captioned, and a stale feature looks worse than a stale list. It is also the least neutral of the three: a design with a voice can be disagreed with, and it dates faster than a record does.',
+    precedent:
+      'Quanta and Nautilus; the front of a journal issue, where the contents page ranks the work and the figure is the argument.',
   },
   {
     id: 'c',

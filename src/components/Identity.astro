@@ -15,12 +15,13 @@ const { primary = false } = Astro.props;
 ---
 <div class="identity">
   {/*
-    The lab's own name, above the institutional taxonomy underneath it. Only
-    one design puts it here, so it is themed markup rather than a line every
-    design has to find room for; this is a line inside the identity block, not
-    a second identity block.
+    The lab's own name, above the institutional taxonomy underneath it. Themed
+    markup rather than a line every design has to find room for: Record sets it
+    as a small tracked label over the strapline, Feature as the masthead flag
+    the rest of the page hangs off. This is a line inside the identity block,
+    not a second identity block.
   */}
-  <Themed themes="a"><p class="identity__lab">{site.labName}</p></Themed>
+  <Themed themes={['a', 'b']}><p class="identity__lab">{site.labName}</p></Themed>
   {primary
     ? <h1 class="identity__name">{site.name}</h1>
     : <p class="identity__name">{site.name}</p>}

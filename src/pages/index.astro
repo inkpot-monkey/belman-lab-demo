@@ -1,19 +1,112 @@
 ---
 import { getEntry, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import DemoBanner from '../components/DemoBanner.astro';
+import FigurePlate from '../components/FigurePlate.astro';
 import FunderStrip from '../components/FunderStrip.astro';
 import Themed from '../components/Themed.astro';
+import { url } from '../lib/paths.ts';
 
 const page = await getEntry('pages', 'home');
 if (!page) throw new Error('Missing src/content/pages/home.md');
 const { Content } = await render(page);
+
+/*
+ * The pull quote is the Research page's own description, read rather than
+ * retyped. A magazine pulls its quotes out of the body text it is already
+ * printing, which is what makes them honest; reading this one from the content
+ * collection is the same move, and it cannot drift from the page it quotes.
+ */
+const research = await getEntry('pages', 'research');
+const pullQuote = research?.data.description as string | undefined;
+
+/*
+ * The lab's themes, put as questions.
+ *
+ * This is the whole argument of the Feature design: "Environmental drivers of
+ * microbial selection" is a label a visitor has to already understand, and
+ * "Can selection be read from polluted air?" is a sentence they can answer yes
+ * or no to. Each of these is drawn from a sentence in her own research
+ * description, but the wording is ours, and the note above the list says so.
+ */
+/** `[kicker, question, project]`, in the order the contents page lays them out. */
+const questions: [string, string, string][] = [
+  ['Climate', 'Which strains does a warming climate favour?', '/projects/climate-and-transmission'],
+  ['Migration', 'How far does a pathogen travel, and how fast?', '/projects/genomic-surveillance'],
+  ['Selection', 'Can selection be read from polluted air?', '/projects/environment-and-selection'],
+];
 ---
 <BaseLayout
   title={page.data.title as string}
   description={page.data.description as string | undefined}
   identityIsHeading
 >
+  {/*
+    Feature opens on a question over a figure rather than on a summary. The
+    question is a <p> and not a heading: the page already has its <h1> in the
+    identity block, and a cover line is a piece of display type, not a level in
+    the document outline.
+  */}
+  <Themed themes="b">
+    <section class="cover" aria-labelledby="cover-question">
+      <p class="cover__kicker">The question</p>
+      <p class="cover__question" id="cover-question">
+        How does the environment decide which microbes make us sick?
+      </p>
+      <DemoBanner what="The question above is our wording, drawn from Sophie’s own research description. It is here to show what this design does with one." />
+      <FigurePlate
+        src="/figures/pm25-attributable-burden.webp"
+        alt="World map shading every country by the fraction of preterm births attributable to fine particulate air pollution in 2019, with inset panels enlarging small island and European states."
+        width={1400}
+        height={830}
+        label="Fig. 1"
+        caption="The share of preterm births attributable to fine particulate pollution, by country, 2019."
+        citation="Ghosh R, Causey K, Burkart K, Wozniak S, Cohen A, Brauer M (2021). Ambient and household PM2.5 pollution and adverse perinatal outcomes. PLOS Medicine 18(9): e1003718, Fig 5(a)."
+        href="https://doi.org/10.1371/journal.pmed.1003718"
+        licence="CC BY 4.0"
+        licenceHref="https://creativecommons.org/licenses/by/4.0/"
+      />
+    </section>
+  </Themed>
+
   <Content />
+
+  <Themed themes="b">
+    <section class="questions" aria-labelledby="questions-heading">
+      <h2 class="questions__heading" id="questions-heading">What the lab is asking</h2>
+      <DemoBanner what="Our wording of the themes in Sophie’s research description. The projects behind them are placeholders." />
+      <ol class="questions__list">
+        {questions.map(([kicker, text, href], index) => (
+          <li class="question">
+            <a class="question__link" href={url(href)}>
+              {/* One line: Astro strips the whitespace before an expression
+                  that starts a line, so a break here reads "01Climate". */}
+              <span class="question__kicker"><span class="question__number">{String(index + 1).padStart(2, '0')}</span> {kicker}</span>
+              <span class="question__text">{text}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+      <FigurePlate
+        src="/figures/neisseria-core-genome-tree.webp"
+        alt="Maximum-likelihood phylogenetic tree of Neisseria species, drawn from the DNA sequences of 896 core genes, with each tip labelled by species and strain."
+        width={784}
+        height={904}
+        label="Fig. 2"
+        caption="A species tree built from 896 core genes — the shape of the question about how far a pathogen travels."
+        citation="Marri PR, Paniscus M, Weyand NJ, Rendón MA, Calton CM, Hernández DR, et al. (2010). Genome sequencing reveals widespread virulence gene exchange among human Neisseria species. PLoS ONE 5(7): e11835."
+        href="https://doi.org/10.1371/journal.pone.0011835"
+        licence="CC BY 4.0"
+        licenceHref="https://creativecommons.org/licenses/by/4.0/"
+      />
+      {pullQuote && (
+        <blockquote class="pullquote">
+          <p class="pullquote__text">{pullQuote}</p>
+          <p class="pullquote__source">From <a href={url('/research')}>Research</a></p>
+        </blockquote>
+      )}
+    </section>
+  </Themed>
 
   {/* One design closes the home page on who funds the work. */}
   <Themed themes="a"><FunderStrip /></Themed>

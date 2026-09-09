@@ -344,10 +344,19 @@ which is the clearest possible view of what the work buys.
 8. `feat(site): surface theme identity statements on how-this-works`
 9. `docs: describe the per-theme layout architecture`
 
-**Status at 2026-09-09.** Commits 1–7 have landed on local `main` and none of
-them have been pushed, so nothing is live and the switcher has never been seen
-outside a preview. 8 and 9 are outstanding, and the step 6 design review has not
-been run.
+**Status at 2026-09-10.** All nine commits have landed on local `main`, along
+with the step 6 review and the work it asked for. Nothing has been pushed, so
+nothing is live and the switcher has still never been seen outside a preview.
+
+The gate has been run and its answer is three designs, not one design with a
+tint control — see `docs/theme-identity-review.md` for the evidence, the
+twelve findings and what was done about each. One is left open on purpose:
+`## Core research themes` in `src/content/pages/research.md` is a heading over
+a summary with no themes under it, and the fix is three sentences of Sophie's
+own words in the CMS rather than three of ours.
+
+`docs/theme-architecture.md` is the reference the ninth commit produced: the
+five levers a design has, and the invariants every one of them keeps.
 
 One theme at a time, and never two at once. Themes B and C must avoid what A
 chose; agents working concurrently cannot see each other and would converge on

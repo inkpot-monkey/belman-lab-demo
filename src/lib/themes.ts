@@ -22,12 +22,23 @@ export interface ThemeSpec {
   /** Base space step in px at each end. */
   space: { minBase: number; maxBase: number };
   /**
-   * Colour tokens. Each value is a `light-dark()` pair so the OS preference
-   * drives the mode, exactly as her current site does.
+   * Colour tokens. Light only: `data-theme` selects which of the three designs
+   * is showing, so it cannot also carry a colour mode, and a design that only
+   * half-exists in the dark is not a design anyone can judge.
    */
-  colors: Record<string, [light: string, dark: string]>;
+  colors: Record<string, string>;
   /** Non-colour, non-type structural choices. */
   shape: { radius: string; rule: string; measure: string };
+  /**
+   * The identity statement, written when the direction gets one and surfaced
+   * on /how-this-works. Optional because a theme has none until its own run
+   * lands; three sales pitches would not help her choose, so `cost` — what she
+   * gives up by picking this one — is the field that earns the page.
+   */
+  thesis?: string;
+  saysAboutYou?: string;
+  cost?: string;
+  precedent?: string;
 }
 
 const SERIF = "'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif";
@@ -44,14 +55,14 @@ export const THEMES: ThemeSpec[] = [
     type: { minBase: 17, maxBase: 19, minRatio: 1.2, maxRatio: 1.25 },
     space: { minBase: 16, maxBase: 20 },
     colors: {
-      bg: ['#fffefb', '#14151a'],
-      surface: ['#f7f5ef', '#1b1d23'],
-      text: ['#23262d', '#d7d9de'],
-      muted: ['#5d626e', '#9a9fab'],
-      heading: ['#11131a', '#f2f3f6'],
-      accent: ['#7a2e2e', '#e0a3a3'],
-      accentText: ['#ffffff', '#14151a'],
-      border: ['#e2ded2', '#2b2e37'],
+      bg: '#fffefb',
+      surface: '#f7f5ef',
+      text: '#23262d',
+      muted: '#5d626e',
+      heading: '#11131a',
+      accent: '#7a2e2e',
+      accentText: '#ffffff',
+      border: '#e2ded2',
     },
     shape: { radius: '2px', rule: '1px', measure: '68ch' },
   },
@@ -64,14 +75,14 @@ export const THEMES: ThemeSpec[] = [
     type: { minBase: 16, maxBase: 19, minRatio: 1.25, maxRatio: 1.333 },
     space: { minBase: 18, maxBase: 28 },
     colors: {
-      bg: ['#ffffff', '#0e1116'],
-      surface: ['#f2f6f8', '#161b22'],
-      text: ['#2b333d', '#c9d1d9'],
-      muted: ['#5f6b78', '#8b949e'],
-      heading: ['#101820', '#f0f6fc'],
-      accent: ['#0d7d8c', '#4dd4e8'],
-      accentText: ['#ffffff', '#0e1116'],
-      border: ['#dde5ea', '#232a33'],
+      bg: '#ffffff',
+      surface: '#f2f6f8',
+      text: '#2b333d',
+      muted: '#5f6b78',
+      heading: '#101820',
+      accent: '#0d7d8c',
+      accentText: '#ffffff',
+      border: '#dde5ea',
     },
     shape: { radius: '12px', rule: '1px', measure: '72ch' },
   },
@@ -84,14 +95,14 @@ export const THEMES: ThemeSpec[] = [
     type: { minBase: 16, maxBase: 20, minRatio: 1.25, maxRatio: 1.414 },
     space: { minBase: 16, maxBase: 26 },
     colors: {
-      bg: ['#fdfcfe', '#121016'],
-      surface: ['#f6f1f8', '#1c1822'],
-      text: ['#3a3440', '#d5cfda'],
-      muted: ['#6b6375', '#9c93a6'],
-      heading: ['#1d1823', '#f4f0f7'],
-      accent: ['#7b4b8a', '#c7b1ce'],
-      accentText: ['#ffffff', '#121016'],
-      border: ['#e7dfeb', '#2a2433'],
+      bg: '#fdfcfe',
+      surface: '#f6f1f8',
+      text: '#3a3440',
+      muted: '#6b6375',
+      heading: '#1d1823',
+      accent: '#7b4b8a',
+      accentText: '#ffffff',
+      border: '#e7dfeb',
     },
     shape: { radius: '4px', rule: '2px', measure: '66ch' },
   },

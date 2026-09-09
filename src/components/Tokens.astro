@@ -4,6 +4,11 @@
  *
  * All three themes ship in every build so the switcher can swap between them
  * with no reload. Each is scoped to a `data-theme` attribute on <html>.
+ *
+ * That attribute names a design, not a colour mode, so there is no dark
+ * palette: `data-theme` is already spent, and the site declares
+ * `color-scheme: light` rather than letting the browser force a mode the
+ * designs were never drawn in.
  */
 import { typeScale, spaceScale, tokensToCss } from '../lib/utopia.ts';
 import { THEMES, VIEWPORT, TYPE_STEPS, SPACE_STEPS, FONT_STACKS } from '../lib/themes.ts';
@@ -21,14 +26,11 @@ const blocks = THEMES.map((theme) => {
     rule: theme.shape.rule,
     measure: theme.shape.measure,
     ...Object.fromEntries(
-      Object.entries(theme.colors).map(([name, [light, dark]]) => [
-        `color-${name}`,
-        `light-dark(${light}, ${dark})`,
-      ]),
+      Object.entries(theme.colors).map(([name, value]) => [`color-${name}`, value]),
     ),
   };
   return `:root[data-theme="${theme.id}"] {\n${tokensToCss({ ...fluidTokens, ...staticTokens })}\n}`;
 }).join('\n\n');
 ---
 
-<style is:global set:html={`:root { color-scheme: light dark; }\n\n${blocks}`}></style>
+<style is:global set:html={`:root { color-scheme: light; }\n\n${blocks}`}></style>

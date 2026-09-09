@@ -163,6 +163,42 @@ collections:
       - name: body
         label: Content
         widget: markdown
+  - name: software
+    label: Software and data
+    label_singular: Software entry
+    folder: src/content/software
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{slug}}"
+    fields:
+      - name: title
+        label: Name
+        widget: string
+      - name: summary
+        label: One-line summary
+        widget: text
+      - name: repo
+        label: Repository URL
+        widget: string
+        hint: e.g. https://github.com/sophbel/geomig_evo_pneumo
+      - name: language
+        label: Main language
+        widget: string
+        required: false
+        hint: e.g. R, Python
+      - name: doi
+        label: DOI of the paper it accompanies
+        widget: string
+        required: false
+        hint: Leave empty for code that stands on its own
+      - name: order
+        label: Order
+        widget: number
+        hint: Lower numbers appear first
+      - name: body
+        label: Content
+        widget: markdown
   - name: highlights
     label: Selected publications
     label_singular: Selected publication

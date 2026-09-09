@@ -87,6 +87,24 @@ export const collections: CollectionSpec[] = [
     ],
   },
   {
+    // Research code, named individually rather than hidden behind a GitHub
+    // link. Everything here is real: the entries are her own repositories,
+    // and each summary is the description she wrote on the repository itself.
+    name: 'software',
+    label: 'Software and data',
+    labelSingular: 'Software entry',
+    folder: 'src/content/software',
+    fields: [
+      { name: 'title', label: 'Name', widget: 'string' },
+      { name: 'summary', label: 'One-line summary', widget: 'text' },
+      { name: 'repo', label: 'Repository URL', widget: 'string', hint: 'e.g. https://github.com/sophbel/geomig_evo_pneumo' },
+      { name: 'language', label: 'Main language', widget: 'string', required: false, hint: 'e.g. R, Python' },
+      { name: 'doi', label: 'DOI of the paper it accompanies', widget: 'string', required: false, hint: 'Leave empty for code that stands on its own' },
+      { name: 'order', label: 'Order', widget: 'number', hint: 'Lower numbers appear first' },
+      body,
+    ],
+  },
+  {
     name: 'highlights',
     // Must match the heading on the Publications page: an editor looking for
     // "Selected publications" should find it under that name.

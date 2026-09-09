@@ -28,7 +28,7 @@ const VIEWPORTS = [
   { name: 'tablet', width: 768, height: 1024 },
   { name: 'desktop', width: 1440, height: 900 },
 ];
-const PAGES = ['/', '/research/', '/team/', '/publications/', '/projects/', '/news/', '/events/', '/gallery/', '/how-this-works/', '/404.html'];
+const PAGES = ['/', '/research/', '/team/', '/publications/', '/software/', '/projects/', '/news/', '/events/', '/gallery/', '/how-this-works/', '/404.html'];
 const THEMES = ['a', 'b', 'c'];
 
 /** Smallest comfortable body text, and the smallest comfortable touch target. */

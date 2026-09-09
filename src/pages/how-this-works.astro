@@ -21,6 +21,7 @@ const synced = new Date(syncedAt).toLocaleDateString('en-GB', {
 
 const sections = [
   ['changing-things', 'Changing things'],
+  ['in-the-editor', 'Things in the editor that aren’t obvious'],
   ['publishing', 'Why a change takes a minute'],
   ['publications', 'Publications, and the ORCID list'],
   ['team', 'The team page'],
@@ -84,7 +85,7 @@ const sections = [
           one copy of each of these, used everywhere it appears.
         </dd>
 
-        <dt>Highlighted publications</dt>
+        <dt>Selected publications</dt>
         <dd>
           The short list at the top of the Publications page. You give it a DOI and
           a sentence about why the paper matters.
@@ -102,6 +103,63 @@ const sections = [
           there is only one copy to change.
         </p>
       </aside>
+    </section>
+
+    <section id="in-the-editor">
+      <h2>Things in the editor that aren’t obvious</h2>
+
+      <p>
+        Most of the forms explain themselves. These are the ones that don’t.
+      </p>
+
+      <dl>
+        <dt>Selected publications wants a DOI</dt>
+        <dd>
+          Not a title. A DOI looks like <code>10.1038/s41586-024-07626-3</code> and
+          is printed on the paper’s page at the publisher, and on your ORCID record.
+          The paper also has to be on your ORCID record — if it isn’t, the
+          Publications page says so rather than quietly leaving it out.
+        </dd>
+
+        <dt>“Order” is a number, not a position</dt>
+        <dd>
+          Lower numbers come first. They don’t have to be consecutive, and leaving
+          gaps — 10, 20, 30 — means you can slot something in later without
+          renumbering everything else.
+        </dd>
+
+        <dt>“Show in navigation” hides a page rather than deleting it</dt>
+        <dd>
+          The page still exists at its own address and anyone with the link can
+          read it. Useful for something you’re still drafting.
+        </dd>
+
+        <dt>“Placeholder entry” marks an invented person</dt>
+        <dd>
+          It’s only here for this demonstration. The made-up team members are
+          flagged with it so the site can label them as not real. It goes away when
+          the demo does.
+        </dd>
+
+        <dt>“Site details” is a single entry, not a list</dt>
+        <dd>
+          You can’t create a second one, deliberately. It holds the handful of
+          things that appear on every page, so there is only ever one copy to
+          change.
+        </dd>
+
+        <dt>Anything marked optional can be left empty</dt>
+        <dd>
+          A person with no photo shows their initials. A project with no funder
+          simply doesn’t mention one. Nothing breaks, and no empty labels appear.
+        </dd>
+
+        <dt>Uploaded images all go to one place</dt>
+        <dd>
+          So a photo you added for one thing can be picked again for another
+          without uploading it twice.
+        </dd>
+      </dl>
     </section>
 
     <section id="publishing">

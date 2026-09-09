@@ -31,6 +31,13 @@ const superseded = publications.filter((p) => p.supersededBy !== null);
 // one to the ORCID record removes it from this list on the next sync.
 const missing = stillMissing(publications, claimedMissing as MissingWork[]);
 
+// Phrasing is built here rather than as inline ternaries, so no part of the
+// sentence depends on an expression carrying its own leading space.
+const one = missing.length === 1;
+const missingSubject = `${missing.length} known ${one ? 'publication is' : 'publications are'}`;
+const missingVerb = one ? 'it does' : 'they do';
+const missingObject = one ? 'it' : 'them';
+
 const synced = new Date(syncedAt).toLocaleDateString('en-GB', {
   day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
 });
@@ -46,10 +53,10 @@ const synced = new Date(syncedAt).toLocaleDateString('en-GB', {
   {missing.length > 0 && (
     <div class="demo-note">
       <p>
-        <strong>{missing.length} known {missing.length === 1 ? 'publication is' : 'publications are'} missing from the ORCID record</strong>,
-        so {missing.length === 1 ? 'it does' : 'they do'} not appear below. Adding
-        {missing.length === 1 ? ' it' : ' them'} at <a href="https://orcid.org/my-works" rel="noopener">orcid.org</a> is
-        the only fix — this list updates itself on the next sync.
+        <strong>{missingSubject} missing from the ORCID record</strong>,
+        so {missingVerb} not appear below. Adding {missingObject} at <a
+          href="https://orcid.org/my-works" rel="noopener">orcid.org</a> is the only
+        fix — this list updates itself on the next sync.
       </p>
       <ul>
         {missing.map((work) => (

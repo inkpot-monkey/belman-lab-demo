@@ -14,7 +14,8 @@
     "gen:cms": "node scripts/generate-cms-config.ts",
     "sync:orcid": "node scripts/fetch-orcid.ts",
     "vendor:cms": "node scripts/vendor-cms.ts",
-    "check:paths": "node scripts/check-base-paths.ts"
+    "check:paths": "node scripts/check-base-paths.ts",
+    "check:responsive": "node scripts/check-responsive.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
@@ -26,6 +27,7 @@
     "@astrojs/check": "^0.9.10",
     "@sveltia/cms": "^0.208.2",
     "@types/node": "^24.0.0",
+    "playwright-core": "^1.63.0",
     "typescript": "^5.9.0",
     "vitest": "^5.0.0"
   },

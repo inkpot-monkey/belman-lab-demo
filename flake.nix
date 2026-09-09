@@ -30,6 +30,10 @@
             # update`.
             pkgs.pnpm_10
 
+            # scripts/check-responsive.mjs drives a real browser over every
+            # page, viewport and theme.
+            pkgs.chromium
+
             # Repo, Pages and deploy settings are driven from the CLI.
             pkgs.gh
           ];

@@ -24,7 +24,8 @@ right of every page.
 | `pnpm build` | Same, then build to `dist/` |
 | `pnpm test` | Unit tests (Vitest) |
 | `pnpm typecheck` | `tsc --noEmit` |
-| `pnpm sync:orcid` | Re-fetch the ORCID snapshot (the only command that touches the network) |
+| `pnpm sync:orcid` | Re-fetch the ORCID snapshot |
+| `pnpm check:responsive` | Drive a real browser over every page, viewport and theme (needs `pnpm preview` running) |
 
 ## How it fits together
 

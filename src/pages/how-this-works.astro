@@ -126,11 +126,11 @@ const sections = [
       </p>
 
       <p>
-        The copy is deliberate rather than live. It was last taken
-        on <time datetime={syncedAt}>{synced}</time>, and that date is printed at
-        the top of the Publications page so you can always tell how current it is. A
-        live fetch would mean the site quietly changing whenever ORCID did, and
-        breaking whenever ORCID was down.
+        The copy is taken once a day rather than on every page view. It last
+        changed on <time datetime={syncedAt}>{synced}</time>, and that date is
+        printed at the top of the Publications page. Reading ORCID live on every
+        visit would mean the page quietly changing whenever ORCID did, and going
+        blank whenever ORCID was down.
       </p>
 
       <h3>Why some of your papers are missing</h3>
@@ -151,13 +151,20 @@ const sections = [
       <ol>
         <li>Go to <a href="https://orcid.org/my-works" rel="noopener">orcid.org</a> and sign in.</li>
         <li>Add the works named in that list.</li>
-        <li>Tell whoever maintains the site, so the copy gets re-taken.</li>
+        <li>Wait a day. That’s it — there is no third step.</li>
       </ol>
 
       <p>
-        Each paper disappears from the to-do list as soon as it appears on ORCID.
-        The list checks itself against your record every time the site is rebuilt,
-        so it can’t end up nagging you about something you’ve already fixed.
+        The site re-reads your ORCID record every morning. If anything has changed
+        it republishes itself, and each paper drops off the to-do list as it
+        appears. Nobody has to remember to do anything, and the list can’t end up
+        nagging you about something you’ve already fixed.
+      </p>
+
+      <p>
+        If nothing has changed, nothing happens — no rebuild, and the date on the
+        Publications page stays where it is. That date is when your publication
+        list last <em>changed</em>, not the last time we looked.
       </p>
 
       <h3>Two other things the page does on its own</h3>

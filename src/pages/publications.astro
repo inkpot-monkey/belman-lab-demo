@@ -46,8 +46,8 @@ const synced = new Date(syncedAt).toLocaleDateString('en-GB', {
   <h1>Publications</h1>
 
   <p class="muted small">
-    Synchronised from <a href="https://orcid.org/0000-0002-9778-7174" rel="noopener">ORCID</a> on {synced}.
-    This page shows the ORCID record exactly as it stands.
+    Last updated from <a href="https://orcid.org/0000-0002-9778-7174" rel="noopener">ORCID</a> on {synced},
+    and checked again every day. This page shows the ORCID record exactly as it stands.
   </p>
 
   {missing.length > 0 && (
@@ -56,7 +56,7 @@ const synced = new Date(syncedAt).toLocaleDateString('en-GB', {
         <strong>{missingSubject} missing from the ORCID record</strong>,
         so {missingVerb} not appear below. Adding {missingObject} at <a
           href="https://orcid.org/my-works" rel="noopener">orcid.org</a> is the only
-        fix — this list updates itself on the next sync.
+        fix — they will appear here within a day of being added.
       </p>
       <ul>
         {missing.map((work) => (

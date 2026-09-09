@@ -136,15 +136,16 @@ Prepend verbatim to each of the three runs.
 > |---|---|---|---|
 > | Type classification | Neo-grotesque, one family | Display serif + editorial sans | Monospace + humanist sans |
 > | Hue family | Achromatic + vermilion | Warm off-white + lavender/aubergine | Cool monochrome + viridis accent |
-> | Layout grammar | Strict modular grid, sidebar | Asymmetric magazine, varied column widths | Dense rail + full-width data zone |
-> | Hero treatment | Name + discipline strapline, no image | Question-as-hero over a paper figure | Type-as-hero over a rendered artefact |
-> | Motif | The grid made visible — hairline rule system | Real paper figures, citation in caption | A rendered data artefact |
+> | Layout grammar | Strict modular grid, sidebar | Asymmetric magazine, varied column widths | Full-width identity panel over a narrow menu rail |
+> | Hero treatment | Name + discipline strapline, no image | Question-as-hero over a paper figure | Keyed identity panel with portrait, unchanged on every page |
+> | Motif | The grid made visible — hairline rule system | Real paper figures, citation in caption | Labelled key/value metadata; one filled accent square |
 > | Publications dialect | Year-railed list | Annotated "selected findings" cards | Compact citation rows with DOI |
 >
 > ### Targets
 >
 > Lead with the science. Put the lab's own name above any institutional
-> taxonomy. Give every image a caption and a credit. Let people and research
+> taxonomy. Give every borrowed or published image a caption and a credit; a
+> portrait of the person whose page it is needs neither. Let people and research
 > reach the reader before media coverage does. Make the page work at 320px first
 > and add complexity upward.
 
@@ -224,6 +225,25 @@ Prepend verbatim to each of the three runs.
 > `saysAboutYou`, `cost`, `precedent`.
 
 ## Run C — Instrument
+
+**Amended 2026-09-09, after the run.** Two things below did not ship, and the
+matrix above has been corrected to describe what did. The run prompt itself is
+left as it was written, as the record of what was asked for.
+
+The rendered artefact is gone. The phylogeny readout made the front page a stack
+of eight blocks before the first sentence, and it was removed along with its
+component, fixture and layout code — recoverable from the commit that added it,
+`ceaaf54`. The identity block then moved out of the rail into a panel across the
+top of every page, carrying the portrait and five facts each labelled with the
+field it came from, and the rail narrowed to hold the menu alone.
+
+Two consequences the design review should weigh rather than treat as settled.
+This direction no longer occupies the live-data-visualisation position the
+research found unoccupied across two dozen lab sites, and nothing else on the
+site occupies it either — so that separator is not being taken. And with a
+left-hand column and a hairline rule system in both, the distance between Record
+and Instrument is now smaller than this matrix originally promised; whether it
+is still enough is exactly the question step 6 exists to answer.
 
 > Use the designer-frontend-design skill.
 >
@@ -323,6 +343,11 @@ which is the clearest possible view of what the work buys.
 7. `feat(themes): give Instrument a computational identity`
 8. `feat(site): surface theme identity statements on how-this-works`
 9. `docs: describe the per-theme layout architecture`
+
+**Status at 2026-09-09.** Commits 1–7 have landed on local `main` and none of
+them have been pushed, so nothing is live and the switcher has never been seen
+outside a preview. 8 and 9 are outstanding, and the step 6 design review has not
+been run.
 
 One theme at a time, and never two at once. Themes B and C must avoid what A
 chose; agents working concurrently cannot see each other and would converge on

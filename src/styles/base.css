@@ -207,6 +207,13 @@
     padding: var(--space-s);
     background: var(--color-surface);
   }
+  /*
+    A card holds a summary and then a body written in the CMS, and the reset
+    takes the margin off both. Without this the two run together as one block
+    of text - which only became visible once Software and data went into the
+    menu and the page was looked at in all three designs.
+  */
+  .card > p + p { margin-block-start: var(--space-2xs); }
 
   .gallery { display: grid; gap: var(--space-s); grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); list-style: none; padding: 0; }
   .gallery__item {

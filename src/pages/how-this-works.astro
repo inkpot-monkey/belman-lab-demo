@@ -7,6 +7,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../lib/site.ts';
 import { url } from '../lib/paths.ts';
 import { PERSON_RANKS } from '../schema/collections.ts';
+import { THEMES } from '../lib/themes.ts';
 import { normalisePublications, stillMissing, type Snapshot, type MissingWork } from '../lib/orcid.ts';
 import snapshot from '../data/orcid-snapshot.json' with { type: 'json' };
 import claimedMissing from '../data/orcid-missing.json' with { type: 'json' };
@@ -18,6 +19,17 @@ const missing = stillMissing(publications, claimedMissing as MissingWork[]);
 const synced = new Date(syncedAt).toLocaleDateString('en-GB', {
   day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
 });
+
+/*
+ * The three designs, described in their own words.
+ *
+ * Read from `ThemeSpec` rather than retyped here, the same way the numbers
+ * further up this page are read from the data the site renders: a description
+ * of a design that lives somewhere other than the design drifts from it, and
+ * this page exists to be trusted while she decides. A design with no statement
+ * written yet is skipped rather than rendered half-empty.
+ */
+const designs = THEMES.filter((theme) => theme.thesis);
 
 const sections = [
   ['changing-things', 'Changing things'],
@@ -343,6 +355,39 @@ const sections = [
         It’s temporary. Once you’ve chosen, the other two designs and the switcher
         itself get deleted, along with the banner at the top of every page.
       </p>
+
+      <p>
+        Each one is written down below: what it argues, what it would say about you,
+        what it costs you, and where it comes from.
+      </p>
+
+      <aside class="note">
+        <p>
+          Read the cost lines first. Three descriptions of what each design is good
+          at would not help you choose between them — what separates them is what
+          each one gives up, and every one of them gives something up.
+        </p>
+      </aside>
+
+      {designs.map((theme) => (
+        <article class="design">
+          <h3>{theme.name}</h3>
+          <p class="design__short">{theme.description}</p>
+          <dl>
+            <dt>What it argues</dt>
+            <dd>{theme.thesis}</dd>
+
+            <dt>What it says about you</dt>
+            <dd>{theme.saysAboutYou}</dd>
+
+            <dt>What it costs</dt>
+            <dd>{theme.cost}</dd>
+
+            <dt>Where it comes from</dt>
+            <dd>{theme.precedent}</dd>
+          </dl>
+        </article>
+      ))}
     </section>
 
     <section id="signing-in">

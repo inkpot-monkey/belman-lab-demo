@@ -407,8 +407,17 @@
     box for everyone but Sophie, and a grid of those is decoration standing in
     for photography this design does not use.
   */
+  /*
+    `auto-fit`, not the shared `auto-fill`. Most ranks in this lab hold one
+    person, and an auto-filled row keeps the empty tracks: the rule over a name
+    then stopped halfway across the module with nothing under the other half,
+    which in a design that draws its grid reads as a mistake rather than as
+    restraint. Collapsing the empty tracks lets a rank of one take the row and
+    its rule cross the column, the way the section rule above it does.
+  */
   :root[data-theme='a'] .people__grid {
     column-gap: var(--space-l);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
     row-gap: 0;
   }
   :root[data-theme='a'] .person {

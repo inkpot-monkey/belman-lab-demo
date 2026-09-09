@@ -154,8 +154,8 @@ collections:
         label: Content
         widget: markdown
   - name: highlights
-    label: Highlighted publications
-    label_singular: Highlight
+    label: Selected publications
+    label_singular: Selected publication
     folder: src/content/highlights
     create: true
     extension: md
@@ -173,9 +173,6 @@ collections:
         label: Why it matters
         widget: text
         required: false
-      - name: body
-        label: Content
-        widget: markdown
   - name: settings
     label: Site details
     files:

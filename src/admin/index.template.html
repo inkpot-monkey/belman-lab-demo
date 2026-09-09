@@ -29,14 +29,14 @@
         max-block-size: 70vh;
         overflow-y: auto;
       }
-      .help > summary {
+      .help > details > summary {
         cursor: pointer;
         font-weight: 600;
         padding: 0.6rem 1rem;
         list-style: none;
       }
-      .help > summary::before { content: "▸ "; }
-      .help[open] > summary::before { content: "▾ "; }
+      .help > details > summary::before { content: "▸ "; }
+      .help > details[open] > summary::before { content: "▾ "; }
       .help__body { padding: 0 1rem 1rem; max-width: 46rem; }
       .help ol { padding-inline-start: 1.2rem; }
       .help li { margin-block-end: 0.4rem; }
@@ -47,6 +47,11 @@
         font-size: 0.92em;
       }
       .help a { color: light-dark(#7b4b8a, #c7b1ce); }
+      .help__links {
+        border-block-start: 1px solid light-dark(#e0d9c0, #3a3527);
+        margin: 0;
+        padding: 0.5rem 1rem;
+      }
       .help__note {
         border-inline-start: 3px solid light-dark(#c9a227, #8a7320);
         margin-block: 0.8rem 0;
@@ -66,9 +71,10 @@
       window.CMS.init();
     </script>
 
-    <details class="help">
-      <summary>Signed out, or your access token stopped working? Open this.</summary>
-      <div class="help__body">
+    <div class="help">
+      <details>
+        <summary>Signed out, or your access token stopped working? Open this.</summary>
+        <div class="help__body">
         <p>
           This CMS edits <code>{{REPO}}</code>.
           Signing in needs a <strong>GitHub access token</strong>. It is a long password that
@@ -114,21 +120,27 @@
         </p>
 
         <h3>If something still will not work</h3>
-        <ul>
-          <li>
-            <strong>"Bad credentials" or signed out again:</strong> the token has expired or was
-            revoked. Make a new one with the steps above.
-          </li>
-          <li>
-            <strong>Saving fails:</strong> the token is probably missing the
-            <strong>Contents: Read and write</strong> permission. Make a new one and check step 4.
-          </li>
-          <li>
-            <strong>Your change is saved but the site looks the same:</strong> give it two or three
-            minutes. The site rebuilds after each save.
-          </li>
-        </ul>
-      </div>
-    </details>
+          <ul>
+            <li>
+              <strong>"Bad credentials" or signed out again:</strong> the token has expired or was
+              revoked. Make a new one with the steps above.
+            </li>
+            <li>
+              <strong>Saving fails:</strong> the token is probably missing the
+              <strong>Contents: Read and write</strong> permission. Make a new one and check step 4.
+            </li>
+            <li>
+              <strong>Your change is saved but the site looks the same:</strong> give it two or three
+              minutes. The site rebuilds after each save.
+            </li>
+          </ul>
+        </div>
+      </details>
+
+      <p class="help__links">
+        New here, or something not behaving? <a href="{{MANUAL_URL}}">How this site works</a>
+        explains where everything lives.
+      </p>
+    </div>
   </body>
 </html>

@@ -35,3 +35,17 @@ describe('the admin page template', () => {
     expect(template).not.toMatch(/sophbel\/sophbel\.github\.io/);
   });
 });
+
+describe('the admin page links to the manual', () => {
+  it('offers it outside the collapsed guide, so it is visible without opening anything', () => {
+    const links = template.slice(template.indexOf('help__links'));
+    expect(links).toContain('{{MANUAL_URL}}');
+    expect(links).toMatch(/How this site works/);
+  });
+
+  it('templates the URL rather than using a relative path', () => {
+    // `../how-this-works` resolves wrongly if /admin is reached without its
+    // trailing slash.
+    expect(template).not.toContain('../how-this-works');
+  });
+});

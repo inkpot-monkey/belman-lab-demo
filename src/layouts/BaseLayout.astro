@@ -7,6 +7,7 @@ import { site } from '../lib/site.ts';
 import { COLLECTION_NAV, url, isCurrent, type NavItem } from '../lib/nav.ts';
 import { DEFAULT_THEME, THEMES } from '../lib/themes.ts';
 import { isIndexable } from '../lib/env.ts';
+import { displayEmail } from '../lib/email.ts';
 import '../styles/base.css';
 import '../styles/demo.css';
 
@@ -24,6 +25,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(url(site.photo), Astro.site);
 const fullTitle = `${title} | ${site.name}`;
 const summary = description ?? `${site.name}, ${site.jobTitle} at ${site.institution}.`;
+const email = displayEmail(site.email, site.obfuscateEmail);
 
 const pages = await getCollection('pages');
 const pageNav: NavItem[] = pages
@@ -96,7 +98,7 @@ const themeIds = THEMES.map((theme) => theme.id);
       <div class="footer__inner">
         <p>&copy; {new Date().getFullYear()} {site.labName}</p>
         <p>{site.name}</p>
-        <p>{site.email}</p>
+        <p>{email.href ? <a href={email.href}>{email.text}</a> : email.text}</p>
         <p>{site.jobTitle} | {site.department}</p>
         {site.office && <p>{site.office}</p>}
         {site.address && <p>{site.address}</p>}

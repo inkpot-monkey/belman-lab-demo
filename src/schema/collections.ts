@@ -124,6 +124,7 @@ export const fileCollections: FileCollectionSpec[] = [
           { name: 'labName', label: 'Lab name', widget: 'string' },
           { name: 'photo', label: 'Profile photo', widget: 'image' },
           { name: 'email', label: 'Email', widget: 'string' },
+          { name: 'obfuscateEmail', label: 'Hide the email from robots', widget: 'boolean', hint: 'Writes it as name[at]example.edu instead of a clickable link. Your previous site did this.' },
           { name: 'office', label: 'Office', widget: 'string', required: false },
           { name: 'address', label: 'Postal address', widget: 'text', required: false },
           { name: 'orcid', label: 'ORCID iD', widget: 'string' },

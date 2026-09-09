@@ -30,6 +30,7 @@ export interface SiteDetails {
   labName: string;
   photo: string;
   email: string;
+  obfuscateEmail: boolean;
   office?: string;
   address?: string;
   orcid: string;

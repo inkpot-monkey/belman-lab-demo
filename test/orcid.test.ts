@@ -4,6 +4,7 @@ import {
   formatAuthors,
   normalisePublications,
   stillMissing,
+  worksEqual,
   type Snapshot,
   type SnapshotWork,
 } from '../src/lib/orcid.ts';
@@ -218,5 +219,35 @@ describe('the committed ORCID snapshot', () => {
 
   it('never marks a published article as superseded', () => {
     expect(publications.filter((p) => !p.isPreprint).every((p) => p.supersededBy === null)).toBe(true);
+  });
+});
+
+describe('worksEqual', () => {
+  const a = work({ putCode: 1, doi: 'a' });
+  const b = work({ putCode: 2, doi: 'b' });
+
+  it('treats an identical record as unchanged', () => {
+    expect(worksEqual([a, b], [{ ...a }, { ...b }])).toBe(true);
+  });
+
+  it('ignores ordering, which ORCID does not guarantee', () => {
+    expect(worksEqual([a, b], [b, a])).toBe(true);
+  });
+
+  it('notices an edited field', () => {
+    expect(worksEqual([a], [{ ...a, title: 'Retitled' }])).toBe(false);
+  });
+
+  it('notices an added or removed work', () => {
+    expect(worksEqual([a], [a, b])).toBe(false);
+    expect(worksEqual([a, b], [a])).toBe(false);
+  });
+
+  it('notices a changed author list', () => {
+    expect(worksEqual([a], [{ ...a, authors: ['Someone New'] }])).toBe(false);
+  });
+
+  it('treats two empty records as unchanged', () => {
+    expect(worksEqual([], [])).toBe(true);
   });
 });

@@ -7,8 +7,8 @@
  *
  * Usage: pnpm sync:orcid
  */
-import { writeFile } from 'node:fs/promises';
-import type { SnapshotWork } from '../src/lib/orcid.ts';
+import { readFile, writeFile } from 'node:fs/promises';
+import { worksEqual, type Snapshot, type SnapshotWork } from '../src/lib/orcid.ts';
 
 /**
  * Only the parts of ORCID's v3.0 payload this script reads. Every field is
@@ -79,6 +79,22 @@ for (const summary of summaries) {
   });
 }
 
+// Leave the file alone when nothing has changed. A daily cron that rewrote the
+// timestamp every morning would produce a commit and a site rebuild per day,
+// and move the "last updated" date without anything having been updated.
+const existing = await readFile(OUT, 'utf8')
+  .then((text) => JSON.parse(text) as Snapshot)
+  .catch(() => null);
+
+if (existing && worksEqual(existing.works, snapshotWorks)) {
+  console.log(`No change: ${snapshotWorks.length} works, unchanged since ${existing.fetchedAt}`);
+  process.exit(0);
+}
+
 const snapshot = { orcid: ORCID, fetchedAt: new Date().toISOString(), works: snapshotWorks };
 await writeFile(OUT, `${JSON.stringify(snapshot, null, 2)}\n`);
-console.log(`Wrote ${snapshotWorks.length} works to ${OUT.pathname}`);
+console.log(
+  existing
+    ? `Updated: ${snapshotWorks.length} works (was ${existing.works.length})`
+    : `Created: ${snapshotWorks.length} works`,
+);

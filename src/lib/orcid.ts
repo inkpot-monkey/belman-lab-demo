@@ -78,6 +78,27 @@ export function formatAuthors(
   return { shown, truncated: true };
 }
 
+/**
+ * Whether two fetches describe the same set of works.
+ *
+ * Lets the sync skip rewriting the snapshot when nothing has changed, so a
+ * daily check does not produce a daily commit, a daily rebuild, and a
+ * "last updated" date that moves every morning while saying nothing new.
+ *
+ * Order is ignored: ORCID does not promise a stable order, and a reshuffle is
+ * not a change worth republishing the site for.
+ */
+export function worksEqual(a: SnapshotWork[], b: SnapshotWork[]): boolean {
+  if (a.length !== b.length) return false;
+
+  const byPutCode = (works: SnapshotWork[]) =>
+    [...works].sort((x, y) => x.putCode - y.putCode).map((work) => JSON.stringify(work));
+
+  const left = byPutCode(a);
+  const right = byPutCode(b);
+  return left.every((work, index) => work === right[index]);
+}
+
 /** Comparison key for matching two records of the same work. */
 const titleKey = (title: string): string => title.toLowerCase().replace(/[^a-z0-9]/g, '');
 

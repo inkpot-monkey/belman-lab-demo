@@ -51,24 +51,15 @@ const themeIds = THEMES.map((theme) => theme.id);
       People, news, projects, events and gallery entries are placeholders.
     </p>
 
-    <header class="topbar">
-      <div class="topbar__inner">
-        <nav class="nav" aria-label="Primary">
-          {nav.map((item) => (
-            <a href={url(item.href)} aria-current={isCurrent(item.href, pathname) ? 'page' : undefined}>{item.label}</a>
-          ))}
-        </nav>
-      </div>
-    </header>
+    <div class="page">
+      <nav class="site-nav nav" aria-label="Primary">
+        {nav.map((item) => (
+          <a href={url(item.href)} aria-current={isCurrent(item.href, pathname) ? 'page' : undefined}>{item.label}</a>
+        ))}
+      </nav>
 
-    <div class="shell">
-      <aside class="identity-column stack-l">
+      <aside class="identity-column">
         <Identity />
-        <nav class="nav nav--side" aria-label="Primary" style="flex-direction: column;">
-          {nav.map((item) => (
-            <a href={url(item.href)} aria-current={isCurrent(item.href, pathname) ? 'page' : undefined}>{item.label}</a>
-          ))}
-        </nav>
       </aside>
 
       <main class="flow prose">

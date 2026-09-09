@@ -57,27 +57,40 @@
 }
 
 @layer layout {
-  .shell {
+  /*
+    One grid, three arrangements. Navigation, identity and content are each
+    emitted exactly once and placed by grid-area, so a theme changes where
+    things sit without changing the markup. Hiding a duplicate nav per theme
+    would put two "Primary" landmarks and every link twice into every page.
+  */
+  .page {
     display: grid;
-    gap: var(--space-xl);
+    column-gap: var(--space-xl);
+    row-gap: var(--space-m);
     grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'nav' 'identity' 'main';
     margin-inline: auto;
     max-inline-size: 78rem;
     padding: var(--space-l) var(--space-m);
   }
 
-  /* Sidebar themes place identity beside the content on wide screens. */
+  .site-nav { grid-area: nav; }
+  .identity-column { grid-area: identity; }
+  .page > main { grid-area: main; margin-block-start: var(--space-l); }
+
+  /* Sidebar themes stack identity above navigation, beside the content. */
   @media (min-width: 60rem) {
-    :root[data-theme='a'] .shell,
-    :root[data-theme='c'] .shell {
+    :root[data-theme='a'] .page,
+    :root[data-theme='c'] .page {
       grid-template-columns: 16rem minmax(0, 1fr);
+      grid-template-areas: 'identity main' 'nav main';
+      grid-template-rows: auto 1fr;
       align-items: start;
     }
-    :root[data-theme='a'] .identity,
-    :root[data-theme='c'] .identity {
-      position: sticky;
-      inset-block-start: var(--space-l);
-    }
+    :root[data-theme='a'] .site-nav,
+    :root[data-theme='c'] .site-nav { flex-direction: column; }
+    :root[data-theme='a'] .page > main,
+    :root[data-theme='c'] .page > main { margin-block-start: 0; }
   }
 
   .flow > * + * { margin-block-start: var(--space-s); }
@@ -90,8 +103,13 @@
   */
   .prose > :is(p, ul, ol, h1, h2, h3, h4, blockquote, hr) { max-inline-size: var(--measure); }
   .prose > section > :is(p, h2, h3) { max-inline-size: var(--measure); }
+  /*
+    Scoped to unclassed lists. Every grid on this site is a <ul> - the team,
+    the cards, the gallery - so an unscoped `li + li` margin knocks each grid
+    item after the first out of alignment with its row.
+  */
   .prose :is(ul, ol):not([class]) { padding-inline-start: var(--space-m); }
-  .prose li + li { margin-block-start: var(--space-2xs); }
+  .prose :is(ul, ol):not([class]) > li + li { margin-block-start: var(--space-2xs); }
 }
 
 @layer components {
@@ -141,14 +159,15 @@
     font-weight: 600;
   }
 
-  /* Top-nav theme puts navigation in a full-width bar above the shell. */
-  .topbar { display: none; border-block-end: var(--rule) solid var(--color-border); }
-  :root[data-theme='b'] .topbar { display: block; }
-  :root[data-theme='b'] .nav--side { display: none; }
-  .topbar__inner {
-    margin-inline: auto;
-    max-inline-size: 78rem;
-    padding: var(--space-s) var(--space-m);
+  /*
+    The top-nav theme separates navigation from content with a rule across the
+    content column. A viewport-wide rule was tried and reverted: sizing it in vw
+    overflows by the scrollbar's width, and containing that needs an
+    `overflow-x` on an ancestor, which is a lot of machinery for a longer line.
+  */
+  :root[data-theme='b'] .site-nav {
+    border-block-end: var(--rule) solid var(--color-border);
+    padding-block-end: var(--space-s);
   }
 
   .social { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-s); font-size: var(--step--1); }

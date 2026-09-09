@@ -25,7 +25,7 @@ export interface ThemeSpec {
    */
   colors: Record<string, [light: string, dark: string]>;
   /** Non-colour, non-type structural choices. */
-  shape: { radius: string; rule: string; measure: string; navStyle: 'sidebar' | 'top' };
+  shape: { radius: string; rule: string; measure: string };
 }
 
 const SERIF = "'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif";
@@ -50,7 +50,7 @@ export const THEMES: ThemeSpec[] = [
       accentText: ['#ffffff', '#14151a'],
       border: ['#e2ded2', '#2b2e37'],
     },
-    shape: { radius: '2px', rule: '1px', measure: '68ch', navStyle: 'sidebar' },
+    shape: { radius: '2px', rule: '1px', measure: '68ch' },
   },
   {
     id: 'b',
@@ -69,7 +69,7 @@ export const THEMES: ThemeSpec[] = [
       accentText: ['#ffffff', '#0e1116'],
       border: ['#dde5ea', '#232a33'],
     },
-    shape: { radius: '12px', rule: '1px', measure: '72ch', navStyle: 'top' },
+    shape: { radius: '12px', rule: '1px', measure: '72ch' },
   },
   {
     id: 'c',
@@ -88,7 +88,7 @@ export const THEMES: ThemeSpec[] = [
       accentText: ['#ffffff', '#121016'],
       border: ['#e7dfeb', '#2a2433'],
     },
-    shape: { radius: '4px', rule: '2px', measure: '66ch', navStyle: 'sidebar' },
+    shape: { radius: '4px', rule: '2px', measure: '66ch' },
   },
 ];
 

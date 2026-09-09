@@ -66,11 +66,11 @@
     entry is a link, so colouring them all says nothing: those are set in the
     display face at heading colour and turn lavender under the cursor.
   */
-  :root[data-theme='b'] :is(.person__name, .pub__title, .card h2) a {
+  :root[data-theme='b'] :is(.person__name, .pub__title, .card__title) a {
     color: var(--color-heading);
     text-decoration-color: var(--color-border);
   }
-  :root[data-theme='b'] :is(.person__name, .pub__title, .card h2) a:hover {
+  :root[data-theme='b'] :is(.person__name, .pub__title, .card__title) a:hover {
     text-decoration-color: var(--color-accent);
   }
 
@@ -696,7 +696,7 @@
     border-block-start: 1px solid var(--color-border);
     padding: var(--space-2xs) 0 0;
   }
-  :root[data-theme='b'] .card h2 {
+  :root[data-theme='b'] .card__title {
     font-size: var(--step-1);
     line-height: 1.15;
   }

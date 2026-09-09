@@ -232,6 +232,15 @@
     background: var(--color-surface);
   }
   /*
+    The card's title is addressed by name rather than by level, because the
+    same card is a top-level entry on the Software and data page and a nested
+    one inside a section on the home page - an <h2> in one place and an <h3> in
+    the other. Only the margin is reset here: what size a card title takes is a
+    decision each design makes, and taking it away from the heading level would
+    change two designs that never asked.
+  */
+  .card__title { margin-block-start: 0; }
+  /*
     A card holds a summary and then a body written in the CMS, and the reset
     takes the margin off both. Without this the two run together as one block
     of text - which only became visible once Software and data went into the

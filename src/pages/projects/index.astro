@@ -24,7 +24,7 @@ const projects = (await getCollection('projects')).sort(
             height="400"
           />
         )}
-        <h2 style="margin-block-start: 0;">
+        <h2 class="card__title">
           <a href={url(`/projects/${project.id}`)}>{project.data.title}</a>
         </h2>
         <p>{project.data.summary}</p>

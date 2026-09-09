@@ -55,11 +55,11 @@
     heading colour with a grey underline, and turn vermilion under the cursor,
     which is the only moment the colour carries information.
   */
-  :root[data-theme='a'] :is(.person__name, .pub__title, .card h2) a {
+  :root[data-theme='a'] :is(.person__name, .pub__title, .card__title) a {
     color: var(--color-heading);
     text-decoration-color: var(--color-border);
   }
-  :root[data-theme='a'] :is(.person__name, .pub__title, .card h2) a:hover {
+  :root[data-theme='a'] :is(.person__name, .pub__title, .card__title) a:hover {
     text-decoration-color: var(--color-accent);
   }
 

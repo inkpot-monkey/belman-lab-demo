@@ -93,11 +93,11 @@
     is a link, so colouring them all says nothing: those take the text colour
     with a hairline underline and turn accent under the cursor.
   */
-  :root[data-theme='c'] :is(.person__name, .pub__title, .card h2) a {
+  :root[data-theme='c'] :is(.person__name, .pub__title, .card__title) a {
     color: var(--color-heading);
     text-decoration-color: var(--color-border);
   }
-  :root[data-theme='c'] :is(.person__name, .pub__title, .card h2) a:hover {
+  :root[data-theme='c'] :is(.person__name, .pub__title, .card__title) a:hover {
     text-decoration-color: var(--color-accent);
   }
 
@@ -373,10 +373,17 @@
 
     Unclassed only. The funding strip and the in-page index bring their own
     treatment and are left alone.
+
+    `.themed > section` is spelled out beside `section` in each of these
+    groups. The wrapper is `display: contents`, so a section this design
+    supplies for itself sits in the same place on the page as one every design
+    shares - but not in the same place in a selector, and a heading that missed
+    the rule was the only one on the site without it.
   */
   :root[data-theme='c'] :is(main, .manual) > h1,
   :root[data-theme='c'] :is(main, .manual) > h2:not([class]),
-  :root[data-theme='c'] :is(main, .manual) > section > h2:not([class]) {
+  :root[data-theme='c'] :is(main, .manual) > section > h2:not([class]),
+  :root[data-theme='c'] :is(main, .manual) > .themed > section > h2:not([class]) {
     align-items: center;
     column-gap: var(--space-s);
     display: grid;
@@ -394,12 +401,14 @@
     content: '';
   }
   :root[data-theme='c'] :is(main, .manual) > h2:not([class])::after,
-  :root[data-theme='c'] :is(main, .manual) > section > h2:not([class])::after {
+  :root[data-theme='c'] :is(main, .manual) > section > h2:not([class])::after,
+  :root[data-theme='c'] :is(main, .manual) > .themed > section > h2:not([class])::after {
     border-block-start: 1px solid var(--color-border);
     content: '';
   }
   :root[data-theme='c'] :is(main, .manual) > h2:not([class]),
-  :root[data-theme='c'] :is(main, .manual) > section > h2:not([class]) {
+  :root[data-theme='c'] :is(main, .manual) > section > h2:not([class]),
+  :root[data-theme='c'] :is(main, .manual) > .themed > section > h2:not([class]) {
     margin-block-start: var(--space-m);
   }
   :root[data-theme='c'] .manual > section { margin-block-start: var(--space-l); }
@@ -501,7 +510,7 @@
     border-radius: 0;
     padding: var(--space-2xs) 0;
   }
-  :root[data-theme='c'] .card h2 { font-size: var(--step-0); }
+  :root[data-theme='c'] .card__title { font-size: var(--step-0); }
   :root[data-theme='c'] .card > .small.muted {
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
@@ -516,12 +525,35 @@
     /* Everything is prose in the first column until something says otherwise. */
     :root[data-theme='c'] .card > * { grid-column: 1; }
     :root[data-theme='c'] .card > .small.muted {
+      align-self: start;
       grid-column: 2;
-      grid-row: 1;
+      /*
+        Down the rows rather than across one. Held to row 1, a metadata column
+        that wraps - a DOI is thirty characters and the column is sixteen
+        rems - made row 1 as tall as itself and pushed the summary a line and a
+        half clear of the title it belongs to, so entries with a DOI sat looser
+        than entries without one. Spanning lets it start beside the title and
+        run past it without setting the height of anything.
+
+        Counted forward: `-1` resolves against the explicit grid, and this grid
+        has no explicit rows, so it would land back on row 1.
+      */
+      grid-row: 1 / span 4;
       /* It follows a <p>, so it would otherwise take the paragraph gap and
          drop out of line with the title it sits beside. */
       margin-block-start: 0;
     }
+  }
+
+  /*
+    The way out of the front page's listing and into the full one. Monospaced,
+    because it is a path rather than a sentence, and set on the hairline that
+    closes the list so it reads as the last row of it.
+  */
+  :root[data-theme='c'] .release__more {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    margin-block-start: var(--space-2xs);
   }
 
   /* ---- People, as a roster --------------------------------------------- */

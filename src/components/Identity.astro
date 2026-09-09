@@ -1,9 +1,10 @@
 ---
 import { site } from '../lib/site.ts';
+import { url } from '../lib/paths.ts';
 ---
 <div class="identity">
   <h1 class="identity__name">{site.name}</h1>
-  <img class="identity__photo" src={site.photo} alt="" width="400" height="400" />
+  <img class="identity__photo" src={url(site.photo)} alt="" width="400" height="400" />
   <div class="identity__meta">
     <p>{site.discipline}</p>
     <p>{site.jobTitle}</p>

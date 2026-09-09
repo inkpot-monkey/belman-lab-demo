@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/generate-cms-config.ts && node scripts/vendor-cms.ts && astro dev",
-    "build": "node scripts/generate-cms-config.ts && node scripts/vendor-cms.ts && astro build",
+    "build": "node scripts/generate-cms-config.ts && node scripts/vendor-cms.ts && astro build && node scripts/check-base-paths.ts",
     "preview": "astro preview",
     "check": "astro check",
     "typecheck": "astro check && tsc --noEmit",
@@ -13,7 +13,8 @@
     "test:watch": "vitest",
     "gen:cms": "node scripts/generate-cms-config.ts",
     "sync:orcid": "node scripts/fetch-orcid.ts",
-    "vendor:cms": "node scripts/vendor-cms.ts"
+    "vendor:cms": "node scripts/vendor-cms.ts",
+    "check:paths": "node scripts/check-base-paths.ts"
   },
   "dependencies": {
     "astro": "^7.3.2",

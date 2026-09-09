@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { PERSON_RANKS } from '../../schema/collections.ts';
-import { url } from '../../lib/nav.ts';
+import { url } from '../../lib/paths.ts';
 
 const people = await getCollection('people');
 
@@ -32,7 +32,7 @@ const initials = (name: string) =>
         {group.members.map((person) => (
           <li class="person">
             {person.data.photo
-              ? <img class="person__avatar" src={person.data.photo as string} alt="" width="300" height="300" />
+              ? <img class="person__avatar" src={url(person.data.photo as string)} alt="" width="300" height="300" />
               : <div class="person__avatar" aria-hidden="true">{initials(person.data.name as string)}</div>}
             <h3 class="person__name">
               <a href={url(`/team/${person.id}`)}>{person.data.name}</a>

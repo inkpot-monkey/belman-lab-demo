@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { joinBase, isCurrentPath, COLLECTION_NAV } from '../src/lib/nav.ts';
+import { joinBase, isCurrentPath, withBase } from '../src/lib/paths.ts';
+import { COLLECTION_NAV } from '../src/lib/nav.ts';
 
 describe('joinBase', () => {
   it('leaves paths alone at the site root', () => {
@@ -55,5 +56,32 @@ describe('COLLECTION_NAV', () => {
 
   it('points every entry at a site-root path', () => {
     expect(COLLECTION_NAV.every((item) => item.href.startsWith('/'))).toBe(true);
+  });
+});
+
+describe('withBase', () => {
+  it('prefixes a root-relative media path, which is how CMS uploads are written', () => {
+    expect(withBase('/belman-lab-demo', '/uploads/profile.jpg')).toBe('/belman-lab-demo/uploads/profile.jpg');
+  });
+
+  it('leaves an absolute URL alone, so a Drive photo URL is not mangled', () => {
+    const drive = 'https://drive.google.com/uc?id=abc';
+    expect(withBase('/belman-lab-demo', drive)).toBe(drive);
+    expect(withBase('/belman-lab-demo', 'http://example.com/a.png')).toBe('http://example.com/a.png');
+  });
+
+  it('leaves protocol-relative, data, mailto, fragment and query URLs alone', () => {
+    for (const value of ['//cdn.example.com/a.png', 'data:image/png;base64,AAA', 'mailto:a@b.c', '#top', '?page=2']) {
+      expect(withBase('/belman-lab-demo', value)).toBe(value);
+    }
+  });
+
+  it('leaves a relative path alone', () => {
+    expect(withBase('/belman-lab-demo', 'sveltia-cms.mjs')).toBe('sveltia-cms.mjs');
+    expect(withBase('/belman-lab-demo', './config.yml')).toBe('./config.yml');
+  });
+
+  it('is a no-op at the site root', () => {
+    expect(withBase('/', '/uploads/profile.jpg')).toBe('/uploads/profile.jpg');
   });
 });

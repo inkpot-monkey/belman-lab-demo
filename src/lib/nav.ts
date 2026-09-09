@@ -14,7 +14,10 @@ export const COLLECTION_NAV: NavItem[] = [
   { label: 'News', href: '/news', order: 6, demo: true },
   { label: 'Events', href: '/events', order: 7, demo: true },
   { label: 'Gallery', href: '/gallery', order: 8, demo: true },
-  { label: 'How this works', href: '/how-this-works', order: 10 },
 ];
+
+// /how-this-works is deliberately absent: it is a manual for whoever edits the
+// site, not something visitors should find in the menu. The page still builds
+// and is reachable by URL.
 
 export { url, isCurrent } from './paths.ts';

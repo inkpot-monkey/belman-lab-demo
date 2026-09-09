@@ -11,7 +11,7 @@ const { person } = Astro.props;
 const { Content } = await render(person);
 const data = person.data as Record<string, unknown>;
 ---
-<BaseLayout title={data.name as string}>
+<BaseLayout title={data.name as string} description={`${data.name}, ${data.rank} in the Belman Lab.`}>
   <h1>{data.name}</h1>
   <p class="muted">{data.rank}{data.pronouns ? ` · ${data.pronouns}` : ''}</p>
 

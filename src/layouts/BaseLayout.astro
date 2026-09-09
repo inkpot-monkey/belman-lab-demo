@@ -6,6 +6,7 @@ import ThemeSwitcher from '../components/ThemeSwitcher.astro';
 import { site } from '../lib/site.ts';
 import { COLLECTION_NAV, url, isCurrent, type NavItem } from '../lib/nav.ts';
 import { DEFAULT_THEME, THEMES } from '../lib/themes.ts';
+import { isIndexable } from '../lib/env.ts';
 import '../styles/base.css';
 import '../styles/demo.css';
 
@@ -14,8 +15,15 @@ interface Props {
   description?: string;
   /** Keeps internal-facing pages out of search results. */
   noindex?: boolean;
+  /** Marks the page whose subject is the person, so their name is its heading. */
+  identityIsHeading?: boolean;
 }
-const { title, description, noindex } = Astro.props;
+const { title, description, noindex, identityIsHeading } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(url(site.photo), Astro.site);
+const fullTitle = `${title} | ${site.name}`;
+const summary = description ?? `${site.name}, ${site.jobTitle} at ${site.institution}.`;
 
 const pages = await getCollection('pages');
 const pageNav: NavItem[] = pages
@@ -34,9 +42,21 @@ const themeIds = THEMES.map((theme) => theme.id);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title} | {site.name}</title>
-    {description && <meta name="description" content={description} />}
-    {noindex && <meta name="robots" content="noindex" />}
+    <title>{fullTitle}</title>
+    <meta name="description" content={summary} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+    <meta name="theme-color" content="#7b4b8a" />
+    {(noindex || !isIndexable) && <meta name="robots" content="noindex" />}
+
+    <!-- Link previews: this URL gets pasted into email and chat. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.labName} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={summary} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
     <Tokens />
     <!-- Applied before first paint so switching themes never flashes. -->
     <script is:inline define:vars={{ themeIds, fallback: DEFAULT_THEME }}>
@@ -49,6 +69,8 @@ const themeIds = THEMES.map((theme) => theme.id);
     </script>
   </head>
   <body>
+    <a class="skip" href="#main">Skip to content</a>
+
     <p class="demo-banner">
       <strong>Design preview</strong> — three candidate designs over real content.
       People, news, projects, events and gallery entries are placeholders.
@@ -62,10 +84,10 @@ const themeIds = THEMES.map((theme) => theme.id);
       </nav>
 
       <aside class="identity-column">
-        <Identity />
+        <Identity primary={identityIsHeading} />
       </aside>
 
-      <main class="flow prose">
+      <main id="main" class="flow prose">
         <slot />
       </main>
     </div>

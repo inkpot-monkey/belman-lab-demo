@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { url } from '../lib/paths.ts';
+import { COLLECTION_NAV } from '../lib/nav.ts';
+---
+<BaseLayout title="Page not found" description="That page does not exist." noindex>
+  <h1>That page doesn’t exist</h1>
+
+  <p>
+    The address may be mistyped, or the page may have been renamed. Nothing is
+    broken — you’re still on the site.
+  </p>
+
+  <p>Try one of these instead:</p>
+
+  <ul>
+    <li><a href={url('/')}>Home</a></li>
+    <li><a href={url('/research')}>Research</a></li>
+    {COLLECTION_NAV.map((item) => (
+      <li><a href={url(item.href)}>{item.label}</a></li>
+    ))}
+  </ul>
+</BaseLayout>

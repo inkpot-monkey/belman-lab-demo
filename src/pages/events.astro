@@ -10,7 +10,7 @@ import fixtures from '../data/fixtures/events.json' with { type: 'json' };
 const events = fixtures as CalendarEvent[];
 const { upcoming, past } = splitByDate(events, new Date());
 ---
-<BaseLayout title="Events">
+<BaseLayout title="Events" description="Seminars, lab meetings and other dates.">
   <h1>Events</h1>
   <DemoBanner what="These are fixtures shaped like a real Google Calendar feed, not a real calendar." />
 

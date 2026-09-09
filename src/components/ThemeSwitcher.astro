@@ -13,8 +13,9 @@ import { THEMES, DEFAULT_THEME } from '../lib/themes.ts';
     {THEMES.map((theme) => (
       <label class="switcher__option">
         <input type="radio" name="theme" value={theme.id} />
-        <span>
-          <span>{theme.name}</span>
+        <span class="switcher__text">
+          <span class="switcher__name">{theme.name}</span>
+          <span class="switcher__short">{theme.shortName}</span>
           <span class="switcher__desc">{theme.description}</span>
         </span>
       </label>

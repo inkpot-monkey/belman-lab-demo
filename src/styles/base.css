@@ -124,6 +124,7 @@
     inline-size: 100%;
     max-inline-size: 12rem;
     object-fit: cover;
+    object-position: top;
   }
   :root[data-theme='b'] .identity__photo { border-radius: 50%; }
 
@@ -194,6 +195,8 @@
   }
   :root[data-theme='a'] .person { background: none; border: 0; border-block-start: var(--rule) solid var(--color-border); border-radius: 0; }
   .person__avatar {
+    object-fit: cover;
+    object-position: top;
     aspect-ratio: 1;
     background: var(--color-border);
     border-radius: var(--radius);
@@ -216,7 +219,7 @@
     background: var(--color-accent);
     border-radius: var(--radius);
     color: var(--color-accentText);
-    font-size: var(--step--2);
+    font-size: var(--step--1);
     letter-spacing: 0.04em;
     padding: 0.1em 0.5em;
     text-transform: uppercase;

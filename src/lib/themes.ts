@@ -12,6 +12,8 @@
 export interface ThemeSpec {
   id: string;
   name: string;
+  /** One word, for the switcher on a screen too narrow for the full name. */
+  shortName: string;
   /** One line shown in the switcher explaining the intent. */
   description: string;
   fonts: { display: string; body: string };
@@ -36,6 +38,7 @@ export const THEMES: ThemeSpec[] = [
   {
     id: 'a',
     name: 'Classic academic',
+    shortName: 'Classic',
     description: 'Serif, dense, restrained. Conservative and unmistakably scholarly.',
     fonts: { display: SERIF, body: SERIF },
     type: { minBase: 17, maxBase: 19, minRatio: 1.2, maxRatio: 1.25 },
@@ -55,6 +58,7 @@ export const THEMES: ThemeSpec[] = [
   {
     id: 'b',
     name: 'Modern lab',
+    shortName: 'Modern',
     description: 'Sans-serif, open, photo-forward. Reads as a contemporary research group.',
     fonts: { display: SANS, body: SANS },
     type: { minBase: 16, maxBase: 19, minRatio: 1.25, maxRatio: 1.333 },
@@ -74,6 +78,7 @@ export const THEMES: ThemeSpec[] = [
   {
     id: 'c',
     name: 'Editorial scientific',
+    shortName: 'Editorial',
     description: 'Serif display against sans body, with her lavender carried forward.',
     fonts: { display: SERIF, body: SANS },
     type: { minBase: 16, maxBase: 20, minRatio: 1.25, maxRatio: 1.414 },
@@ -99,8 +104,13 @@ export const FONT_STACKS = { serif: SERIF, sans: SANS, mono: MONO };
 /** Viewport range every fluid value interpolates across. */
 export const VIEWPORT = { minViewport: 320, maxViewport: 1240 };
 
-/** Type scale steps: -1 for fine print up to 5 for a page title. */
-export const TYPE_STEPS = [-2, -1, 0, 1, 2, 3, 4, 5];
+/**
+ * Type scale steps: -1 for fine print up to 5 for a page title.
+ *
+ * There is deliberately no -2. It resolves to between 10px and 12px depending
+ * on the theme, which is too small to read on a phone.
+ */
+export const TYPE_STEPS = [-1, 0, 1, 2, 3, 4, 5];
 
 /** Named space multipliers of the base step. */
 export const SPACE_STEPS: Record<string, number> = {

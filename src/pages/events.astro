@@ -28,7 +28,7 @@ const sections: [string, string][] = [
     {upcoming.length === 0
       ? <p class="muted">Nothing scheduled.</p>
       : (
-        <ul class="pubs">
+        <ul class="pubs pubs--dated">
           {upcoming.map((event) => (
             <li class="pub">
               <div class="pub__title">{event.summary ?? 'Untitled event'}</div>
@@ -43,7 +43,7 @@ const sections: [string, string][] = [
   {past.length > 0 && (
     <section id="past">
       <h2>Past</h2>
-      <ul class="pubs">
+      <ul class="pubs pubs--dated">
         {past.map((event) => (
           <li class="pub">
             <div class="pub__title">{event.summary ?? 'Untitled event'}</div>

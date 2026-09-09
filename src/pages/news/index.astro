@@ -15,7 +15,7 @@ const format = (date: Date) =>
   <h1>News</h1>
   <DemoBanner what="Every item below is a placeholder, not a real announcement." />
 
-  <ul class="pubs">
+  <ul class="pubs pubs--dated">
     {news.map((item) => (
       <li class="pub">
         <div class="pub__title"><a href={url(`/news/${item.id}`)}>{item.data.title}</a></div>

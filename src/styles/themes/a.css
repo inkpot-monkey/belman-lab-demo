@@ -383,13 +383,21 @@
   :root[data-theme='a'] .pub__authors,
   :root[data-theme='a'] .pub__meta { max-inline-size: var(--measure); }
 
+  /*
+    The rail is scoped to the citation lists, not to every `.pub`. News and
+    events reuse the row and have no year, so an unscoped rail left a 4rem
+    empty track down the side of both pages - a drawn gutter with nothing on
+    either side of it, in the one design whose motif is that the grid is
+    visible. Scoped by list rather than by `:has(.pub__year)`, so a paper that
+    happens to be missing a year still lines up with the ones around it.
+  */
   @media (min-width: 34rem) {
-    :root[data-theme='a'] .pub {
+    :root[data-theme='a'] .pubs:not(.pubs--dated) .pub {
       column-gap: var(--space-m);
       grid-template-columns: 4rem minmax(0, 1fr);
     }
     :root[data-theme='a'] .pub__year { grid-column: 1; grid-row: 1; }
-    :root[data-theme='a'] .pub > :not(.pub__year) { grid-column: 2; }
+    :root[data-theme='a'] .pubs:not(.pubs--dated) .pub > :not(.pub__year) { grid-column: 2; }
   }
 
   /* ---- People ---------------------------------------------------------- */

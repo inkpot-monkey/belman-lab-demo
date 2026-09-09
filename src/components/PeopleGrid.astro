@@ -37,7 +37,7 @@ const initials = (name: string) =>
         <a href={url(`/team/${person.id}`)}>{person.data.name}</a>
       </h3>
       <p class="person__rank">{person.data.rank}</p>
-      {person.data.placeholder && <p class="person__rank">Placeholder entry</p>}
+      {person.data.placeholder && <p class="person__placeholder">Placeholder entry</p>}
       <Themed themes="c">
         <div class="person__about"><Content /></div>
       </Themed>

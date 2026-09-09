@@ -431,6 +431,12 @@
   :root[data-theme='a'] .person__name { font-weight: 700; }
   :root[data-theme='a'] .person__rank { letter-spacing: 0.04em; }
 
+  /* The mark, tracked and capitalised like every other label in this design. */
+  :root[data-theme='a'] .person__placeholder {
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+
   /* Alumni, folded away. The summary is a control, so it is sized like one. */
   :root[data-theme='a'] .people__summary {
     border-block-start: 2px solid var(--color-heading);

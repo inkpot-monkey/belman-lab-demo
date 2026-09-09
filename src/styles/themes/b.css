@@ -694,6 +694,13 @@
     line-height: 1.15;
     margin-block-start: var(--space-3xs);
   }
+  /* The mark, in this design's own voice: an editor's note, like the others. */
+  :root[data-theme='b'] .person__placeholder {
+    font-family: var(--font-display);
+    font-style: italic;
+    letter-spacing: 0;
+    text-transform: none;
+  }
   :root[data-theme='b'] .people__summary {
     color: var(--color-accent);
     cursor: pointer;

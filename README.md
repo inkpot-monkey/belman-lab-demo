@@ -50,6 +50,10 @@ landmarks and every link twice into every page. Where a design needs markup the
 others do not have, it comes from `src/components/Themed.astro`, which ships
 every variant and lets the active design's stylesheet reveal one.
 
+`docs/theme-architecture.md` is the fuller version: the five levers a design
+has, in the order you would reach for them, and the invariants that hold across
+all three.
+
 **Publications come from ORCID.** `pnpm sync:orcid` writes
 `src/data/orcid-snapshot.json`; the build reads only that file, so builds are
 reproducible and work offline. `src/lib/orcid.ts` handles presentation —

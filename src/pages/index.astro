@@ -6,6 +6,10 @@ const page = await getEntry('pages', 'home');
 if (!page) throw new Error('Missing src/content/pages/home.md');
 const { Content } = await render(page);
 ---
-<BaseLayout title={page.data.title as string} description={page.data.description as string | undefined}>
+<BaseLayout
+  title={page.data.title as string}
+  description={page.data.description as string | undefined}
+  identityIsHeading
+>
   <Content />
 </BaseLayout>

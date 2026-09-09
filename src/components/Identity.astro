@@ -1,9 +1,21 @@
 ---
 import { site } from '../lib/site.ts';
 import { url } from '../lib/paths.ts';
+
+interface Props {
+  /**
+   * True only where the person is the subject of the page, which is the home
+   * page. Everywhere else the name is a repeated site header, and marking it
+   * as a heading gives every page two <h1>s.
+   */
+  primary?: boolean;
+}
+const { primary = false } = Astro.props;
 ---
 <div class="identity">
-  <h1 class="identity__name">{site.name}</h1>
+  {primary
+    ? <h1 class="identity__name">{site.name}</h1>
+    : <p class="identity__name">{site.name}</p>}
   <img class="identity__photo" src={url(site.photo)} alt="" width="400" height="400" />
   <div class="identity__meta">
     <p>{site.discipline}</p>

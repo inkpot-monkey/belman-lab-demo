@@ -25,6 +25,7 @@
     line-height: 1.6;
     margin: 0;
     text-wrap: pretty;
+    overflow-wrap: break-word;
   }
 
   h1, h2, h3, h4 {
@@ -283,7 +284,8 @@
     padding-inline-start: var(--space-s);
   }
 
-  .manual table { border-collapse: collapse; inline-size: 100%; text-align: start; }
+  .manual .table-scroll { overflow-x: auto; }
+  .manual table { border-collapse: collapse; inline-size: 100%; min-inline-size: 22rem; text-align: start; }
   .manual caption {
     color: var(--color-muted);
     font-size: var(--step--1);
@@ -319,6 +321,20 @@
 }
 
 @layer utilities {
+  /* Visible only once focused, so keyboard users can jump past the sidebar. */
+  .skip {
+    background: var(--color-bg);
+    border: var(--rule) solid var(--color-accent);
+    border-radius: var(--radius);
+    inset-block-start: var(--space-2xs);
+    inset-inline-start: var(--space-2xs);
+    padding: var(--space-2xs) var(--space-s);
+    position: absolute;
+    transform: translateY(-200%);
+    z-index: 20;
+  }
+  .skip:focus { transform: none; }
+
   .visually-hidden {
     clip-path: inset(50%);
     block-size: 1px;

@@ -16,17 +16,30 @@ export const COLLECTION_NAV: NavItem[] = [
   { label: 'Gallery', href: '/gallery', order: 8, demo: true },
 ];
 
+/** Drop trailing slashes, but never reduce the root path to an empty string. */
+const normalise = (value: string): string => value.replace(/\/+$/, '') || '/';
+
 /**
- * Join a site-root path onto Astro's configured base, so the same build works
- * at a domain root and under a GitHub Pages project path.
+ * Join a site-root path onto a base path.
+ *
+ * Split out from `url` so the base can be supplied directly in tests: this is
+ * what lets one build serve from a domain root and from a GitHub Pages project
+ * path, and getting it wrong breaks every link on the site at once.
  */
-export function url(path: string): string {
-  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-  return path === '/' ? `${base}/` : `${base}${path}`;
+export function joinBase(base: string, path: string): string {
+  const prefix = base.replace(/\/+$/, '');
+  return path === '/' ? `${prefix}/` : `${prefix}${path}`;
 }
 
-/** True when `href` is the current page, tolerating a trailing slash. */
-export function isCurrent(href: string, pathname: string): boolean {
-  const strip = (value: string) => value.replace(/\/+$/, '') || '/';
-  return strip(url(href)) === strip(pathname);
+/** True when `href` is the current page, tolerating trailing slashes. */
+export function isCurrentPath(base: string, href: string, pathname: string): boolean {
+  return normalise(joinBase(base, href)) === normalise(pathname);
 }
+
+/** The configured base path, defaulting to the site root outside Astro. */
+const siteBase = (): string => import.meta.env?.BASE_URL ?? '/';
+
+export const url = (path: string): string => joinBase(siteBase(), path);
+
+export const isCurrent = (href: string, pathname: string): boolean =>
+  isCurrentPath(siteBase(), href, pathname);

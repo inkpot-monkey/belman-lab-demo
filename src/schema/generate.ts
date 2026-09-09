@@ -1,6 +1,22 @@
+/**
+ * Derive both consumers of the content model from the spec in `fields.ts`.
+ *
+ * Astro needs a Zod schema and Sveltia needs a YAML config. Deriving each from
+ * one declaration is what makes the guarantee hold: the CMS cannot offer a
+ * field the build would reject, because neither side is written by hand.
+ *
+ * The spec, not Zod, is the single source. Reading widget shapes back out of a
+ * Zod schema would mean depending on its internals, which change between major
+ * versions.
+ */
 import { z } from 'zod';
 import { stringify } from 'yaml';
-import { BODY_FIELD, type CollectionSpec, type Field } from './fields.ts';
+import {
+  BODY_FIELD,
+  type CollectionSpec,
+  type Field,
+  type FileCollectionSpec,
+} from './fields.ts';
 
 /** Zod type for one field, before optionality is applied. */
 function zodForField(field: Field): z.ZodType {
@@ -40,10 +56,23 @@ export function toZod(fields: Field[]): z.ZodObject<Record<string, z.ZodType>> {
   return z.object(shape);
 }
 
+/** One field as Sveltia's config.yml expects it. */
+export interface SveltiaField {
+  name: string;
+  label: string;
+  widget: string;
+  /** Only ever emitted as `false`; Sveltia treats an absent key as required. */
+  required?: false;
+  hint?: string;
+  options?: string[];
+  field?: SveltiaField;
+  fields?: SveltiaField[];
+}
+
 /** Build the Sveltia field list. Sveltia treats fields as required by default. */
-export function toSveltiaFields(fields: Field[]): unknown[] {
+export function toSveltiaFields(fields: Field[]): SveltiaField[] {
   return fields.map((field) => {
-    const emitted: Record<string, unknown> = {
+    const emitted: SveltiaField = {
       name: field.name,
       label: field.label,
       widget: field.widget,
@@ -51,7 +80,7 @@ export function toSveltiaFields(fields: Field[]): unknown[] {
     if (field.required === false) emitted.required = false;
     if (field.hint !== undefined) emitted.hint = field.hint;
     if (field.widget === 'select') emitted.options = field.options;
-    if (field.widget === 'list') emitted.field = toSveltiaFields([field.field])[0];
+    if (field.widget === 'list') emitted.field = toSveltiaFields([field.field])[0]!;
     if (field.widget === 'object') emitted.fields = toSveltiaFields(field.fields);
     return emitted;
   });
@@ -69,25 +98,6 @@ export function toSveltiaCollection(spec: CollectionSpec): Record<string, unknow
     slug: '{{slug}}',
     fields: toSveltiaFields(spec.fields),
   };
-}
-
-export interface FileEntrySpec {
-  name: string;
-  label: string;
-  /** Repo-relative path of the single file this entry edits. */
-  file: string;
-  fields: Field[];
-}
-
-/**
- * A collection of individually-named files rather than a folder of entries.
- * Used for things there is exactly one of - site details, footer - where
- * letting an editor create a second entry would be a footgun.
- */
-export interface FileCollectionSpec {
-  name: string;
-  label: string;
-  files: FileEntrySpec[];
 }
 
 export function toSveltiaFileCollection(spec: FileCollectionSpec): Record<string, unknown> {

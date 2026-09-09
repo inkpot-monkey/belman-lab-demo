@@ -42,6 +42,25 @@ export interface CollectionSpec {
   fields: Field[];
 }
 
+export interface FileEntrySpec {
+  name: string;
+  label: string;
+  /** Repo-relative path of the single file this entry edits. */
+  file: string;
+  fields: Field[];
+}
+
+/**
+ * A collection of individually-named files rather than a folder of entries.
+ * Used for things there is exactly one of - site details, footer - where
+ * letting an editor create a second entry would be a footgun.
+ */
+export interface FileCollectionSpec {
+  name: string;
+  label: string;
+  files: FileEntrySpec[];
+}
+
 /**
  * The frontmatter key whose value is the Markdown body rather than a
  * frontmatter entry. Astro exposes it outside `data`, so it is deliberately

@@ -7,8 +7,7 @@
  *
  * Content model shape adapted from fjd2004711/scholar-lite (MIT) - see CREDITS.md.
  */
-import type { CollectionSpec, Field } from './fields.ts';
-import type { FileCollectionSpec } from './generate.ts';
+import type { CollectionSpec, Field, FileCollectionSpec } from './fields.ts';
 
 const body: Field = { name: 'body', label: 'Content', widget: 'markdown' };
 

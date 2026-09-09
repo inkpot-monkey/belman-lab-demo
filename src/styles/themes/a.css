@@ -522,6 +522,19 @@
   :root[data-theme='a'] .manual thead th,
   :root[data-theme='a'] .manual tbody th { color: var(--color-heading); }
 
+  /*
+    Inline code, boxed rather than filled. The shared style sets it on the grey
+    surface, and a vermilion link inside one - `/admin` on the how-it-works
+    page is exactly that - lands at 4.26:1 against #f0f0f0 where the same words
+    clear 4.5:1 against the page. A hairline box does the same job on this
+    design without tinting the ground under the one colour that has to stay
+    readable.
+  */
+  :root[data-theme='a'] .manual code {
+    background: none;
+    border: var(--rule) solid var(--color-border);
+  }
+
   /* ---- Footer: the signature, repeated -------------------------------- */
 
   /*

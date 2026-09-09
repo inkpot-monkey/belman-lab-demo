@@ -45,7 +45,7 @@ What stays shared is the content, the routes and the markup, which is what the
 switcher relies on: it swaps an attribute, never a page.
 
 Navigation, the identity block and `<main>` are each emitted exactly once, in
-`BaseLayout`, because a per-design copy of one of them would put two "Primary"
+`BaseLayout`. `test/single-emission.test.ts` pins that, because a per-design copy of one of them would put two "Primary"
 landmarks and every link twice into every page. Where a design needs markup the
 others do not have, it comes from `src/components/Themed.astro`, which ships
 every variant and lets the active design's stylesheet reveal one.

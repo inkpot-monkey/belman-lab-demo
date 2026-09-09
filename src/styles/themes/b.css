@@ -640,6 +640,37 @@
     }
   }
 
+  /*
+    News and events are the same row with a date where the citation goes, and
+    left alone they were a reading column with the margin track empty beside
+    them - the one place in this design where the wide right-hand column pays
+    for nothing. The date moves into it as a dateline, which is what a magazine
+    does with one, and which is the same device the selected publications use
+    for their annotation two blocks up.
+
+    Not Record's rail: that sets the year first, in the margin the text is
+    indented past. This sets the date last, out to the right of the entry, and
+    the two pages read as opposite decisions rather than the same one.
+  */
+  :root[data-theme='b'] .pubs--dated .pub__meta { color: var(--color-muted); }
+
+  @media (min-width: 48rem) {
+    :root[data-theme='b'] .pubs--dated .pub {
+      column-gap: var(--space-l);
+      grid-template-columns: minmax(0, 1fr) minmax(0, 16rem);
+    }
+    :root[data-theme='b'] .pubs--dated .pub > * { grid-column: 1; }
+    :root[data-theme='b'] .pubs--dated .pub__meta {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: var(--step-0);
+      grid-column: 2;
+      grid-row: 1;
+      line-height: 1.3;
+      max-inline-size: none;
+    }
+  }
+
   /* ---- Cards, ranked like a contents page -------------------------------- */
 
   :root[data-theme='b'] .cards {

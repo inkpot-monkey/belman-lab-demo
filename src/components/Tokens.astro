@@ -1,0 +1,34 @@
+---
+/**
+ * Emits the design tokens for every theme in one global stylesheet.
+ *
+ * All three themes ship in every build so the switcher can swap between them
+ * with no reload. Each is scoped to a `data-theme` attribute on <html>.
+ */
+import { typeScale, spaceScale, tokensToCss } from '../lib/utopia.ts';
+import { THEMES, VIEWPORT, TYPE_STEPS, SPACE_STEPS, FONT_STACKS } from '../lib/themes.ts';
+
+const blocks = THEMES.map((theme) => {
+  const fluidTokens = {
+    ...typeScale({ ...VIEWPORT, ...theme.type, steps: TYPE_STEPS }),
+    ...spaceScale({ ...VIEWPORT, ...theme.space, steps: SPACE_STEPS }),
+  };
+  const staticTokens: Record<string, string> = {
+    'font-display': theme.fonts.display,
+    'font-body': theme.fonts.body,
+    'font-mono': FONT_STACKS.mono,
+    radius: theme.shape.radius,
+    rule: theme.shape.rule,
+    measure: theme.shape.measure,
+    ...Object.fromEntries(
+      Object.entries(theme.colors).map(([name, [light, dark]]) => [
+        `color-${name}`,
+        `light-dark(${light}, ${dark})`,
+      ]),
+    ),
+  };
+  return `:root[data-theme="${theme.id}"] {\n${tokensToCss({ ...fluidTokens, ...staticTokens })}\n}`;
+}).join('\n\n');
+---
+
+<style is:global set:html={`:root { color-scheme: light dark; }\n\n${blocks}`}></style>

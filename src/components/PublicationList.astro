@@ -1,0 +1,43 @@
+---
+import { formatAuthors, type Publication } from '../lib/orcid.ts';
+import { site } from '../lib/site.ts';
+
+interface Props {
+  publications: Publication[];
+  /** Curated notes keyed by DOI. */
+  notes?: Record<string, string>;
+}
+const { publications, notes = {} } = Astro.props;
+---
+<ol class="pubs">
+  {publications.map((publication) => {
+    const { shown, truncated } = formatAuthors(publication.authors, { max: 6, emphasise: site.name });
+    const note = publication.doi ? notes[publication.doi] : undefined;
+    return (
+      <li class="pub">
+        <div class="pub__title">
+          {publication.url
+            ? <a href={publication.url} rel="noopener">{publication.title}</a>
+            : publication.title}
+        </div>
+        {shown.length > 0 && (
+          <p class="pub__authors">
+            {shown.map((author, index) => (
+              <>
+                {index > 0 && ', '}
+                {author === site.name ? <em>{author}</em> : author}
+              </>
+            ))}
+            {truncated && ' et al.'}
+          </p>
+        )}
+        <p class="pub__meta">
+          {publication.journal ?? 'Preprint'}
+          {publication.year && ` · ${publication.year}`}
+          {publication.isPreprint && <> · <span class="tag">Preprint</span></>}
+        </p>
+        {note && <p class="small">{note}</p>}
+      </li>
+    );
+  })}
+</ol>

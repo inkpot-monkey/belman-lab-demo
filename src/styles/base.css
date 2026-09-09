@@ -1,0 +1,251 @@
+/* Layer order is declared once so later rules never depend on source position. */
+@layer reset, base, layout, components, utilities;
+
+@layer reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  body, h1, h2, h3, h4, p, figure, blockquote, dl, dd, ul, ol { margin: 0; }
+  ul[class], ol[class] { list-style: none; padding: 0; }
+  /*
+    `block-size: auto` is load-bearing: without it an <img> with width/height
+    attributes keeps the attribute height even when CSS constrains its width,
+    so `aspect-ratio` is silently ignored and the image is distorted.
+  */
+  img, picture, svg { max-inline-size: 100%; block-size: auto; display: block; }
+  input, button, textarea, select { font: inherit; color: inherit; }
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: var(--step-0);
+    line-height: 1.6;
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  h1, h2, h3, h4 {
+    color: var(--color-heading);
+    font-family: var(--font-display);
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  h1 { font-size: var(--step-4); }
+  h2 { font-size: var(--step-2); margin-block-start: var(--space-l); }
+  h3 { font-size: var(--step-1); margin-block-start: var(--space-m); }
+
+  a { color: var(--color-accent); text-underline-offset: 0.15em; }
+  a:hover { text-decoration-thickness: 2px; }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--radius);
+  }
+
+  code, pre { font-family: var(--font-mono); font-size: var(--step--1); }
+
+  hr {
+    border: 0;
+    border-block-start: var(--rule) solid var(--color-border);
+    margin-block: var(--space-l);
+  }
+}
+
+@layer layout {
+  .shell {
+    display: grid;
+    gap: var(--space-xl);
+    grid-template-columns: minmax(0, 1fr);
+    margin-inline: auto;
+    max-inline-size: 78rem;
+    padding: var(--space-l) var(--space-m);
+  }
+
+  /* Sidebar themes place identity beside the content on wide screens. */
+  @media (min-width: 60rem) {
+    :root[data-theme='a'] .shell,
+    :root[data-theme='c'] .shell {
+      grid-template-columns: 16rem minmax(0, 1fr);
+      align-items: start;
+    }
+    :root[data-theme='a'] .identity,
+    :root[data-theme='c'] .identity {
+      position: sticky;
+      inset-block-start: var(--space-l);
+    }
+  }
+
+  .flow > * + * { margin-block-start: var(--space-s); }
+  .flow h2 + *, .flow h3 + * { margin-block-start: var(--space-2xs); }
+
+  /*
+    The measure constrains prose, not the column. Applying it to the container
+    would also squeeze the team grid, the gallery and the card lists, which want
+    the full width available to them.
+  */
+  .prose > :is(p, ul, ol, h1, h2, h3, h4, blockquote, hr) { max-inline-size: var(--measure); }
+  .prose > section > :is(p, h2, h3) { max-inline-size: var(--measure); }
+  .prose :is(ul, ol):not([class]) { padding-inline-start: var(--space-m); }
+  .prose li + li { margin-block-start: var(--space-2xs); }
+}
+
+@layer components {
+  .identity { display: flex; flex-direction: column; gap: var(--space-2xs); }
+  .identity__name { font-size: var(--step-3); margin: 0; }
+  .identity__photo {
+    aspect-ratio: 1;
+    border-radius: var(--radius);
+    inline-size: 100%;
+    max-inline-size: 12rem;
+    object-fit: cover;
+  }
+  :root[data-theme='b'] .identity__photo { border-radius: 50%; }
+
+  /*
+    The top-nav theme has no sidebar, so identity becomes a compact hero band
+    instead of a full-width column that would push the content below the fold.
+  */
+  @media (min-width: 40rem) {
+    :root[data-theme='b'] .identity {
+      display: grid;
+      grid-template-areas: 'photo name' 'photo meta' 'photo social';
+      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-rows: auto auto 1fr;
+      gap: var(--space-3xs) var(--space-m);
+      align-content: start;
+    }
+    :root[data-theme='b'] .identity__name { grid-area: name; align-self: end; }
+    :root[data-theme='b'] .identity__photo { grid-area: photo; max-inline-size: 9rem; align-self: start; }
+    :root[data-theme='b'] .identity__meta { grid-area: meta; }
+    :root[data-theme='b'] .identity .social { grid-area: social; align-self: start; }
+  }
+  .identity__meta { color: var(--color-muted); font-size: var(--step--1); }
+  .identity__meta p { margin: 0; }
+
+  .nav { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-s); }
+  .nav a {
+    color: var(--color-text);
+    padding-block: var(--space-3xs);
+    text-decoration: none;
+    border-block-end: var(--rule) solid transparent;
+  }
+  .nav a:hover { border-block-end-color: var(--color-border); }
+  .nav a[aria-current='page'] {
+    border-block-end-color: var(--color-accent);
+    color: var(--color-heading);
+    font-weight: 600;
+  }
+
+  /* Top-nav theme puts navigation in a full-width bar above the shell. */
+  .topbar { display: none; border-block-end: var(--rule) solid var(--color-border); }
+  :root[data-theme='b'] .topbar { display: block; }
+  :root[data-theme='b'] .nav--side { display: none; }
+  .topbar__inner {
+    margin-inline: auto;
+    max-inline-size: 78rem;
+    padding: var(--space-s) var(--space-m);
+  }
+
+  .social { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-s); font-size: var(--step--1); }
+
+  .people { container-type: inline-size; }
+  .people__grid {
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+    list-style: none;
+    padding: 0;
+  }
+  .person {
+    border: var(--rule) solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    padding: var(--space-s);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+  :root[data-theme='a'] .person { background: none; border: 0; border-block-start: var(--rule) solid var(--color-border); border-radius: 0; }
+  .person__avatar {
+    aspect-ratio: 1;
+    background: var(--color-border);
+    border-radius: var(--radius);
+    display: grid;
+    place-items: center;
+    color: var(--color-muted);
+    font-size: var(--step-2);
+  }
+  :root[data-theme='b'] .person__avatar { border-radius: 50%; }
+  .person__name { font-size: var(--step-0); margin: 0; }
+  .person__rank { color: var(--color-muted); font-size: var(--step--1); }
+
+  /* Publication and event lists are prose, so they respect the measure. */
+  .pubs { display: flex; flex-direction: column; gap: var(--space-m); list-style: none; padding: 0; max-inline-size: var(--measure); }
+  .pub { display: grid; gap: var(--space-3xs); }
+  .pub__title { font-size: var(--step-0); font-weight: 600; }
+  .pub__authors, .pub__meta { color: var(--color-muted); font-size: var(--step--1); }
+  .pub__authors em { color: var(--color-heading); font-style: normal; font-weight: 600; }
+  .tag {
+    background: var(--color-accent);
+    border-radius: var(--radius);
+    color: var(--color-accentText);
+    font-size: var(--step--2);
+    letter-spacing: 0.04em;
+    padding: 0.1em 0.5em;
+    text-transform: uppercase;
+  }
+
+  .cards { display: grid; gap: var(--space-m); grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); list-style: none; padding: 0; }
+  .card {
+    border: var(--rule) solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-s);
+    background: var(--color-surface);
+  }
+
+  .gallery { display: grid; gap: var(--space-s); grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); list-style: none; padding: 0; }
+  .gallery__item {
+    background: var(--color-surface);
+    border: var(--rule) dashed var(--color-border);
+    border-radius: var(--radius);
+    display: grid;
+    place-items: center;
+    color: var(--color-muted);
+    font-size: var(--step--1);
+    padding: var(--space-s);
+    text-align: center;
+  }
+
+  .footer {
+    border-block-start: var(--rule) solid var(--color-border);
+    color: var(--color-muted);
+    font-size: var(--step--1);
+    margin-block-start: var(--space-2xl);
+    padding: var(--space-l) var(--space-m);
+  }
+  .footer__inner { margin-inline: auto; max-inline-size: 78rem; }
+  .footer p { margin: 0; }
+}
+
+@layer utilities {
+  .visually-hidden {
+    clip-path: inset(50%);
+    block-size: 1px;
+    inline-size: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+  }
+  .muted { color: var(--color-muted); }
+  .small { font-size: var(--step--1); }
+  .stack-l > * + * { margin-block-start: var(--space-l); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

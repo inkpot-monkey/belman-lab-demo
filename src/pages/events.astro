@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DemoBanner from '../components/DemoBanner.astro';
+import { formatEventDate, splitByDate, type CalendarEvent } from '../lib/events.ts';
+import fixtures from '../data/fixtures/events.json' with { type: 'json' };
+
+// Fixtures, not a live calendar. Shaped exactly like @palebluebytes/cms
+// `CalendarEvent[]`, so wiring the real calendar later is a one-line swap for
+// `await fetchEvents({ calendarId, auth })`.
+const events = fixtures as CalendarEvent[];
+const { upcoming, past } = splitByDate(events, new Date());
+---
+<BaseLayout title="Events">
+  <h1>Events</h1>
+  <DemoBanner what="These are fixtures shaped like a real Google Calendar feed, not a real calendar." />
+
+  <section>
+    <h2>Upcoming</h2>
+    {upcoming.length === 0
+      ? <p class="muted">Nothing scheduled.</p>
+      : (
+        <ul class="pubs">
+          {upcoming.map((event) => (
+            <li class="pub">
+              <div class="pub__title">{event.summary ?? 'Untitled event'}</div>
+              <p class="pub__meta">{formatEventDate(event)}{event.location && ` · ${event.location}`}</p>
+              {event.description && <p class="small">{event.description}</p>}
+            </li>
+          ))}
+        </ul>
+      )}
+  </section>
+
+  {past.length > 0 && (
+    <section>
+      <h2>Past</h2>
+      <ul class="pubs">
+        {past.map((event) => (
+          <li class="pub">
+            <div class="pub__title">{event.summary ?? 'Untitled event'}</div>
+            <p class="pub__meta">{formatEventDate(event)}{event.location && ` · ${event.location}`}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</BaseLayout>

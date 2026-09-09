@@ -1,0 +1,91 @@
+---
+import { getCollection } from 'astro:content';
+import Tokens from '../components/Tokens.astro';
+import Identity from '../components/Identity.astro';
+import ThemeSwitcher from '../components/ThemeSwitcher.astro';
+import { site } from '../lib/site.ts';
+import { COLLECTION_NAV, url, isCurrent, type NavItem } from '../lib/nav.ts';
+import { DEFAULT_THEME, THEMES } from '../lib/themes.ts';
+import '../styles/base.css';
+import '../styles/demo.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description } = Astro.props;
+
+const pages = await getCollection('pages');
+const pageNav: NavItem[] = pages
+  .filter((page) => page.data.showInNav as boolean)
+  .map((page) => ({
+    label: page.data.title as string,
+    href: page.id === 'home' ? '/' : `/${page.id}`,
+    order: page.data.order as number,
+  }));
+
+const nav = [...pageNav, ...COLLECTION_NAV].sort((a, b) => a.order - b.order);
+const pathname = Astro.url.pathname;
+const themeIds = THEMES.map((theme) => theme.id);
+---
+<html lang="en" data-theme={DEFAULT_THEME}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} | {site.name}</title>
+    {description && <meta name="description" content={description} />}
+    <Tokens />
+    <!-- Applied before first paint so switching themes never flashes. -->
+    <script is:inline define:vars={{ themeIds, fallback: DEFAULT_THEME }}>
+      try {
+        const stored = localStorage.getItem('demo-theme');
+        document.documentElement.dataset.theme = themeIds.includes(stored) ? stored : fallback;
+      } catch {
+        document.documentElement.dataset.theme = fallback;
+      }
+    </script>
+  </head>
+  <body>
+    <p class="demo-banner">
+      <strong>Design preview</strong> — three candidate designs over real content.
+      People, news, projects, events and gallery entries are placeholders.
+    </p>
+
+    <header class="topbar">
+      <div class="topbar__inner">
+        <nav class="nav" aria-label="Primary">
+          {nav.map((item) => (
+            <a href={url(item.href)} aria-current={isCurrent(item.href, pathname) ? 'page' : undefined}>{item.label}</a>
+          ))}
+        </nav>
+      </div>
+    </header>
+
+    <div class="shell">
+      <aside class="identity-column stack-l">
+        <Identity />
+        <nav class="nav nav--side" aria-label="Primary" style="flex-direction: column;">
+          {nav.map((item) => (
+            <a href={url(item.href)} aria-current={isCurrent(item.href, pathname) ? 'page' : undefined}>{item.label}</a>
+          ))}
+        </nav>
+      </aside>
+
+      <main class="flow prose">
+        <slot />
+      </main>
+    </div>
+
+    <footer class="footer">
+      <div class="footer__inner">
+        <p>&copy; {new Date().getFullYear()} {site.name}</p>
+        <p>{site.email}</p>
+        <p>{site.jobTitle} | {site.department}</p>
+        {site.office && <p>{site.office}</p>}
+        {site.address && <p>{site.address}</p>}
+      </div>
+    </footer>
+
+    <ThemeSwitcher />
+  </body>
+</html>

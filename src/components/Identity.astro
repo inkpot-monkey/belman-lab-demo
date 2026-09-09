@@ -1,0 +1,18 @@
+---
+import { site } from '../lib/site.ts';
+---
+<div class="identity">
+  <h1 class="identity__name">{site.name}</h1>
+  <img class="identity__photo" src={site.photo} alt="" width="400" height="400" />
+  <div class="identity__meta">
+    <p>{site.discipline}</p>
+    <p>{site.jobTitle}</p>
+    <p>{site.department}</p>
+    <p>{site.institution}</p>
+  </div>
+  <div class="social">
+    <a href={`https://orcid.org/${site.orcid}`} rel="noopener">ORCID</a>
+    {site.github && <a href={`https://github.com/${site.github}`} rel="noopener">GitHub</a>}
+    {site.scholar && <a href={`https://scholar.google.com/citations?user=${site.scholar}`} rel="noopener">Scholar</a>}
+  </div>
+</div>

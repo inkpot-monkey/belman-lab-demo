@@ -1,0 +1,68 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PublicationList from '../components/PublicationList.astro';
+import { normalisePublications, type Snapshot } from '../lib/orcid.ts';
+import snapshot from '../data/orcid-snapshot.json' with { type: 'json' };
+
+const { publications, syncedAt } = normalisePublications(snapshot as Snapshot);
+
+const highlightEntries = (await getCollection('highlights')).sort(
+  (a, b) => (a.data.order as number) - (b.data.order as number),
+);
+const notes = Object.fromEntries(
+  highlightEntries.flatMap((entry) =>
+    entry.data.note ? [[entry.data.doi as string, entry.data.note as string]] : [],
+  ),
+);
+const highlightDois = highlightEntries.map((entry) => entry.data.doi as string);
+
+const byDoi = new Map(publications.flatMap((p) => (p.doi ? [[p.doi, p]] : [])));
+const highlights = highlightDois.flatMap((doi) => byDoi.get(doi) ?? []);
+const missingHighlights = highlightDois.filter((doi) => !byDoi.has(doi));
+
+// A preprint whose published version is also on the record is the same work
+// twice; show it under a separate heading rather than in the main list.
+const current = publications.filter((p) => p.supersededBy === null);
+const superseded = publications.filter((p) => p.supersededBy !== null);
+
+const synced = new Date(syncedAt).toLocaleDateString('en-GB', {
+  day: 'numeric', month: 'long', year: 'numeric',
+});
+---
+<BaseLayout title="Publications" description="Publications, synchronised from ORCID.">
+  <h1>Publications</h1>
+
+  <p class="muted small">
+    Synchronised from <a href="https://orcid.org/0000-0002-9778-7174" rel="noopener">ORCID</a> on {synced}.
+    Anything missing here is missing from the ORCID record.
+  </p>
+
+  {missingHighlights.length > 0 && (
+    <p class="demo-note">
+      <strong>{missingHighlights.length} highlighted {missingHighlights.length === 1 ? 'DOI is' : 'DOIs are'} not on the ORCID record</strong>
+      {' '}({missingHighlights.join(', ')}), so {missingHighlights.length === 1 ? 'it cannot' : 'they cannot'} be shown.
+      Adding {missingHighlights.length === 1 ? 'it' : 'them'} to ORCID will fix this.
+    </p>
+  )}
+
+  {highlights.length > 0 && (
+    <section>
+      <h2>Selected publications</h2>
+      <PublicationList publications={highlights} notes={notes} />
+    </section>
+  )}
+
+  <section>
+    <h2>All publications</h2>
+    <PublicationList publications={current} />
+  </section>
+
+  {superseded.length > 0 && (
+    <section>
+      <h2>Preprints with a published version</h2>
+      <p class="muted small">These appear on the ORCID record alongside the journal article of the same work.</p>
+      <PublicationList publications={superseded} />
+    </section>
+  )}
+</BaseLayout>

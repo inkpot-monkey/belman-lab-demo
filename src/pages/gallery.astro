@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DemoBanner from '../components/DemoBanner.astro';
+import fixtures from '../data/fixtures/gallery.json' with { type: 'json' };
+
+interface Photo {
+  id: string;
+  name: string;
+  caption: string;
+  description: string;
+  width: number | null;
+  height: number | null;
+  ratio: number;
+  url?: string;
+}
+
+// Fixtures shaped like @palebluebytes/cms `Photo[]`.
+//
+// When this is wired to a real Drive folder, remember the documented trap: an
+// unshared folder answers 200 with an empty file list, which is
+// indistinguishable from an empty folder. Check for emptiness explicitly rather
+// than rendering a silently blank gallery.
+const photos = fixtures as Photo[];
+---
+<BaseLayout title="Gallery">
+  <h1>Gallery</h1>
+  <DemoBanner what="These are fixtures shaped like a real Google Drive folder, not real lab photos." />
+
+  {photos.length === 0 ? (
+    <p class="demo-note">
+      <strong>No photos returned.</strong> If this is unexpected, check the Drive folder is still
+      shared — an unshared folder returns an empty list rather than an error.
+    </p>
+  ) : (
+    <ul class="gallery">
+      {photos.map((photo) => (
+        <li>
+          {photo.url
+            ? <img src={photo.url} alt={photo.caption} width={photo.width ?? undefined} height={photo.height ?? undefined} loading="lazy" />
+            : (
+              <div class="gallery__item" style={`aspect-ratio: ${photo.ratio};`}>
+                <span>{photo.caption}<br /><span class="small">{photo.width}×{photo.height}</span></span>
+              </div>
+            )}
+        </li>
+      ))}
+    </ul>
+  )}
+</BaseLayout>

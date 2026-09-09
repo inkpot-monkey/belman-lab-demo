@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { PERSON_RANKS } from '../../schema/collections.ts';
+import { url } from '../../lib/nav.ts';
+
+const people = await getCollection('people');
+
+// Group by rank in the order ranks are declared, so seniority drives the page
+// rather than alphabetical accident.
+const groups = PERSON_RANKS.map((rank) => ({
+  rank,
+  members: people
+    .filter((person) => person.data.rank === rank)
+    .sort((a, b) => (a.data.order as number) - (b.data.order as number)),
+})).filter((group) => group.members.length > 0);
+
+const initials = (name: string) =>
+  name.split(/\s+/).slice(0, 2).map((part) => part[0] ?? '').join('');
+---
+<BaseLayout title="Team" description="People in the Belman Lab.">
+  <h1>Team</h1>
+  <p class="demo-note">
+    <strong>Demo content.</strong> Every entry except Sophie is a placeholder, shown so the
+    team layout can be judged at realistic size. None of them are real people.
+  </p>
+
+  {groups.map((group) => (
+    <section class="people">
+      <h2>{group.rank}</h2>
+      <ul class="people__grid">
+        {group.members.map((person) => (
+          <li class="person">
+            {person.data.photo
+              ? <img class="person__avatar" src={person.data.photo as string} alt="" width="300" height="300" />
+              : <div class="person__avatar" aria-hidden="true">{initials(person.data.name as string)}</div>}
+            <h3 class="person__name">
+              <a href={url(`/team/${person.id}`)}>{person.data.name}</a>
+            </h3>
+            <p class="person__rank">{person.data.rank}</p>
+            {person.data.placeholder && <p class="person__rank">Placeholder entry</p>}
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</BaseLayout>

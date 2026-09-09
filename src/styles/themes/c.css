@@ -143,7 +143,18 @@
   }
   :root[data-theme='c'] .page > main { margin-block-start: var(--space-s); }
 
-  @media (min-width: 58rem) {
+  /*
+    48rem, where Record's module waits until 62.
+
+    Both designs stack to identity, then menu, then prose below their own
+    breakpoint, and between 48 and 62rem that was the only shape either had -
+    so on a tablet the two were separated by type and colour alone and the
+    layout axis the brief gave them stopped doing any work. This design is the
+    one that can afford the earlier line: its rail is 11rem against Record's
+    14, its scale is the narrowest of the three, and its panel is already a
+    band across the top at this width.
+  */
+  @media (min-width: 48rem) {
     /*
       `auto 1fr`: the content column spans the second row on its own, and the
       menu sits at the top of it. Two auto rows would share the content's
@@ -197,7 +208,7 @@
     }
   }
 
-  @media (min-width: 58rem) {
+  @media (min-width: 48rem) {
     /*
       The plate sits in the same column the menu sits in below it, at the same
       width and the same gutter, so the panel's text and the page's content
@@ -352,7 +363,7 @@
     text-decoration: underline;
   }
 
-  @media (min-width: 58rem) {
+  @media (min-width: 48rem) {
     /* In the rail the menu is a ruled index, tightened past thumb size. */
     :root[data-theme='c'] .site-nav { border-block-end: 0; }
     :root[data-theme='c'] .nav a {

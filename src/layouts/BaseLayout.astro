@@ -12,8 +12,10 @@ import '../styles/demo.css';
 interface Props {
   title: string;
   description?: string;
+  /** Keeps internal-facing pages out of search results. */
+  noindex?: boolean;
 }
-const { title, description } = Astro.props;
+const { title, description, noindex } = Astro.props;
 
 const pages = await getCollection('pages');
 const pageNav: NavItem[] = pages
@@ -34,6 +36,7 @@ const themeIds = THEMES.map((theme) => theme.id);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title} | {site.name}</title>
     {description && <meta name="description" content={description} />}
+    {noindex && <meta name="robots" content="noindex" />}
     <Tokens />
     <!-- Applied before first paint so switching themes never flashes. -->
     <script is:inline define:vars={{ themeIds, fallback: DEFAULT_THEME }}>

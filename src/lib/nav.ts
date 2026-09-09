@@ -14,6 +14,7 @@ export const COLLECTION_NAV: NavItem[] = [
   { label: 'News', href: '/news', order: 6, demo: true },
   { label: 'Events', href: '/events', order: 7, demo: true },
   { label: 'Gallery', href: '/gallery', order: 8, demo: true },
+  { label: 'How this works', href: '/how-this-works', order: 10 },
 ];
 
 export { url, isCurrent } from './paths.ts';

@@ -1,0 +1,310 @@
+---
+// NOTE: Astro strips the whitespace before an inline element or expression that
+// starts a line, so `word\n<b>text</b>` renders as `wordtext`. Keep inline tags
+// on the same line as the word before them; test/astro-whitespace.test.ts
+// enforces it.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../lib/site.ts';
+import { url } from '../lib/paths.ts';
+import { PERSON_RANKS } from '../schema/collections.ts';
+import { normalisePublications, stillMissing, type Snapshot, type MissingWork } from '../lib/orcid.ts';
+import snapshot from '../data/orcid-snapshot.json' with { type: 'json' };
+import claimedMissing from '../data/orcid-missing.json' with { type: 'json' };
+
+// The numbers on this page are read from the same data the site renders, so it
+// cannot drift into describing a version of the site that no longer exists.
+const { publications, syncedAt } = normalisePublications(snapshot as Snapshot);
+const missing = stillMissing(publications, claimedMissing as MissingWork[]);
+const synced = new Date(syncedAt).toLocaleDateString('en-GB', {
+  day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
+});
+
+const sections = [
+  ['changing-things', 'Changing things'],
+  ['publishing', 'Why a change takes a minute'],
+  ['publications', 'Publications, and the ORCID list'],
+  ['team', 'The team page'],
+  ['events-photos', 'Events and photos'],
+  ['not-real', "What isn't real yet"],
+  ['designs', 'The design switcher'],
+  ['signing-in', 'Signing in'],
+  ['moving', 'If this ever has to move'],
+];
+---
+<BaseLayout
+  title="How this works"
+  description="How the site is put together, and what to do when something looks wrong."
+  noindex
+>
+  <article class="manual">
+    <h1>How this site works</h1>
+
+    <p class="lede">
+      This page is for you rather than for visitors. It covers where the words on
+      this site actually live, why the publication list behaves the way it does,
+      and what to do when something looks wrong.
+    </p>
+
+    <nav class="toc" aria-labelledby="toc-heading">
+      <h2 id="toc-heading">On this page</h2>
+      <ol>
+        {sections.map(([id, label]) => <li><a href={`#${id}`}>{label}</a></li>)}
+      </ol>
+    </nav>
+
+    <section id="changing-things">
+      <h2>Changing things</h2>
+
+      <p>
+        Everything you can edit lives at <a href={url('/admin/')}><code>/admin</code></a>.
+        You sign in, pick the thing you want to change, type into a form, and save.
+        There is no separate copy of the site kept anywhere else, and nothing you
+        change here can break the layout.
+      </p>
+
+      <dl>
+        <dt>Pages</dt>
+        <dd>The body text of Home, Research, and Join us.</dd>
+
+        <dt>People</dt>
+        <dd>
+          One entry per person. Adding someone to the lab means adding an entry;
+          nothing else needs touching.
+        </dd>
+
+        <dt>Site details</dt>
+        <dd>
+          Your name, job title, department, email, and the footer. There is exactly
+          one copy of each of these, used everywhere it appears.
+        </dd>
+
+        <dt>Highlighted publications</dt>
+        <dd>
+          The short list at the top of the Publications page. You give it a DOI and
+          a sentence about why the paper matters.
+        </dd>
+
+        <dt>News and Projects</dt>
+        <dd>A post or a project per entry, in whatever order you set.</dd>
+      </dl>
+
+      <aside class="note">
+        <p>
+          Your old site kept its own copy of your job title on every page, and the
+          three copies had drifted apart — two said “Infectious Disease
+          Epidemiologist” and the third had lost it. That can’t happen now, because
+          there is only one copy to change.
+        </p>
+      </aside>
+    </section>
+
+    <section id="publishing">
+      <h2>Why a change takes a minute</h2>
+
+      <p>
+        Saving doesn’t edit a live page. It records your change, and the whole site
+        is then rebuilt and republished from scratch. That normally takes one to
+        three minutes, so if you save and immediately reload, you’ll still see the
+        old version. Wait a couple of minutes and reload again.
+      </p>
+
+      <p>
+        If you’re working through several pages at once, use <b>Save without
+        publishing</b> on each one and then press <b>Publish changes</b> when you’re
+        done. The site rebuilds once instead of after every save.
+      </p>
+    </section>
+
+    <section id="publications">
+      <h2>Publications, and the ORCID list</h2>
+
+      <p>
+        Your publications aren’t typed into this site. They’re copied from
+        your <a href={`https://orcid.org/${site.orcid}`} rel="noopener">ORCID
+        record</a>, which means you maintain one list, in the place you already
+        maintain it for grants and your institution, and the site follows.
+      </p>
+
+      <p>
+        The copy is deliberate rather than live. It was last taken
+        on <time datetime={syncedAt}>{synced}</time>, and that date is printed at
+        the top of the Publications page so you can always tell how current it is. A
+        live fetch would mean the site quietly changing whenever ORCID did, and
+        breaking whenever ORCID was down.
+      </p>
+
+      <h3>Why some of your papers are missing</h3>
+
+      <p>
+        Because the list is copied from ORCID, <b>anything not on ORCID is not on
+        this site.</b> Right now {missing.length} of your publications aren’t on your
+        ORCID record, including your <cite>Lancet Microbe</cite> paper. Your ORCID
+        record has been filling itself in automatically from Crossref, and Crossref
+        doesn’t know about everything you’ve written.
+      </p>
+
+      <p>
+        So the Publications page lists them explicitly. That block isn’t an error —
+        it’s a to-do list:
+      </p>
+
+      <ol>
+        <li>Go to <a href="https://orcid.org/my-works" rel="noopener">orcid.org</a> and sign in.</li>
+        <li>Add the works named in that list.</li>
+        <li>Tell whoever maintains the site, so the copy gets re-taken.</li>
+      </ol>
+
+      <p>
+        Each paper disappears from the to-do list as soon as it appears on ORCID.
+        The list checks itself against your record every time the site is rebuilt,
+        so it can’t end up nagging you about something you’ve already fixed.
+      </p>
+
+      <h3>Two other things the page does on its own</h3>
+
+      <p>
+        Your name is picked out in bold in every author list, wherever you appear in
+        it. And where your record holds both a preprint and the published version of
+        the same work, the preprint is moved to its own section at the bottom rather
+        than appearing twice in the main list.
+      </p>
+
+      <details>
+        <summary>Why not Google Scholar?</summary>
+        <p>
+          Scholar has no official way for a website to read from it, so anything
+          that reads Scholar is scraping the page and will break without warning
+          when Google changes it. Your old publications page was built that way,
+          which is why none of its entries had authors. ORCID publishes a proper,
+          documented feed, and you control what’s in it.
+        </p>
+      </details>
+    </section>
+
+    <section id="team">
+      <h2>The team page</h2>
+
+      <p>
+        Each person is an entry with a name, a position, and an order. The page
+        groups people by position and lists the groups in seniority
+        order — {PERSON_RANKS.slice(0, 3).join(', ')}, and so on down
+        to {PERSON_RANKS.at(-1)!.toLowerCase()}. Within a group, the order number
+        decides who comes first; lower numbers come first.
+      </p>
+
+      <p>
+        A group with nobody in it doesn’t appear at all, so there’s no need to
+        delete the empty ones. Everyone gets their own page automatically, with
+        whatever biography and links you give them. A person without a photo shows
+        their initials instead, which is fine and looks deliberate.
+      </p>
+    </section>
+
+    <section id="events-photos">
+      <h2>Events and photos</h2>
+
+      <p>
+        These two aren’t connected to anything yet. When they are, they’ll work
+        differently from everything else on this page: instead of being typed into
+        the CMS, <b>Events</b> will read a Google Calendar and <b>Gallery</b> will
+        read a shared Google Drive folder.
+      </p>
+
+      <p>
+        The point is that you already live in Google Calendar, and asking you to
+        re-enter a seminar into a second system is a battle nobody wins. Anyone in
+        the lab will be able to drop photos into the Drive folder without needing a
+        CMS login at all.
+      </p>
+
+      <aside class="note">
+        <p>
+          One thing to know in advance: if that Drive folder ever stops being
+          shared, Google reports it as an empty folder rather than as an error. The
+          gallery is built to say so plainly instead of showing an empty page.
+        </p>
+      </aside>
+    </section>
+
+    <section id="not-real">
+      <h2>What isn’t real yet</h2>
+
+      <p>
+        This is a demonstration, so some of it is filled with stand-in content to
+        show how the layouts behave at realistic size.
+      </p>
+
+      <table>
+        <caption>Where the content on each page comes from</caption>
+        <thead>
+          <tr><th scope="col">Page</th><th scope="col">Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Home, Research</th><td>Your real text, carried over</td></tr>
+          <tr><th scope="row">Publications</th><td>Your real ORCID record</td></tr>
+          <tr><th scope="row">Site details, footer</th><td>Real</td></tr>
+          <tr><th scope="row">Team</th><td>You are real; everyone else is a placeholder</td></tr>
+          <tr><th scope="row">News, Projects</th><td>Placeholder</td></tr>
+          <tr><th scope="row">Events, Gallery</th><td>Placeholder, not yet connected</td></tr>
+          <tr><th scope="row">Join us</th><td>An empty outline waiting for your words</td></tr>
+        </tbody>
+      </table>
+
+      <p>
+        The placeholder people are named things like “PhD Student Name” on purpose.
+        Inventing plausible-looking researchers and putting them on a real
+        academic’s website is a bad idea even temporarily.
+      </p>
+    </section>
+
+    <section id="designs">
+      <h2>The design switcher</h2>
+
+      <p>
+        The panel in the corner swaps between three designs. All three show the same
+        content and the same pages — only the design changes — so you can judge them
+        against your own words rather than against a mock-up.
+      </p>
+
+      <p>
+        It’s temporary. Once you’ve chosen, the other two designs and the switcher
+        itself get deleted, along with the banner at the top of every page.
+      </p>
+    </section>
+
+    <section id="signing-in">
+      <h2>Signing in</h2>
+
+      <p>
+        The CMS asks for a GitHub access token, which is a long password GitHub
+        generates for you. It’s stored only in your browser. It expires — once a
+        year at most — and when it does, the CMS simply says you’re signed out.
+        Nothing is lost.
+      </p>
+
+      <p>
+        The instructions for getting a new one are printed at the bottom of
+        the <a href={url('/admin/')}>sign-in page</a> itself, because the moment
+        you need them is the moment you can’t get in.
+      </p>
+    </section>
+
+    <section id="moving">
+      <h2>If this ever has to move</h2>
+
+      <p>
+        Everything is stored as ordinary text files in one place, and the published
+        site is a folder of plain web pages with no software running behind it.
+        There’s no company holding your content and no subscription to keep paying.
+      </p>
+
+      <p>
+        If the site ever needs to move somewhere else — a university server, a
+        different host, whatever exists in ten years — the words, the photos and the
+        publication list come with it unchanged. That was a deliberate choice, and
+        it’s the reason a few things here are slightly more awkward than they’d be
+        otherwise. The access token is the main one.
+      </p>
+    </section>
+  </article>
+</BaseLayout>

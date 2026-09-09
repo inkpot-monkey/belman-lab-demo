@@ -29,6 +29,13 @@ describe('the admin page template', () => {
     expect(guide).toMatch(/Read and write/);
   });
 
+  it('collapses to a single button rather than a bar across the editing form', () => {
+    // The first version was pinned across the bottom and covered the fields.
+    expect(template).toContain('class="help__toggle"');
+    expect(template).toMatch(/\.help__panel\s*\{[^}]*position:\s*absolute/);
+    expect(template).not.toMatch(/\.help\s*\{[^}]*inset-inline:\s*0/);
+  });
+
   it('templates the repository rather than naming one, so it cannot drift from config.yml', () => {
     expect(template).toContain('{{REPO}}');
     expect(template).toContain('{{REPO_NAME}}');
@@ -37,10 +44,10 @@ describe('the admin page template', () => {
 });
 
 describe('the admin page links to the manual', () => {
-  it('offers it outside the collapsed guide, so it is visible without opening anything', () => {
-    const links = template.slice(template.indexOf('help__links'));
-    expect(links).toContain('{{MANUAL_URL}}');
-    expect(links).toMatch(/How this site works/);
+  it('offers it inside the help panel', () => {
+    const panel = template.slice(template.indexOf('help__panel'));
+    expect(panel).toContain('{{MANUAL_URL}}');
+    expect(panel).toMatch(/How this site works/);
   });
 
   it('templates the URL rather than using a relative path', () => {

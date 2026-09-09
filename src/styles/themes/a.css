@@ -64,7 +64,7 @@
   }
 
   :root[data-theme='a'] hr {
-    border-block-start: 2px solid var(--color-heading);
+    border-block-start: var(--rule-strong) solid var(--color-heading);
   }
 }
 
@@ -176,7 +176,7 @@
     set as the smaller thing they are. The rule closes the strapline unit.
   */
   :root[data-theme='a'] .identity__meta p:first-child {
-    border-block-end: 2px solid var(--color-heading);
+    border-block-end: var(--rule-strong) solid var(--color-heading);
     color: var(--color-text);
     font-size: var(--step-0);
     font-weight: 500;
@@ -217,7 +217,7 @@
       is still the name and the discipline rather than a face.
     */
     :root[data-theme='a'] .page:has(h1.identity__name) .identity {
-      border-block-end: 3px solid var(--color-heading);
+      border-block-end: var(--rule-heavy) solid var(--color-heading);
       column-gap: var(--space-xl);
       display: grid;
       grid-template-areas:
@@ -267,7 +267,7 @@
     */
     :root[data-theme='a'] .nav a {
       border-block-end: 0;
-      border-inline-start: 3px solid transparent;
+      border-inline-start: var(--rule-heavy) solid transparent;
       padding-block: var(--space-3xs);
       padding-inline-start: var(--space-2xs);
     }
@@ -285,14 +285,14 @@
     funding strip, the in-page index — bring their own rule and are left alone.
   */
   :root[data-theme='a'] :is(main, .manual) > h1 {
-    border-block-end: 3px solid var(--color-heading);
+    border-block-end: var(--rule-heavy) solid var(--color-heading);
     max-inline-size: none;
     padding-block-end: var(--space-2xs);
   }
   :root[data-theme='a'] :is(main, .manual) > section + section { margin-block-start: 0; }
   :root[data-theme='a'] :is(main, .manual) > section > h2:not([class]),
   :root[data-theme='a'] :is(main, .manual) > h2:not([class]) {
-    border-block-start: 2px solid var(--color-heading);
+    border-block-start: var(--rule-strong) solid var(--color-heading);
     max-inline-size: none;
     margin-block-start: var(--space-l);
     padding-block-start: var(--space-2xs);
@@ -301,7 +301,7 @@
   /* ---- The in-page index ----------------------------------------------- */
 
   :root[data-theme='a'] .section-index__heading {
-    border-block-end: 2px solid var(--color-heading);
+    border-block-end: var(--rule-strong) solid var(--color-heading);
     font-size: var(--step--1);
     letter-spacing: 0.12em;
     margin: 0;
@@ -358,7 +358,7 @@
   /* ---- Publications: years railed down the margin ---------------------- */
 
   :root[data-theme='a'] .pubs {
-    border-block-start: 2px solid var(--color-heading);
+    border-block-start: var(--rule-strong) solid var(--color-heading);
     gap: 0;
     max-inline-size: none;
   }
@@ -439,7 +439,7 @@
 
   /* Alumni, folded away. The summary is a control, so it is sized like one. */
   :root[data-theme='a'] .people__summary {
-    border-block-start: 2px solid var(--color-heading);
+    border-block-start: var(--rule-strong) solid var(--color-heading);
     color: var(--color-heading);
     cursor: pointer;
     font-size: var(--step--1);
@@ -455,14 +455,14 @@
   :root[data-theme='a'] .card {
     background: none;
     border: 0;
-    border-block-start: 2px solid var(--color-heading);
+    border-block-start: var(--rule-strong) solid var(--color-heading);
     padding: var(--space-2xs) 0 0;
   }
 
   /* ---- Funding --------------------------------------------------------- */
 
   :root[data-theme='a'] .funders {
-    border-block-start: 2px solid var(--color-heading);
+    border-block-start: var(--rule-strong) solid var(--color-heading);
     margin-block-start: var(--space-2xl);
     padding-block-start: var(--space-2xs);
   }
@@ -502,7 +502,7 @@
   /* The manual's index is the same device as the rail, so it is set the same. */
   :root[data-theme='a'] .toc {
     background: none;
-    border-block: 2px solid var(--color-heading);
+    border-block: var(--rule-strong) solid var(--color-heading);
     border-inline-start: 0;
     padding-inline: 0;
   }
@@ -519,7 +519,7 @@
     keep the shared default until their own runs look at it.
   */
   :root[data-theme='a'] .footer {
-    border-block-start: 2px solid var(--color-heading);
+    border-block-start: var(--rule-strong) solid var(--color-heading);
     margin-block-start: var(--space-2xl);
     padding-inline: 0;
   }

@@ -26,6 +26,8 @@ const blocks = THEMES.map((theme) => {
     'font-mono': theme.fonts.mono ?? FONT_STACKS.mono,
     radius: theme.shape.radius,
     rule: theme.shape.rule,
+    'rule-strong': theme.shape.ruleStrong,
+    'rule-heavy': theme.shape.ruleHeavy,
     measure: theme.shape.measure,
     ...Object.fromEntries(
       Object.entries(theme.colors).map(([name, value]) => [`color-${name}`, value]),

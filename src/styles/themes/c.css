@@ -670,7 +670,11 @@
   :root[data-theme='c'] .toc li { border-block-end: 1px solid var(--color-hairline); }
   :root[data-theme='c'] .toc li a { display: inline-block; padding-block: var(--space-2xs); }
 
-  :root[data-theme='c'] .note { border-inline-start: 1px solid var(--color-accent); }
+  /*
+    No `.note` override any more. The shared marker bar is `--rule-heavy`, and
+    this design declares all three rule weights as the same hairline, so it
+    already arrives at 1px.
+  */
 
   :root[data-theme='c'] .manual details {
     border: 0;

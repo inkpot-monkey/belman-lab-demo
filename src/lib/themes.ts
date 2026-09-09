@@ -34,8 +34,18 @@ export interface ThemeSpec {
    * half-exists in the dark is not a design anyone can judge.
    */
   colors: Record<string, string>;
-  /** Non-colour, non-type structural choices. */
-  shape: { radius: string; rule: string; measure: string };
+  /**
+   * Non-colour, non-type structural choices.
+   *
+   * Three rule weights, not one. A design that draws structure with rules
+   * needs to say which rule is which - `rule` divides rows inside a list,
+   * `ruleStrong` opens a section, `ruleHeavy` closes a masthead - and a design
+   * that draws structure some other way sets all three to the same hairline
+   * and says that instead. Written here rather than as literal pixels in the
+   * stylesheets, because a weight repeated twenty times in one file is a
+   * decision nobody can find to change.
+   */
+  shape: { radius: string; rule: string; ruleStrong: string; ruleHeavy: string; measure: string };
   /**
    * The identity statement, written when the direction gets one and surfaced
    * on /how-this-works. Optional because a theme has none until its own run
@@ -120,7 +130,7 @@ export const THEMES: ThemeSpec[] = [
       border: '#c2c2c2',
       grid: '#e4e4e4',
     },
-    shape: { radius: '0', rule: '1px', measure: '60ch' },
+    shape: { radius: '0', rule: '1px', ruleStrong: '2px', ruleHeavy: '3px', measure: '60ch' },
     thesis:
       'The site is a record of the work, not an argument for it. One grotesque, a grid you can see, and colour used only where it carries information.',
     saysAboutYou:
@@ -172,7 +182,7 @@ export const THEMES: ThemeSpec[] = [
      * Record would be a difference nobody asked for: this design separates
      * itself by type, colour and column, not by corners.
      */
-    shape: { radius: '0', rule: '1px', measure: '64ch' },
+    shape: { radius: '0', rule: '1px', ruleStrong: '2px', ruleHeavy: '3px', measure: '64ch' },
     thesis:
       'The site tells the science rather than listing it. A question in display type carries the page, a published figure carries the evidence, and every image says where it came from.',
     saysAboutYou:
@@ -234,7 +244,7 @@ export const THEMES: ThemeSpec[] = [
      * 15 of them, so 70ch fills the column instead of leaving a band of empty
      * width the section rules point into.
      */
-    shape: { radius: '0', rule: '1px', measure: '70ch' },
+    shape: { radius: '0', rule: '1px', ruleStrong: '1px', ruleHeavy: '1px', measure: '70ch' },
     thesis:
       'The site is an instrument the lab keeps, not a brochure about it. Monospace carries every identifier and every identifier is labelled with the field it came from, hairline rules do all the dividing, software and data sit in the menu beside publications, and each page says which file it is written in and which commit built it.',
     saysAboutYou:

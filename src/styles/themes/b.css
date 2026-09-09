@@ -188,7 +188,7 @@
 
   :root[data-theme='b'] .identity {
     /* A printed double rule, which is one border rather than two elements. */
-    border-block-end: 3px double var(--color-heading);
+    border-block-end: var(--rule-heavy) double var(--color-heading);
     gap: var(--space-3xs);
     padding-block-end: var(--space-2xs);
   }
@@ -618,13 +618,13 @@
   :root[data-theme='b'] #selected .pubs { gap: var(--space-l); }
   :root[data-theme='b'] #selected .pub {
     border-block-end: 0;
-    border-block-start: 2px solid var(--color-heading);
+    border-block-start: var(--rule-strong) solid var(--color-heading);
     padding-block: var(--space-s) 0;
   }
   :root[data-theme='b'] #selected .pub__title { font-size: var(--step-2); }
   :root[data-theme='b'] #selected .pub > .small {
     background: var(--color-wash);
-    border-inline-start: 2px solid var(--color-accent);
+    border-inline-start: var(--rule-strong) solid var(--color-accent);
     color: var(--color-heading);
     font-family: var(--font-display);
     font-size: var(--step-0);
@@ -714,7 +714,7 @@
     :root[data-theme='b'] .cards { grid-template-columns: repeat(12, minmax(0, 1fr)); }
     :root[data-theme='b'] .card { grid-column: span 6; }
     :root[data-theme='b'] .card:nth-child(4n + 1) {
-      border-block-start: 2px solid var(--color-heading);
+      border-block-start: var(--rule-strong) solid var(--color-heading);
       grid-column: span 7;
     }
     :root[data-theme='b'] .card:nth-child(4n + 1) h2 { font-size: var(--step-2); }
@@ -800,7 +800,7 @@
   /* ---- Footer: the colophon ---------------------------------------------- */
 
   :root[data-theme='b'] .footer {
-    border-block-start: 3px double var(--color-heading);
+    border-block-start: var(--rule-heavy) double var(--color-heading);
     margin-block-start: var(--space-2xl);
   }
   :root[data-theme='b'] .footer__inner {
@@ -838,7 +838,7 @@
   */
   :root[data-theme='b'] .demo-note {
     border: 0;
-    border-inline-start: 3px solid var(--color-accent);
+    border-inline-start: var(--rule-heavy) solid var(--color-accent);
     color: var(--color-text);
     padding: var(--space-3xs) 0 var(--space-3xs) var(--space-s);
   }

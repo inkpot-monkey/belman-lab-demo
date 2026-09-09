@@ -1,19 +1,48 @@
 import { describe, it, expect } from 'vitest';
-import { repairTitle, formatAuthors, normalisePublications } from '../src/lib/orcid.ts';
-import snapshot from '../src/data/orcid-snapshot.json' with { type: 'json' };
+import {
+  repairTitle,
+  formatAuthors,
+  normalisePublications,
+  stillMissing,
+  type Snapshot,
+  type SnapshotWork,
+} from '../src/lib/orcid.ts';
+import realSnapshot from '../src/data/orcid-snapshot.json' with { type: 'json' };
+
+/**
+ * Behaviour is asserted against literals, not the committed record: running
+ * `pnpm sync:orcid` must never be able to turn this suite red on its own.
+ * The real record is exercised separately, and only for properties that hold
+ * whatever it contains.
+ */
+const work = (over: Partial<SnapshotWork>): SnapshotWork => ({
+  putCode: 1,
+  title: 'A title',
+  type: 'journal-article',
+  year: '2024',
+  journal: 'Journal',
+  doi: '10.0000/a',
+  url: 'https://doi.org/10.0000/a',
+  authors: [],
+  ...over,
+});
+
+const snapshotOf = (works: SnapshotWork[]): Snapshot => ({
+  orcid: '0000-0000-0000-0000',
+  fetchedAt: '2026-09-09T00:00:00.000Z',
+  works,
+});
 
 describe('repairTitle', () => {
   it('restores spaces lost when Crossref strips italic markup', () => {
-    // Real value from the live ORCID record: <i>Streptococcus pneumoniae</i> was
-    // stripped without replacing the surrounding spaces.
     expect(repairTitle('CharacterisingStreptococcus pneumoniaeTransmission Patterns in Malawi')).toBe(
       'Characterising Streptococcus pneumoniae Transmission Patterns in Malawi',
     );
   });
 
   it('leaves acronyms alone', () => {
-    expect(repairTitle('SARS-CoV-2 genomics as a springboard for future disease mitigation in LMICs')).toBe(
-      'SARS-CoV-2 genomics as a springboard for future disease mitigation in LMICs',
+    expect(repairTitle('SARS-CoV-2 genomics for disease mitigation in LMICs')).toBe(
+      'SARS-CoV-2 genomics for disease mitigation in LMICs',
     );
     expect(repairTitle('Genetic background of isolates following PCV13')).toBe(
       'Genetic background of isolates following PCV13',
@@ -36,17 +65,11 @@ describe('repairTitle', () => {
 
 describe('formatAuthors', () => {
   it('lists every author when under the limit', () => {
-    expect(formatAuthors(['A One', 'B Two'], { max: 5 })).toEqual({
-      shown: ['A One', 'B Two'],
-      truncated: false,
-    });
+    expect(formatAuthors(['A One', 'B Two'], { max: 5 })).toEqual({ shown: ['A One', 'B Two'], truncated: false });
   });
 
   it('truncates a long author list', () => {
-    expect(formatAuthors(['A', 'B', 'C', 'D'], { max: 2 })).toEqual({
-      shown: ['A', 'B'],
-      truncated: true,
-    });
+    expect(formatAuthors(['A', 'B', 'C', 'D'], { max: 2 })).toEqual({ shown: ['A', 'B'], truncated: true });
   });
 
   it('always keeps the emphasised author visible, even past the limit', () => {
@@ -69,69 +92,131 @@ describe('formatAuthors', () => {
 });
 
 describe('normalisePublications', () => {
-  const result = normalisePublications(snapshot);
-
   it('carries the sync date through so staleness is visible', () => {
-    expect(result.syncedAt).toBe(snapshot.fetchedAt);
+    expect(normalisePublications(snapshotOf([])).syncedAt).toBe('2026-09-09T00:00:00.000Z');
   });
 
-  it('repairs mangled titles from the real record', () => {
-    const malawi = result.publications.find((p) => p.title.includes('Malawi'));
-    expect(malawi?.title).toBe(
-      'Characterising Streptococcus pneumoniae Transmission Patterns in Malawi Through Genomic and Statistical Modelling',
+  it('repairs mangled titles', () => {
+    const [only] = normalisePublications(
+      snapshotOf([work({ title: 'CharacterisingStreptococcus pneumoniaeTransmission' })]),
+    ).publications;
+    expect(only?.title).toBe('Characterising Streptococcus pneumoniae Transmission');
+  });
+
+  it('sorts newest first, with undated works last', () => {
+    const { publications } = normalisePublications(
+      snapshotOf([
+        work({ putCode: 1, doi: 'a', year: '2021' }),
+        work({ putCode: 2, doi: 'b', year: null }),
+        work({ putCode: 3, doi: 'c', year: '2024' }),
+      ]),
     );
+    expect(publications.map((p) => p.doi)).toEqual(['c', 'a', 'b']);
   });
 
-  it('sorts newest first', () => {
-    const years = result.publications.map((p) => p.year).filter((y): y is number => y !== null);
-    expect(years).toEqual([...years].sort((a, b) => b - a));
-  });
-
-  it('coerces the year to a number', () => {
-    expect(result.publications.every((p) => p.year === null || typeof p.year === 'number')).toBe(true);
+  it('coerces the year to a number and an unparseable year to null', () => {
+    const { publications } = normalisePublications(
+      snapshotOf([work({ doi: 'a', year: '2024' }), work({ doi: 'b', year: 'not a year' })]),
+    );
+    expect(publications.find((p) => p.doi === 'a')?.year).toBe(2024);
+    expect(publications.find((p) => p.doi === 'b')?.year).toBeNull();
   });
 
   it('flags preprints', () => {
-    const nature = result.publications.find((p) => p.journal === 'Nature');
-    expect(nature?.isPreprint).toBe(false);
-    expect(result.publications.some((p) => p.isPreprint)).toBe(true);
+    const { publications } = normalisePublications(
+      snapshotOf([work({ doi: 'a', type: 'journal-article' }), work({ doi: 'b', type: 'preprint' })]),
+    );
+    expect(publications.find((p) => p.doi === 'a')?.isPreprint).toBe(false);
+    expect(publications.find((p) => p.doi === 'b')?.isPreprint).toBe(true);
   });
 
   it('marks a preprint as superseded when a published version shares its title', () => {
-    // The record holds both the 2023 preprint and the 2024 G3 article of
-    // "Estimating between-country migration in pneumococcal populations".
-    const superseded = result.publications.filter((p) => p.supersededBy !== null);
-    expect(superseded).toHaveLength(1);
-    expect(superseded[0]!.isPreprint).toBe(true);
-    expect(superseded[0]!.supersededBy).toBe(
-      result.publications.find((p) => p.journal === 'G3: Genes, Genomes, Genetics')?.id,
+    const { publications } = normalisePublications(
+      snapshotOf([
+        work({ doi: 'preprint', type: 'preprint', title: 'Estimating Between Country Migration', year: '2023' }),
+        work({ doi: 'article', type: 'journal-article', title: 'Estimating between-country migration', year: '2024' }),
+      ]),
     );
+    expect(publications.find((p) => p.doi === 'preprint')?.supersededBy).toBe('article');
+    expect(publications.find((p) => p.doi === 'article')?.supersededBy).toBeNull();
   });
 
-  it('never marks a published article as superseded', () => {
-    expect(result.publications.filter((p) => !p.isPreprint).every((p) => p.supersededBy === null)).toBe(true);
+  it('leaves a preprint with no published counterpart alone', () => {
+    const [only] = normalisePublications(
+      snapshotOf([work({ type: 'preprint', title: 'Only ever a preprint' })]),
+    ).publications;
+    expect(only?.supersededBy).toBeNull();
   });
 
   it('deduplicates repeated DOIs', () => {
-    const doubled = {
-      ...snapshot,
-      works: [...snapshot.works, snapshot.works[0]!],
-    };
-    expect(normalisePublications(doubled).publications).toHaveLength(result.publications.length);
+    const duplicate = work({ doi: '10.0000/same' });
+    expect(normalisePublications(snapshotOf([duplicate, { ...duplicate }])).publications).toHaveLength(1);
   });
 
-  it('gives every publication a stable id', () => {
-    const ids = result.publications.map((p) => p.id);
+  it('falls back to the put-code when there is no DOI', () => {
+    const [only] = normalisePublications(
+      snapshotOf([work({ putCode: 999, doi: null, year: null, authors: [] })]),
+    ).publications;
+    expect(only).toMatchObject({ id: '999', doi: null, year: null, authors: [] });
+  });
+});
+
+describe('stillMissing', () => {
+  const { publications } = normalisePublications(
+    snapshotOf([work({ title: 'A new perspective on ancient Mitis group streptococcal genetics' })]),
+  );
+
+  it('drops a claimed-missing work once it appears on the record', () => {
+    expect(
+      stillMissing(publications, [
+        { title: 'Emergence of a multidrug-resistant lineage', venue: 'The Lancet Microbe', year: 2022 },
+        { title: 'A new perspective on ancient Mitis group streptococcal genetics', venue: 'x', year: 2022 },
+      ]).map((w) => w.venue),
+    ).toEqual(['The Lancet Microbe']);
+  });
+
+  it('matches regardless of case and punctuation', () => {
+    expect(
+      stillMissing(publications, [
+        { title: 'A NEW PERSPECTIVE ON ANCIENT MITIS-GROUP STREPTOCOCCAL GENETICS!', venue: 'x', year: null },
+      ]),
+    ).toEqual([]);
+  });
+
+  it('keeps works that genuinely are not on the record', () => {
+    const absent = [{ title: 'Something never published anywhere', venue: 'x', year: null }];
+    expect(stillMissing(publications, absent)).toEqual(absent);
+  });
+
+  it('returns nothing for an empty claim list', () => {
+    expect(stillMissing(publications, [])).toEqual([]);
+  });
+});
+
+describe('the committed ORCID snapshot', () => {
+  // Only properties that hold whatever the record currently contains, so a
+  // re-sync cannot break the suite.
+  const { publications, syncedAt } = normalisePublications(realSnapshot as Snapshot);
+
+  it('parses without throwing and yields publications', () => {
+    expect(publications.length).toBeGreaterThan(0);
+  });
+
+  it('gives every publication a unique, non-empty id', () => {
+    const ids = publications.map((p) => p.id);
     expect(new Set(ids).size).toBe(ids.length);
     expect(ids.every((id) => id.length > 0)).toBe(true);
   });
 
-  it('survives a work with no DOI, year or authors', () => {
-    const sparse = {
-      ...snapshot,
-      works: [{ putCode: 999, title: 'Untitled work', type: null, year: null, journal: null, doi: null, url: null, authors: [] }],
-    };
-    const [only] = normalisePublications(sparse).publications;
-    expect(only).toMatchObject({ id: '999', year: null, doi: null, authors: [] });
+  it('yields a number or null for every year, never NaN', () => {
+    expect(publications.every((p) => p.year === null || Number.isInteger(p.year))).toBe(true);
+  });
+
+  it('records a parseable sync date', () => {
+    expect(Number.isNaN(new Date(syncedAt).getTime())).toBe(false);
+  });
+
+  it('never marks a published article as superseded', () => {
+    expect(publications.filter((p) => !p.isPreprint).every((p) => p.supersededBy === null)).toBe(true);
   });
 });

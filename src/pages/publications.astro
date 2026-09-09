@@ -2,8 +2,9 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PublicationList from '../components/PublicationList.astro';
-import { normalisePublications, type Snapshot } from '../lib/orcid.ts';
+import { normalisePublications, stillMissing, type Snapshot, type MissingWork } from '../lib/orcid.ts';
 import snapshot from '../data/orcid-snapshot.json' with { type: 'json' };
+import claimedMissing from '../data/orcid-missing.json' with { type: 'json' };
 
 const { publications, syncedAt } = normalisePublications(snapshot as Snapshot);
 
@@ -26,8 +27,12 @@ const missingHighlights = highlightDois.filter((doi) => !byDoi.has(doi));
 const current = publications.filter((p) => p.supersededBy === null);
 const superseded = publications.filter((p) => p.supersededBy !== null);
 
+// Works known to be absent from ORCID, filtered to those still absent. Adding
+// one to the ORCID record removes it from this list on the next sync.
+const missing = stillMissing(publications, claimedMissing as MissingWork[]);
+
 const synced = new Date(syncedAt).toLocaleDateString('en-GB', {
-  day: 'numeric', month: 'long', year: 'numeric',
+  day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
 });
 ---
 <BaseLayout title="Publications" description="Publications, synchronised from ORCID.">
@@ -35,8 +40,28 @@ const synced = new Date(syncedAt).toLocaleDateString('en-GB', {
 
   <p class="muted small">
     Synchronised from <a href="https://orcid.org/0000-0002-9778-7174" rel="noopener">ORCID</a> on {synced}.
-    Anything missing here is missing from the ORCID record.
+    This page shows the ORCID record exactly as it stands.
   </p>
+
+  {missing.length > 0 && (
+    <div class="demo-note">
+      <p>
+        <strong>{missing.length} known {missing.length === 1 ? 'publication is' : 'publications are'} missing from the ORCID record</strong>,
+        so {missing.length === 1 ? 'it does' : 'they do'} not appear below. Adding
+        {missing.length === 1 ? ' it' : ' them'} at <a href="https://orcid.org/my-works" rel="noopener">orcid.org</a> is
+        the only fix — this list updates itself on the next sync.
+      </p>
+      <ul>
+        {missing.map((work) => (
+          <li>
+            {work.title}
+            {work.venue && <span class="muted"> — {work.venue}</span>}
+            {work.year && <span class="muted"> ({work.year})</span>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
 
   {missingHighlights.length > 0 && (
     <p class="demo-note">

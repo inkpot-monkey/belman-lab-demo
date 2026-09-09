@@ -78,8 +78,33 @@ export function formatAuthors(
   return { shown, truncated: true };
 }
 
-/** Comparison key for matching a preprint to its published version. */
+/** Comparison key for matching two records of the same work. */
 const titleKey = (title: string): string => title.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+/**
+ * A work known to be absent from the ORCID record.
+ *
+ * ORCID is the source of truth for the publication list, so anything not on it
+ * simply does not appear. Naming the known gaps on the page turns an invisible
+ * omission into a visible, actionable list.
+ */
+export interface MissingWork {
+  title: string;
+  venue: string;
+  year: number | null;
+}
+
+/**
+ * Filter a hand-maintained "known missing" list down to those still absent.
+ *
+ * This makes the list self-healing: as works are added to ORCID they drop off
+ * the gap list automatically, so the page cannot end up claiming a paper is
+ * missing after it has been fixed.
+ */
+export function stillMissing(publications: Publication[], claimed: MissingWork[]): MissingWork[] {
+  const present = new Set(publications.map((publication) => titleKey(publication.title)));
+  return claimed.filter((work) => !present.has(titleKey(work.title)));
+}
 
 export function normalisePublications(snapshot: Snapshot): PublicationList {
   const seen = new Set<string>();

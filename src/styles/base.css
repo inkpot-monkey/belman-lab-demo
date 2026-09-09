@@ -269,6 +269,15 @@
 
   .lede { font-size: var(--step-1); color: var(--color-muted); max-inline-size: var(--measure); }
 
+  /*
+    The date on the one page that is about a single dated thing. Named rather
+    than left as `.muted`, because a date is the one line on a news item every
+    design has an opinion about - a year railed down the margin, a dateline in
+    the display italic, a monospaced identifier - and an unnamed grey paragraph
+    is the one thing none of them can have an opinion about.
+  */
+  .dateline { color: var(--color-muted); font-size: var(--step--1); }
+
   .toc {
     background: var(--color-surface);
     border-radius: var(--radius);

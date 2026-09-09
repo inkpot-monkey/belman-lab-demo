@@ -400,6 +400,19 @@
     :root[data-theme='a'] .pubs:not(.pubs--dated) .pub > :not(.pub__year) { grid-column: 2; }
   }
 
+  /* The dateline, set as a label: tracked capitals over a rule, like the
+     funding strip's heading and the in-page index's. */
+  :root[data-theme='a'] .dateline {
+    border-block-end: var(--rule-strong) solid var(--color-heading);
+    color: var(--color-heading);
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    max-inline-size: none;
+    padding-block-end: var(--space-3xs);
+    text-transform: uppercase;
+  }
+
   /* ---- People ---------------------------------------------------------- */
 
   /*

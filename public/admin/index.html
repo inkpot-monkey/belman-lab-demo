@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Edit the site</title>
+    <link href="./config.yml" type="text/yaml" rel="cms-config-url" />
+    <style>
+      :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+      body { margin: 0; }
+
+      /*
+        The help panel is deliberately outside the CMS and fixed to the viewport.
+        The moment it is needed is the moment sign-in has failed, so a guide
+        rendered inside the CMS would be a guide you cannot reach.
+      */
+      .help {
+        position: fixed;
+        inset-inline: 0;
+        inset-block-end: 0;
+        z-index: 2147483647;
+        background: light-dark(#fffdf5, #1c1a14);
+        border-block-start: 1px solid light-dark(#e0d9c0, #3a3527);
+        color: light-dark(#2b2b2b, #e8e6e0);
+        font-size: 14px;
+        line-height: 1.55;
+        max-block-size: 70vh;
+        overflow-y: auto;
+      }
+      .help > summary {
+        cursor: pointer;
+        font-weight: 600;
+        padding: 0.6rem 1rem;
+        list-style: none;
+      }
+      .help > summary::before { content: "▸ "; }
+      .help[open] > summary::before { content: "▾ "; }
+      .help__body { padding: 0 1rem 1rem; max-width: 46rem; }
+      .help ol { padding-inline-start: 1.2rem; }
+      .help li { margin-block-end: 0.4rem; }
+      .help code {
+        background: light-dark(#efe9d6, #2c2820);
+        border-radius: 3px;
+        padding: 0.1em 0.35em;
+        font-size: 0.92em;
+      }
+      .help a { color: light-dark(#7b4b8a, #c7b1ce); }
+      .help__note {
+        border-inline-start: 3px solid light-dark(#c9a227, #8a7320);
+        margin-block: 0.8rem 0;
+        padding-inline-start: 0.8rem;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="./sveltia-cms.mjs" type="module"></script>
+
+    <details class="help">
+      <summary>Signed out, or your access token stopped working? Open this.</summary>
+      <div class="help__body">
+        <p>
+          Signing in needs a <strong>GitHub access token</strong>. It is a long password that
+          GitHub generates for you. It expires, so this will need doing again roughly once a year.
+        </p>
+
+        <h3>Getting a token</h3>
+        <ol>
+          <li>
+            Open
+            <a
+              href="https://github.com/settings/personal-access-tokens/new?name=Sveltia%20CMS&contents=write"
+              target="_blank"
+              rel="noopener"
+              >this pre-filled GitHub page</a
+            >. Sign in to GitHub if it asks.
+          </li>
+          <li>
+            Under <strong>Expiration</strong>, choose the longest option offered (usually
+            <code>1 year</code>), so you do not have to repeat this often.
+          </li>
+          <li>
+            Under <strong>Repository access</strong>, choose
+            <strong>Only select repositories</strong> and pick
+            <code>sophbel.github.io</code>.
+          </li>
+          <li>
+            Under <strong>Permissions → Repository permissions</strong>, find
+            <strong>Contents</strong> and set it to <strong>Read and write</strong>. Leave
+            everything else alone.
+          </li>
+          <li>Click <strong>Generate token</strong> at the bottom.</li>
+          <li>
+            Copy the token it shows you. <strong>You only get to see it once.</strong>
+          </li>
+          <li>Come back here, choose <strong>Sign in using access token</strong>, and paste it in.</li>
+        </ol>
+
+        <p class="help__note">
+          The token is stored only in this browser. If you use a different computer or browser,
+          you will need to paste it there too — the same token works in both, so keep a copy
+          somewhere safe like a password manager.
+        </p>
+
+        <h3>If something still will not work</h3>
+        <ul>
+          <li>
+            <strong>"Bad credentials" or signed out again:</strong> the token has expired or was
+            revoked. Make a new one with the steps above.
+          </li>
+          <li>
+            <strong>Saving fails:</strong> the token is probably missing the
+            <strong>Contents: Read and write</strong> permission. Make a new one and check step 4.
+          </li>
+          <li>
+            <strong>Your change is saved but the site looks the same:</strong> give it two or three
+            minutes. The site rebuilds after each save.
+          </li>
+        </ul>
+      </div>
+    </details>
+  </body>
+</html>

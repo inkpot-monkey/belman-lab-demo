@@ -86,14 +86,15 @@ export const collections: CollectionSpec[] = [
   },
   {
     name: 'highlights',
-    label: 'Highlighted publications',
-    labelSingular: 'Highlight',
+    // Must match the heading on the Publications page: an editor looking for
+    // "Selected publications" should find it under that name.
+    label: 'Selected publications',
+    labelSingular: 'Selected publication',
     folder: 'src/content/highlights',
     fields: [
       { name: 'doi', label: 'DOI', widget: 'string', hint: 'e.g. 10.1038/s41586-024-07626-3 - must match a paper on your ORCID record' },
       { name: 'order', label: 'Order', widget: 'number' },
       { name: 'note', label: 'Why it matters', widget: 'text', required: false },
-      body,
     ],
   },
 ];

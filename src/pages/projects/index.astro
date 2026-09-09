@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import DemoBanner from '../../components/DemoBanner.astro';
+import { url } from '../../lib/paths.ts';
 
 const projects = (await getCollection('projects')).sort(
   (a, b) => (a.data.order as number) - (b.data.order as number),
@@ -14,7 +15,12 @@ const projects = (await getCollection('projects')).sort(
   <ul class="cards">
     {projects.map((project) => (
       <li class="card">
-        <h2 style="margin-block-start: 0;">{project.data.title}</h2>
+        {project.data.image && (
+          <img src={url(project.data.image as string)} alt="" width="600" height="400" />
+        )}
+        <h2 style="margin-block-start: 0;">
+          <a href={url(`/projects/${project.id}`)}>{project.data.title}</a>
+        </h2>
         <p>{project.data.summary}</p>
         {project.data.funder && <p class="small muted">Funded by {project.data.funder}</p>}
       </li>

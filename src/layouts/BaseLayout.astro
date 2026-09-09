@@ -72,7 +72,8 @@ const themeIds = THEMES.map((theme) => theme.id);
 
     <footer class="footer">
       <div class="footer__inner">
-        <p>&copy; {new Date().getFullYear()} {site.name}</p>
+        <p>&copy; {new Date().getFullYear()} {site.labName}</p>
+        <p>{site.name}</p>
         <p>{site.email}</p>
         <p>{site.jobTitle} | {site.department}</p>
         {site.office && <p>{site.office}</p>}

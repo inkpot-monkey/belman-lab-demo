@@ -60,13 +60,20 @@ function formatInstant(value: string, timeZone: string | undefined): string | nu
     minute: '2-digit',
     hour12: false,
   };
+
+  // Never fall through to the machine's zone. Omitting `timeZone` makes
+  // Intl use the host default, so the same event would render one time in CI
+  // and another on a laptop - a build whose output depends on where it ran.
+  // UTC is wrong-looking but deterministic; the source zone is preferred when
+  // it is usable.
+  //
+  // The source zone is whatever the calendar said and is not guaranteed to be
+  // IANA - Outlook writes "W. Europe Standard Time" - so an unusable value
+  // must not throw at render time.
   try {
-    // The source timezone is whatever the calendar said and is not guaranteed
-    // to be IANA - Outlook writes "W. Europe Standard Time". Fall back rather
-    // than throwing at render time.
-    return new Intl.DateTimeFormat('en-GB', timeZone ? { ...options, timeZone } : options).format(date);
+    return new Intl.DateTimeFormat('en-GB', { ...options, timeZone: timeZone ?? 'UTC' }).format(date);
   } catch {
-    return new Intl.DateTimeFormat('en-GB', options).format(date);
+    return new Intl.DateTimeFormat('en-GB', { ...options, timeZone: 'UTC' }).format(date);
   }
 }
 
@@ -86,6 +93,14 @@ export function formatEventDate(event: CalendarEvent): string {
   return formatInstant(event.start, event.timeZone) ?? event.start;
 }
 
+/** Milliseconds since the epoch, or 0 for anything unparseable. */
+const instantOf = (value: string): number => {
+  const parsed = new Date(value).getTime();
+  return Number.isNaN(parsed) ? 0 : parsed;
+};
+
+const startOf = (event: CalendarEvent): number => instantOf(event.start);
+
 /**
  * The instant an event stops being upcoming. An all-day event stays upcoming
  * for the whole of its day rather than expiring at midnight.
@@ -95,14 +110,8 @@ function expiryOf(event: CalendarEvent): number {
   if (dateOnly) {
     return Date.UTC(Number(dateOnly[1]), Number(dateOnly[2]) - 1, Number(dateOnly[3]), 23, 59, 59, 999);
   }
-  const parsed = new Date(event.start).getTime();
-  return Number.isNaN(parsed) ? 0 : parsed;
+  return instantOf(event.start);
 }
-
-const startOf = (event: CalendarEvent): number => {
-  const parsed = new Date(event.start).getTime();
-  return Number.isNaN(parsed) ? 0 : parsed;
-};
 
 /**
  * Partition into upcoming and past. The instant is a parameter, not a call to

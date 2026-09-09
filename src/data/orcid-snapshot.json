@@ -1,6 +1,6 @@
 {
   "orcid": "0000-0002-9778-7174",
-  "fetchedAt": "2026-01-01T00:00:00.000Z",
+  "fetchedAt": "2026-09-09T13:45:08.485Z",
   "works": [
     {
       "putCode": 199471696,
@@ -318,6 +318,16 @@
         "Gerald G. Krueger",
         "Bing-Jian Feng"
       ]
+    },
+    {
+      "putCode": 99912451,
+      "title": "Considerations in assessing germline variant pathogenicity using cosegregation analysis.",
+      "type": "journal-article",
+      "year": "2020",
+      "journal": "Genetics in medicine : official journal of the American College of Medical Genetics",
+      "doi": "10.1038/s41436-020-0920-4",
+      "url": "https://doi.org/10.1038/s41436-020-0920-4",
+      "authors": []
     }
   ]
 }

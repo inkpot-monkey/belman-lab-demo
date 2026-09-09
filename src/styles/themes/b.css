@@ -198,11 +198,11 @@
   :root[data-theme='b'] .identity__meta p { line-height: 1.35; }
 
   /*
-    The portrait, and its credit, are not part of this masthead — see the note
-    at the top of the file. Hidden rather than removed, because the markup is
-    shared and Record wants it.
+    The portrait is not part of this masthead — see the note at the top of the
+    file. Hidden rather than removed, because the markup is shared and Record
+    and Instrument both want it.
   */
-  :root[data-theme='b'] .identity__figure { display: none; }
+  :root[data-theme='b'] .identity__photo { display: none; }
 
   :root[data-theme='b'] .identity .social a { font-weight: 500; }
 

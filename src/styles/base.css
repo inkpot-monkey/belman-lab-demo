@@ -135,11 +135,6 @@
     it is real text rather than a CSS-generated string.
   */
   .identity__key { display: none; }
-  /*
-    Shown only by a design that credits every image. Hidden rather than absent
-    so the credit is written once, in the markup, instead of once per design.
-  */
-  .identity__credit { display: none; }
 
   .nav { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-s); }
   .nav a {

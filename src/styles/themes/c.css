@@ -201,39 +201,22 @@
     /*
       The plate sits in the same column the menu sits in below it, at the same
       width and the same gutter, so the panel's text and the page's content
-      share one left edge all the way down. It is also what gives the credit
-      room: in a column the width of the photograph it broke into six lines.
+      share one left edge all the way down.
     */
     :root[data-theme='c'] .identity { grid-template-columns: var(--c-rail) minmax(0, 1fr); }
   }
 
-  :root[data-theme='c'] .identity__figure {
+  :root[data-theme='c'] .identity__photo {
+    border: 1px solid var(--color-border);
     grid-area: photo;
+    inline-size: 5.5rem;
     /* Stacked, the plate needs a gap under it; beside the type the column
        gutter is already the gap. */
     margin-block-end: var(--space-2xs);
-  }
-  @media (min-width: 34rem) {
-    :root[data-theme='c'] .identity__figure { margin-block-end: 0; }
-  }
-  :root[data-theme='c'] .identity__photo {
-    border: 1px solid var(--color-border);
-    inline-size: 5.5rem;
     max-inline-size: none;
   }
-  /* Every image on the site is credited, and this is the only image on it. */
-  :root[data-theme='c'] .identity__credit {
-    color: var(--color-muted);
-    display: block;
-    font-size: var(--step--1);
-    line-height: 1.3;
-    margin-block-start: var(--space-3xs);
-    /* Stacked, the credit is a line of prose and takes a line's width. Beside
-       the photograph it takes the column, which the grid has already sized. */
-    max-inline-size: var(--measure);
-  }
   @media (min-width: 34rem) {
-    :root[data-theme='c'] .identity__credit { max-inline-size: none; }
+    :root[data-theme='c'] .identity__photo { margin-block-end: 0; }
   }
 
   :root[data-theme='c'] .identity__lab {

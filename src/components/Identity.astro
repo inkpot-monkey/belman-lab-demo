@@ -26,17 +26,15 @@ const { primary = false } = Astro.props;
     ? <h1 class="identity__name">{site.name}</h1>
     : <p class="identity__name">{site.name}</p>}
   {/*
-    A <figure> so the portrait can carry a caption. The caption is hidden by
-    default and revealed by whichever design wants every image credited; the
-    figure itself is a plain wrapper, so the designs that do not use it render
-    exactly as they did before.
+    The portrait. `alt=""` because the name is set beside it in text, so a
+    screen reader announcing the face as well would only say it twice.
+
+    No caption. A photograph of the person whose page this is needs no
+    explanation, and a standing "credit to be added" line is a note to
+    ourselves printed on her site. Whoever takes the real photograph gets
+    credited where photographs are credited, not in the page header.
   */}
-  <figure class="identity__figure">
-    <img class="identity__photo" src={url(site.photo)} alt="" width="400" height="400" />
-    <figcaption class="identity__credit">
-      {site.name}. Photograph credit to be added before launch.
-    </figcaption>
-  </figure>
+  <img class="identity__photo" src={url(site.photo)} alt="" width="400" height="400" />
   {/*
     Each line carries the name of the field it came from. The keys are hidden
     by default and shown by the design that sets this block as a keyed

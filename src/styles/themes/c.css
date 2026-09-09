@@ -7,9 +7,22 @@
  * are tokens, generated from `ThemeSpec` by `Tokens.astro`.
  */
 @layer layout {
+  /*
+    No rail in this design yet. Pages fill BaseLayout's `rail` slot with an
+    in-page index, so the slot is occupied on every page whichever design is
+    showing; hiding it here — and repeating this design's own arrangement for
+    the pages that have one — keeps that from opening an empty row. This
+    design's own run decides whether it wants a rail of its own.
+  */
+  :root[data-theme='c'] .rail { display: none; }
+  :root[data-theme='c'] .page:has(> .rail) {
+    grid-template-areas: 'nav' 'identity' 'main';
+  }
+
   /* Identity above navigation, in a sidebar beside the content. */
   @media (min-width: 60rem) {
-    :root[data-theme='c'] .page {
+    :root[data-theme='c'] .page,
+    :root[data-theme='c'] .page:has(> .rail) {
       grid-template-columns: 16rem minmax(0, 1fr);
       grid-template-areas: 'identity main' 'nav main';
       grid-template-rows: auto 1fr;

@@ -1,32 +1,544 @@
 /*
- * Theme A. Structure, arrangement and component variants for this design only.
+ * Theme A — "Record". Swiss / International Typographic.
  *
  * Everything here is scoped to `:root[data-theme='a']` and declared inside the
  * layers `base.css` already ordered, so this file extends the one cascade
  * rather than competing with it. Colour, type and spacing are not here: those
  * are tokens, generated from `ThemeSpec` by `Tokens.astro`.
+ *
+ * The design in one paragraph: one grotesque (Archivo, variable, self-hosted),
+ * an achromatic palette with a single vermilion, and a three-column module
+ * whose gutters are drawn rather than implied. Hierarchy comes from weight,
+ * case and rules; nothing is rounded, nothing is shadowed, and the only hue on
+ * the page marks something — a link, a preprint, the current page, a number.
+ *
+ * Two things stop it reading as the default serious-website answer. The module
+ * stays put across every page: the third column exists whether or not there is
+ * an index to put in it, and the content column reclaims it rather than the
+ * grid moving. And the home page spends its whole first row on a strapline
+ * instead of a hero, so the first thing read is who this is and what she does.
  */
+
+@layer base {
+  :root[data-theme='a'] body {
+    /* Archivo ships real weights and a real italic; never let the browser fake one. */
+    font-synthesis: none;
+  }
+
+  :root[data-theme='a'] :is(h1, h2, h3, h4) {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+
+  /*
+    Unclassed h3s are subheadings, and Swiss sets those as tracked capitals.
+    `.person__name` and the other classed h3s are names and titles, which caps
+    would shout; they keep the size the component gives them.
+  */
+  :root[data-theme='a'] h3:not([class]) {
+    font-size: var(--step-0);
+    letter-spacing: 0.1em;
+    line-height: 1.3;
+    text-transform: uppercase;
+  }
+
+  :root[data-theme='a'] a {
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+
+  /*
+    The accent is reserved for links inside prose, where it marks the one word
+    in a sentence that goes somewhere. In a list of names, papers or projects
+    every entry is a link, so colouring them all says nothing: those take the
+    heading colour with a grey underline, and turn vermilion under the cursor,
+    which is the only moment the colour carries information.
+  */
+  :root[data-theme='a'] :is(.person__name, .pub__title, .card h2) a {
+    color: var(--color-heading);
+    text-decoration-color: var(--color-border);
+  }
+  :root[data-theme='a'] :is(.person__name, .pub__title, .card h2) a:hover {
+    text-decoration-color: var(--color-accent);
+  }
+
+  :root[data-theme='a'] hr {
+    border-block-start: 2px solid var(--color-heading);
+  }
+}
+
 @layer layout {
-  /* Identity above navigation, in a sidebar beside the content. */
-  @media (min-width: 60rem) {
+  /*
+    Mobile: identity first, because the strapline is the page's title before
+    any page has its own; then navigation; then the in-page index if the page
+    has one; then the content.
+  */
+  :root[data-theme='a'] .page {
+    column-gap: var(--space-xl);
+    row-gap: var(--space-s);
+    grid-template-areas: 'identity' 'nav' 'main';
+  }
+  :root[data-theme='a'] .page:has(> .rail) {
+    grid-template-areas: 'identity' 'nav' 'rail' 'main';
+  }
+  :root[data-theme='a'] .page > main { margin-block-start: var(--space-s); }
+
+  @media (min-width: 62rem) {
+    /*
+      The module: a 14rem identity and navigation column, the content column,
+      and a 13rem column for an in-page index. The three column positions are
+      the same on every page — a page with no index widens its content into the
+      third column rather than moving the first two, so the left edge of the
+      text never shifts as you move around the site.
+    */
     :root[data-theme='a'] .page {
-      grid-template-columns: 16rem minmax(0, 1fr);
-      grid-template-areas: 'identity main' 'nav main';
+      align-items: stretch;
+      grid-template-columns: 14rem minmax(0, 1fr) 13rem;
+      grid-template-areas:
+        'identity main main'
+        'nav      main main';
+      /*
+        `auto 1fr`, not two auto rows. The content column spans both rows, and
+        two auto rows would share its height between them — which puts the
+        navigation halfway down a long page, below a gap the size of the
+        article. The second row takes the slack instead.
+      */
       grid-template-rows: auto 1fr;
-      align-items: start;
     }
-    :root[data-theme='a'] .site-nav { flex-direction: column; }
+    :root[data-theme='a'] .page:has(> .rail) {
+      grid-template-areas:
+        'identity main rail'
+        'nav      main rail';
+    }
+    /*
+      The home page, and only the home page: the identity spends the whole
+      first row as a masthead. It is the one page whose subject is the person,
+      which is also why its name is the <h1> — `identityIsHeading` in
+      BaseLayout — and that <h1> is what this selector reads.
+    */
+    :root[data-theme='a'] .page:has(h1.identity__name) {
+      grid-template-areas:
+        'identity identity identity'
+        'nav      main     main';
+    }
+
+    :root[data-theme='a'] .identity-column,
+    :root[data-theme='a'] .site-nav { align-self: start; }
+    /* One item per line in the column, so the menu reads as an index. */
+    :root[data-theme='a'] .site-nav { flex-direction: column; gap: 0; }
     :root[data-theme='a'] .page > main { margin-block-start: 0; }
+
+    /*
+      The gutters, drawn. The rule belongs in the middle of the gutter rather
+      than against the content, so each column is pulled half a gutter to the
+      left and pads the same amount back: the text lands exactly where the
+      grid puts it, and the hairline sits between the columns.
+
+      Both columns stretch, so the rules run the full height of the page
+      whatever the tallest column turns out to be.
+    */
+    :root[data-theme='a'] .page > main,
+    :root[data-theme='a'] .page > .rail {
+      border-inline-start: 1px solid var(--color-grid);
+      margin-inline-start: calc(var(--space-xl) / -2);
+      padding-inline-start: calc(var(--space-xl) / 2);
+    }
   }
 }
 
 @layer components {
+  /* ---- Identity: the strapline that signs the site ---------------------- */
+
+  :root[data-theme='a'] .identity { gap: 0; }
+
+  :root[data-theme='a'] .identity__lab {
+    color: var(--color-accent);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  :root[data-theme='a'] .identity__name {
+    font-size: var(--step-1);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-block-start: var(--space-3xs);
+  }
+
+  /*
+    The second line of the strapline. `.identity__meta` holds one <p> per field
+    of site.json in the order those fields are declared, so its first child is
+    the discipline; the three after it are the institutional taxonomy, and are
+    set as the smaller thing they are. The rule closes the strapline unit.
+  */
+  :root[data-theme='a'] .identity__meta p:first-child {
+    border-block-end: 2px solid var(--color-heading);
+    color: var(--color-text);
+    font-size: var(--step-0);
+    font-weight: 500;
+    line-height: 1.2;
+    margin-block-end: var(--space-2xs);
+    padding-block: var(--space-3xs) var(--space-2xs);
+  }
+  :root[data-theme='a'] .identity__meta p + p { line-height: 1.35; }
+
+  /*
+    The one photograph on the site, on the one page it is about, credited.
+    Everywhere else the identity is type. It is ordered after the taxonomy so
+    that the top of every page — including the home page on a phone — is the
+    strapline and not a face.
+  */
+  :root[data-theme='a'] .identity__figure { order: 1; margin-block-start: var(--space-m); }
+  :root[data-theme='a'] .identity:not(:has(h1.identity__name)) .identity__figure { display: none; }
+  :root[data-theme='a'] .identity__photo {
+    border: 1px solid var(--color-border);
+    max-inline-size: 9rem;
+  }
+  :root[data-theme='a'] .identity__credit {
+    color: var(--color-muted);
+    display: block;
+    font-size: var(--step--1);
+    line-height: 1.3;
+    margin-block-start: var(--space-3xs);
+    max-inline-size: 12rem;
+  }
+
+  :root[data-theme='a'] .identity .social {
+    font-size: var(--step--1);
+    margin-block-start: var(--space-s);
+  }
+
+  /* On its own page the name is the <h1>, and it is sized like one. */
+  :root[data-theme='a'] .page:has(h1.identity__name) .identity__name {
+    font-size: var(--step-4);
+  }
+
+  @media (min-width: 62rem) {
+    /*
+      The masthead. Type takes the row; the portrait is a small plate hung off
+      the right of it, bottom-aligned to the strapline, so the first thing read
+      is still the name and the discipline rather than a face.
+    */
+    :root[data-theme='a'] .page:has(h1.identity__name) .identity {
+      border-block-end: 3px solid var(--color-heading);
+      column-gap: var(--space-xl);
+      display: grid;
+      grid-template-areas:
+        'lab    photo'
+        'name   photo'
+        'meta   photo'
+        'social photo';
+      grid-template-columns: minmax(0, 1fr) 9rem;
+      padding-block-end: var(--space-s);
+    }
+    :root[data-theme='a'] .page:has(h1.identity__name) .identity__lab { grid-area: lab; }
+    :root[data-theme='a'] .page:has(h1.identity__name) .identity__name {
+      font-size: var(--step-5);
+      grid-area: name;
+    }
+    :root[data-theme='a'] .page:has(h1.identity__name) .identity__meta { grid-area: meta; }
+    :root[data-theme='a'] .page:has(h1.identity__name) .identity .social { grid-area: social; }
+    :root[data-theme='a'] .page:has(h1.identity__name) .identity__figure {
+      align-self: end;
+      grid-area: photo;
+      justify-self: end;
+      margin-block-start: 0;
+    }
+  }
+  :root[data-theme='a'] .identity .social a {
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ---- Navigation ------------------------------------------------------ */
+
+  :root[data-theme='a'] .nav a {
+    font-size: var(--step--1);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    /* A thumb-sized target on a phone, where the menu is a wrapped row. */
+    padding-block: var(--space-2xs);
+    text-transform: uppercase;
+  }
+  :root[data-theme='a'] .nav a[aria-current='page'] { font-weight: 700; }
+
+  @media (min-width: 62rem) {
+    /*
+      Stacked, the underline that marks the current page runs the width of the
+      column and reads as a divider. In a column the marker belongs on the
+      inline edge, where it also lines up with the gutter rules.
+    */
+    :root[data-theme='a'] .nav a {
+      border-block-end: 0;
+      border-inline-start: 3px solid transparent;
+      padding-block: var(--space-3xs);
+      padding-inline-start: var(--space-2xs);
+    }
+    :root[data-theme='a'] .nav a:hover { border-inline-start-color: var(--color-border); }
+    :root[data-theme='a'] .nav a[aria-current='page'] {
+      border-inline-start-color: var(--color-accent);
+    }
+  }
+
+  /* ---- Headings, ruled ------------------------------------------------- */
+
+  /*
+    A rule is what starts a section here, so it has to cross the whole column
+    rather than stop at the measure the prose keeps. Classed headings — the
+    funding strip, the in-page index — bring their own rule and are left alone.
+  */
+  :root[data-theme='a'] :is(main, .manual) > h1 {
+    border-block-end: 3px solid var(--color-heading);
+    max-inline-size: none;
+    padding-block-end: var(--space-2xs);
+  }
+  :root[data-theme='a'] :is(main, .manual) > section + section { margin-block-start: 0; }
+  :root[data-theme='a'] :is(main, .manual) > section > h2:not([class]),
+  :root[data-theme='a'] :is(main, .manual) > h2:not([class]) {
+    border-block-start: 2px solid var(--color-heading);
+    max-inline-size: none;
+    margin-block-start: var(--space-l);
+    padding-block-start: var(--space-2xs);
+  }
+
+  /* ---- The in-page index ----------------------------------------------- */
+
+  :root[data-theme='a'] .section-index__heading {
+    border-block-end: 2px solid var(--color-heading);
+    font-size: var(--step--1);
+    letter-spacing: 0.12em;
+    margin: 0;
+    padding-block-end: var(--space-3xs);
+    text-transform: uppercase;
+  }
+  :root[data-theme='a'] .section-index__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  :root[data-theme='a'] .section-index a {
+    color: var(--color-text);
+    display: grid;
+    font-size: var(--step--1);
+    gap: var(--space-2xs);
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+    line-height: 1.3;
+    padding-block: var(--space-2xs);
+    text-decoration: none;
+  }
+  :root[data-theme='a'] .section-index a:hover .section-index__label {
+    text-decoration: underline;
+  }
+  :root[data-theme='a'] .section-index__number {
+    color: var(--color-accent);
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+  }
+
+  /* On a phone the index is a ruled strip above the content, not a column. */
+  :root[data-theme='a'] .rail {
+    border-block: 1px solid var(--color-border);
+    padding-block: var(--space-2xs);
+  }
+  :root[data-theme='a'] .rail .section-index__list {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: var(--space-m);
+  }
+
+  @media (min-width: 62rem) {
+    :root[data-theme='a'] .rail { border-block: 0; padding-block: 0; }
+    :root[data-theme='a'] .rail .section-index__list { display: block; }
+    :root[data-theme='a'] .section-index {
+      inset-block-start: var(--space-m);
+      position: sticky;
+    }
+    :root[data-theme='a'] .section-index__item {
+      border-block-end: 1px solid var(--color-border);
+    }
+  }
+
+  /* ---- Publications: years railed down the margin ---------------------- */
+
+  :root[data-theme='a'] .pubs {
+    border-block-start: 2px solid var(--color-heading);
+    gap: 0;
+    max-inline-size: none;
+  }
+  :root[data-theme='a'] .pub {
+    border-block-end: 1px solid var(--color-border);
+    padding-block: var(--space-s);
+  }
+  /*
+    The year comes out of the citation and becomes the rail. The copy that
+    lives inside the meta line goes away, so the year is announced once.
+  */
+  :root[data-theme='a'] .pub__year {
+    color: var(--color-muted);
+    display: block;
+    font-size: var(--step--1);
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+  :root[data-theme='a'] .pub__meta-year { display: none; }
+  :root[data-theme='a'] .pub__title { font-weight: 700; max-inline-size: var(--measure); }
+  :root[data-theme='a'] .pub__authors,
+  :root[data-theme='a'] .pub__meta { max-inline-size: var(--measure); }
+
+  @media (min-width: 34rem) {
+    :root[data-theme='a'] .pub {
+      column-gap: var(--space-m);
+      grid-template-columns: 4rem minmax(0, 1fr);
+    }
+    :root[data-theme='a'] .pub__year { grid-column: 1; grid-row: 1; }
+    :root[data-theme='a'] .pub > :not(.pub__year) { grid-column: 2; }
+  }
+
+  /* ---- People ---------------------------------------------------------- */
+
+  /*
+    A ruled list of names, not a card wall: the avatars are initials in a grey
+    box for everyone but Sophie, and a grid of those is decoration standing in
+    for photography this design does not use.
+  */
+  :root[data-theme='a'] .people__grid {
+    column-gap: var(--space-l);
+    row-gap: 0;
+  }
   :root[data-theme='a'] .person {
     background: none;
     border: 0;
-    border-block-start: var(--rule) solid var(--color-border);
+    border-block-start: 1px solid var(--color-border);
     border-radius: 0;
+    padding: var(--space-2xs) 0 var(--space-s);
   }
+  :root[data-theme='a'] .person__avatar { display: none; }
+  :root[data-theme='a'] .person__name { font-weight: 700; }
+  :root[data-theme='a'] .person__rank { letter-spacing: 0.04em; }
+
+  /* Alumni, folded away. The summary is a control, so it is sized like one. */
+  :root[data-theme='a'] .people__summary {
+    border-block-start: 2px solid var(--color-heading);
+    color: var(--color-heading);
+    cursor: pointer;
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding-block: var(--space-2xs);
+    text-transform: uppercase;
+  }
+
+  /* ---- Cards, flattened ------------------------------------------------ */
+
+  :root[data-theme='a'] .cards { column-gap: var(--space-l); row-gap: var(--space-l); }
+  :root[data-theme='a'] .card {
+    background: none;
+    border: 0;
+    border-block-start: 2px solid var(--color-heading);
+    padding: var(--space-2xs) 0 0;
+  }
+
+  /* ---- Funding --------------------------------------------------------- */
+
+  :root[data-theme='a'] .funders {
+    border-block-start: 2px solid var(--color-heading);
+    margin-block-start: var(--space-2xl);
+    padding-block-start: var(--space-2xs);
+  }
+  :root[data-theme='a'] .funders .demo-note { max-inline-size: var(--measure); }
+  :root[data-theme='a'] .funders__heading {
+    font-size: var(--step--1);
+    letter-spacing: 0.12em;
+    margin: 0;
+    text-transform: uppercase;
+  }
+  :root[data-theme='a'] .funders__list {
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+    list-style: none;
+    margin-block-start: var(--space-s);
+    max-inline-size: none;
+    padding: 0;
+  }
+  :root[data-theme='a'] .funder__acronym {
+    color: var(--color-heading);
+    display: block;
+    font-size: var(--step-2);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  :root[data-theme='a'] .funder__name {
+    color: var(--color-muted);
+    display: block;
+    font-size: var(--step--1);
+    margin-block-start: var(--space-3xs);
+  }
+
+  /* ---- Long-form pages ------------------------------------------------- */
+
+  /* The manual's index is the same device as the rail, so it is set the same. */
+  :root[data-theme='a'] .toc {
+    background: none;
+    border-block: 2px solid var(--color-heading);
+    border-inline-start: 0;
+    padding-inline: 0;
+  }
+  :root[data-theme='a'] .manual thead th,
+  :root[data-theme='a'] .manual tbody th { color: var(--color-heading); }
+
+  /* ---- Footer: the signature, repeated -------------------------------- */
+
+  /*
+    Shared `.footer` pads the banner and centres the inner box inside that
+    padding, so footer text sits one gutter to the left of the content above
+    it. Alignment is the whole argument of this design, so the padding moves
+    onto the inner box, where it lines up with `.page`. The other two designs
+    keep the shared default until their own runs look at it.
+  */
+  :root[data-theme='a'] .footer {
+    border-block-start: 2px solid var(--color-heading);
+    margin-block-start: var(--space-2xl);
+    padding-inline: 0;
+  }
+  :root[data-theme='a'] .footer__inner { padding-inline: var(--space-m); }
+  :root[data-theme='a'] .footer__inner { display: grid; gap: var(--space-3xs); }
+  :root[data-theme='a'] .footer__inner > p:first-child {
+    color: var(--color-accent);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    margin-block-end: var(--space-2xs);
+    text-transform: uppercase;
+  }
+  :root[data-theme='a'] .footer__inner > p:nth-child(2) {
+    color: var(--color-heading);
+    font-size: var(--step-0);
+    font-weight: 600;
+  }
+  @media (min-width: 62rem) {
+    /* The lab name sits in the identity column, so the footer keeps the grid. */
+    :root[data-theme='a'] .footer__inner {
+      column-gap: var(--space-xl);
+      grid-template-columns: 14rem minmax(0, 1fr);
+    }
+    :root[data-theme='a'] .footer__inner > p:first-child { grid-column: 1; grid-row: 1; }
+    :root[data-theme='a'] .footer__inner > p:not(:first-child) { grid-column: 2; }
+  }
+
+  /* ---- Demo chrome ----------------------------------------------------- */
+
+  /* Flat is the point, so the one shadow on the site goes. */
+  :root[data-theme='a'] .switcher {
+    border-color: var(--color-heading);
+    box-shadow: none;
+  }
+  :root[data-theme='a'] .demo-banner strong { letter-spacing: 0.14em; }
 }
 
 @layer utilities {

@@ -15,6 +15,14 @@ const { publications, notes = {} } = Astro.props;
     const note = publication.doi ? notes[publication.doi] : undefined;
     return (
       <li class="pub">
+        {/*
+          The year twice: once on its own, for a design that rails the years
+          down the margin, and once inside the meta line for the designs that
+          read it as part of the citation. Whichever one a design does not use
+          is `display: none`, so it is out of the accessibility tree as well as
+          off the screen and the year is announced once.
+        */}
+        {publication.year && <p class="pub__year">{publication.year}</p>}
         <div class="pub__title">
           {publication.url
             ? <a href={publication.url} rel="noopener">{publication.title}</a>
@@ -33,7 +41,7 @@ const { publications, notes = {} } = Astro.props;
         )}
         <p class="pub__meta">
           {publication.journal ?? 'Preprint'}
-          {publication.year && ` · ${publication.year}`}
+          {publication.year && <span class="pub__meta-year"> · {publication.year}</span>}
           {publication.isPreprint && <> · <span class="tag">Preprint</span></>}
         </p>
         {note && <p class="small">{note}</p>}

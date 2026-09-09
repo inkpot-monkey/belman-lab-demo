@@ -43,6 +43,13 @@ export interface ThemeSpec {
   precedent?: string;
 }
 
+/*
+ * Archivo, self-hosted and variable, for the design that uses one family
+ * strictly. The fallbacks are grotesques of a similar width, so the page does
+ * not reflow noticeably while the face loads.
+ */
+const GROTESQUE = "'Archivo Variable', 'Helvetica Neue', Helvetica, Arial, sans-serif";
+
 const SERIF = "'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif";
 const SANS = "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
 const MONO = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace";
@@ -50,23 +57,47 @@ const MONO = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospac
 export const THEMES: ThemeSpec[] = [
   {
     id: 'a',
-    name: 'Classic academic',
-    shortName: 'Classic',
-    description: 'Serif, dense, restrained. Conservative and unmistakably scholarly.',
-    fonts: { display: SERIF, body: SERIF },
-    type: { minBase: 17, maxBase: 19, minRatio: 1.2, maxRatio: 1.25 },
-    space: { minBase: 16, maxBase: 20 },
+    name: 'Record',
+    shortName: 'Record',
+    description: 'Achromatic, gridded, one grotesque. The design stands behind the work.',
+    fonts: { display: GROTESQUE, body: GROTESQUE },
+    /*
+     * One family, so the scale has to carry the hierarchy a second family
+     * would otherwise carry: a wider ratio at the large end than the other two
+     * designs use, against a body size that stays put.
+     */
+    type: { minBase: 17, maxBase: 18, minRatio: 1.2, maxRatio: 1.333 },
+    space: { minBase: 16, maxBase: 22 },
+    /*
+     * Achromatic, plus one vermilion. Every grey here is neutral - red, green
+     * and blue equal - so the accent is the only hue on the page and therefore
+     * always means something. `grid` is the gutter rule: quieter than `border`,
+     * because it draws the structure rather than separating content.
+     *
+     * Vermilion is #d6320f rather than a brighter one so it clears 4.5:1 both
+     * ways - as link text on the page, and as the ground under white in the
+     * demo banner and the preprint tag.
+     */
     colors: {
-      bg: '#fffefb',
-      surface: '#f7f5ef',
-      text: '#23262d',
-      muted: '#5d626e',
-      heading: '#11131a',
-      accent: '#7a2e2e',
+      bg: '#fafafa',
+      surface: '#f0f0f0',
+      text: '#171717',
+      muted: '#5a5a5a',
+      heading: '#000000',
+      accent: '#d6320f',
       accentText: '#ffffff',
-      border: '#e2ded2',
+      border: '#c2c2c2',
+      grid: '#e4e4e4',
     },
-    shape: { radius: '2px', rule: '1px', measure: '68ch' },
+    shape: { radius: '0', rule: '1px', measure: '60ch' },
+    thesis:
+      'The site is a record of the work, not an argument for it. One grotesque, a grid you can see, and colour used only where it carries information.',
+    saysAboutYou:
+      'That the science is the point and the reader’s time matters more than the lab’s personality. It reads as an institution rather than as a person.',
+    cost:
+      'Warmth, and memorability. Nothing here is recognisably yours: a visitor remembers the papers and not the page, and this is not a design anyone shares for its own sake. It is also the safe answer, so it has to be executed exactly right or it reads as a template.',
+    precedent:
+      'EMBL-EBI and Wellcome Sanger group pages; Müller-Brockmann’s grid systems, where rules and alignment do the work that decoration does elsewhere.',
   },
   {
     id: 'b',

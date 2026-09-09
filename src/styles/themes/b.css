@@ -6,6 +6,20 @@
  * rather than competing with it. Colour, type and spacing are not here: those
  * are tokens, generated from `ThemeSpec` by `Tokens.astro`.
  */
+@layer layout {
+  /*
+    No rail in this design yet. Pages fill BaseLayout's `rail` slot with an
+    in-page index, so the slot is occupied on every page whichever design is
+    showing; hiding it here — and putting the arrangement back to the one
+    without it — keeps that from opening an empty row. This design's own run
+    decides whether it wants a rail of its own.
+  */
+  :root[data-theme='b'] .page:has(> .rail) {
+    grid-template-areas: 'nav' 'identity' 'main';
+  }
+  :root[data-theme='b'] .rail { display: none; }
+}
+
 @layer components {
   :root[data-theme='b'] .identity__photo { border-radius: 50%; }
   :root[data-theme='b'] .person__avatar { border-radius: 50%; }

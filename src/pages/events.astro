@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import DemoBanner from '../components/DemoBanner.astro';
+import SectionIndex from '../components/SectionIndex.astro';
+import Themed from '../components/Themed.astro';
 import { formatEventDate, splitByDate, type CalendarEvent } from '../lib/events.ts';
 import fixtures from '../data/fixtures/events.json' with { type: 'json' };
 
@@ -9,12 +11,19 @@ import fixtures from '../data/fixtures/events.json' with { type: 'json' };
 // `await fetchEvents({ calendarId, auth })`.
 const events = fixtures as CalendarEvent[];
 const { upcoming, past } = splitByDate(events, new Date());
+
+const sections: [string, string][] = [
+  ['upcoming', 'Upcoming'],
+  ...(past.length > 0 ? [['past', 'Past'] as [string, string]] : []),
+];
 ---
 <BaseLayout title="Events" description="Seminars, lab meetings and other dates.">
+  <Fragment slot="rail"><Themed themes="a"><SectionIndex sections={sections} /></Themed></Fragment>
+
   <h1>Events</h1>
   <DemoBanner what="These are fixtures shaped like a real Google Calendar feed, not a real calendar." />
 
-  <section>
+  <section id="upcoming">
     <h2>Upcoming</h2>
     {upcoming.length === 0
       ? <p class="muted">Nothing scheduled.</p>
@@ -32,7 +41,7 @@ const { upcoming, past } = splitByDate(events, new Date());
   </section>
 
   {past.length > 0 && (
-    <section>
+    <section id="past">
       <h2>Past</h2>
       <ul class="pubs">
         {past.map((event) => (

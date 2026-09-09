@@ -1,6 +1,8 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionIndex from '../components/SectionIndex.astro';
+import Themed from '../components/Themed.astro';
 
 export async function getStaticPaths() {
   const pages = await getCollection('pages');
@@ -10,9 +12,19 @@ export async function getStaticPaths() {
 }
 
 const { page } = Astro.props;
-const { Content } = await render(page);
+const { Content, headings } = await render(page);
+
+// Astro gives every Markdown heading an id, so a page written in the editor
+// gets an in-page index without anyone having to add anchors by hand. Only the
+// top level of it: an index that mirrors the whole outline is a second copy of
+// the page.
+const sections: [string, string][] = headings
+  .filter((heading) => heading.depth === 2)
+  .map((heading) => [heading.slug, heading.text]);
 ---
 <BaseLayout title={page.data.title as string} description={page.data.description as string | undefined}>
+  <Fragment slot="rail"><Themed themes="a"><SectionIndex sections={sections} /></Themed></Fragment>
+
   <h1>{page.data.title}</h1>
   <Content />
 </BaseLayout>

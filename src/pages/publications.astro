@@ -2,6 +2,8 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PublicationList from '../components/PublicationList.astro';
+import SectionIndex from '../components/SectionIndex.astro';
+import Themed from '../components/Themed.astro';
 import { normalisePublications, stillMissing, type Snapshot, type MissingWork } from '../lib/orcid.ts';
 import snapshot from '../data/orcid-snapshot.json' with { type: 'json' };
 import claimedMissing from '../data/orcid-missing.json' with { type: 'json' };
@@ -41,8 +43,21 @@ const missingObject = one ? 'it' : 'them';
 const synced = new Date(syncedAt).toLocaleDateString('en-GB', {
   day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
 });
+
+// The index of this page, built from the same conditions that decide whether
+// each section is rendered, so it can never point at a heading that is not
+// there.
+const sections: [string, string][] = [
+  ...(highlights.length > 0 ? [['selected', 'Selected publications'] as [string, string]] : []),
+  ['all', 'All publications'],
+  ...(superseded.length > 0
+    ? [['superseded', 'Preprints with a published version'] as [string, string]]
+    : []),
+];
 ---
 <BaseLayout title="Publications" description="Publications, synchronised from ORCID.">
+  <Fragment slot="rail"><Themed themes="a"><SectionIndex sections={sections} /></Themed></Fragment>
+
   <h1>Publications</h1>
 
   <p class="muted small">
@@ -79,19 +94,19 @@ const synced = new Date(syncedAt).toLocaleDateString('en-GB', {
   )}
 
   {highlights.length > 0 && (
-    <section>
+    <section id="selected">
       <h2>Selected publications</h2>
       <PublicationList publications={highlights} notes={notes} />
     </section>
   )}
 
-  <section>
+  <section id="all">
     <h2>All publications</h2>
     <PublicationList publications={current} />
   </section>
 
   {superseded.length > 0 && (
-    <section>
+    <section id="superseded">
       <h2>Preprints with a published version</h2>
       <p class="muted small">These appear on the ORCID record alongside the journal article of the same work.</p>
       <PublicationList publications={superseded} />

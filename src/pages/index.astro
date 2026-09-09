@@ -135,7 +135,7 @@ const releases = (await getCollection('software')).sort(
       <ul class="cards">
         {releases.map((entry) => (
           <li class="card">
-            <h3 class="card__title"><a href={entry.data.repo as string} rel="noopener">{entry.data.title}</a></h3>
+            <h3 class="card__title card__title--repo"><a href={entry.data.repo as string} rel="noopener">{entry.data.title}</a></h3>
             <p>{entry.data.summary}</p>
             {/* One line: a newline between two expressions becomes a space of
                 its own, which would double the separator. */}

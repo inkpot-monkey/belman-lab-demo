@@ -55,7 +55,16 @@
     </style>
   </head>
   <body>
-    <script src="./sveltia-cms.mjs" type="module"></script>
+    <!--
+      The vendored bundle is the package's module build, which exposes
+      `window.CMS` but does not mount itself; only the IIFE bundle auto-mounts.
+      Initialising explicitly works with either build, so vendoring cannot
+      silently produce a blank admin page.
+    -->
+    <script type="module">
+      import './sveltia-cms.mjs';
+      window.CMS.init();
+    </script>
 
     <details class="help">
       <summary>Signed out, or your access token stopped working? Open this.</summary>

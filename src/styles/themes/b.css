@@ -338,7 +338,15 @@
   :root[data-theme='b'] .cover .demo-note { margin-block: var(--space-m); }
   :root[data-theme='b'] .cover .figure { margin-block-start: var(--space-m); }
 
-  @media (min-width: 48rem) {
+  /*
+    62rem, not the 48 the rest of this design splits at, and it is the same
+    line the content grid's margin track opens on. Three of twelve columns is
+    a note four or five words to the line on a tablet - the caption slot for a
+    figure that carries its own citation, set narrower than the citation can be
+    read at. Below this width the note stays a paragraph above the figure and
+    the figure takes the full column.
+  */
+  @media (min-width: 62rem) {
     /*
       Twelve columns, used unevenly on purpose: the question stops three
       columns short of the right edge so its ragged edge is visible as a

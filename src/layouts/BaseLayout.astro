@@ -8,6 +8,11 @@ import { COLLECTION_NAV, url, isCurrent, type NavItem } from '../lib/nav.ts';
 import { DEFAULT_THEME, THEMES } from '../lib/themes.ts';
 import { isIndexable } from '../lib/env.ts';
 import '../styles/base.css';
+// One file per design, each extending the layers base.css declares. Imported
+// after it so a same-specificity rule resolves in the design's favour.
+import '../styles/themes/a.css';
+import '../styles/themes/b.css';
+import '../styles/themes/c.css';
 import '../styles/demo.css';
 
 interface Props {
@@ -90,6 +95,16 @@ const themeIds = THEMES.map((theme) => theme.id);
       <main id="main" class="flow prose">
         <slot />
       </main>
+
+      {/*
+        A second column beside the content, for a page that wants one: an
+        in-page index, a metadata rail. Rendered only when a page fills it, so
+        it costs nothing on the pages that do not, and placed by each design
+        from its own stylesheet.
+      */}
+      {Astro.slots.has('rail') && (
+        <aside class="rail"><slot name="rail" /></aside>
+      )}
     </div>
 
     <footer class="footer">

@@ -1,4 +1,10 @@
-/* Layer order is declared once so later rules never depend on source position. */
+/*
+ * Layer order is declared once so later rules never depend on source position.
+ *
+ * Each design then extends these same layers from its own file in
+ * `styles/themes/`, scoped to `:root[data-theme='x']`. Those files are
+ * imported by BaseLayout after this one.
+ */
 @layer reset, base, layout, components, utilities;
 
 @layer reset {
@@ -59,10 +65,12 @@
 
 @layer layout {
   /*
-    One grid, three arrangements. Navigation, identity and content are each
-    emitted exactly once and placed by grid-area, so a theme changes where
-    things sit without changing the markup. Hiding a duplicate nav per theme
-    would put two "Primary" landmarks and every link twice into every page.
+    The shared grid, and the default arrangement of it. Each design refines
+    this from its own file in `styles/themes/`; navigation, identity and
+    content are still emitted exactly once and placed by grid-area, so a theme
+    changes where things sit without changing the markup. Hiding a duplicate
+    nav per theme would put two "Primary" landmarks and every link twice into
+    every page.
   */
   .page {
     display: grid;
@@ -76,23 +84,16 @@
   }
 
   .site-nav { grid-area: nav; }
+  /*
+    An optional second column, filled by a page through BaseLayout's `rail`
+    slot. It is the one piece of page structure that cannot be written from
+    inside <main>, because it is a sibling of it in this grid. A theme that
+    rearranges the grid has to name the area itself; this is only the default.
+  */
+  .page:has(> .rail) { grid-template-areas: 'nav' 'identity' 'main' 'rail'; }
+  .rail { grid-area: rail; }
   .identity-column { grid-area: identity; }
   .page > main { grid-area: main; margin-block-start: var(--space-l); }
-
-  /* Sidebar themes stack identity above navigation, beside the content. */
-  @media (min-width: 60rem) {
-    :root[data-theme='a'] .page,
-    :root[data-theme='c'] .page {
-      grid-template-columns: 16rem minmax(0, 1fr);
-      grid-template-areas: 'identity main' 'nav main';
-      grid-template-rows: auto 1fr;
-      align-items: start;
-    }
-    :root[data-theme='a'] .site-nav,
-    :root[data-theme='c'] .site-nav { flex-direction: column; }
-    :root[data-theme='a'] .page > main,
-    :root[data-theme='c'] .page > main { margin-block-start: 0; }
-  }
 
   .flow > * + * { margin-block-start: var(--space-s); }
   .flow h2 + *, .flow h3 + * { margin-block-start: var(--space-2xs); }
@@ -126,26 +127,6 @@
     object-fit: cover;
     object-position: top;
   }
-  :root[data-theme='b'] .identity__photo { border-radius: 50%; }
-
-  /*
-    The top-nav theme has no sidebar, so identity becomes a compact hero band
-    instead of a full-width column that would push the content below the fold.
-  */
-  @media (min-width: 40rem) {
-    :root[data-theme='b'] .identity {
-      display: grid;
-      grid-template-areas: 'photo name' 'photo meta' 'photo social';
-      grid-template-columns: auto minmax(0, 1fr);
-      grid-template-rows: auto auto 1fr;
-      gap: var(--space-3xs) var(--space-m);
-      align-content: start;
-    }
-    :root[data-theme='b'] .identity__name { grid-area: name; align-self: end; }
-    :root[data-theme='b'] .identity__photo { grid-area: photo; max-inline-size: 9rem; align-self: start; }
-    :root[data-theme='b'] .identity__meta { grid-area: meta; }
-    :root[data-theme='b'] .identity .social { grid-area: social; align-self: start; }
-  }
   .identity__meta { color: var(--color-muted); font-size: var(--step--1); }
   .identity__meta p { margin: 0; }
 
@@ -161,17 +142,6 @@
     border-block-end-color: var(--color-accent);
     color: var(--color-heading);
     font-weight: 600;
-  }
-
-  /*
-    The top-nav theme separates navigation from content with a rule across the
-    content column. A viewport-wide rule was tried and reverted: sizing it in vw
-    overflows by the scrollbar's width, and containing that needs an
-    `overflow-x` on an ancestor, which is a lot of machinery for a longer line.
-  */
-  :root[data-theme='b'] .site-nav {
-    border-block-end: var(--rule) solid var(--color-border);
-    padding-block-end: var(--space-s);
   }
 
   .social { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-s); font-size: var(--step--1); }
@@ -193,7 +163,6 @@
     flex-direction: column;
     gap: var(--space-2xs);
   }
-  :root[data-theme='a'] .person { background: none; border: 0; border-block-start: var(--rule) solid var(--color-border); border-radius: 0; }
   .person__avatar {
     object-fit: cover;
     object-position: top;
@@ -205,7 +174,6 @@
     color: var(--color-muted);
     font-size: var(--step-2);
   }
-  :root[data-theme='b'] .person__avatar { border-radius: 50%; }
   .person__name { font-size: var(--step-0); margin: 0; }
   .person__rank { color: var(--color-muted); font-size: var(--step--1); }
 
@@ -346,6 +314,15 @@
     position: absolute;
     white-space: nowrap;
   }
+  /*
+    Per-theme markup, from the Themed component. The switcher swaps
+    `data-theme` without reloading, so a variant cannot be picked at build
+    time: every variant ships in the page and each theme's stylesheet hides the
+    ones that are not its own. `display: none` takes them out of the
+    accessibility tree as well as off the screen.
+  */
+  .themed { display: contents; }
+
   .muted { color: var(--color-muted); }
   .small { font-size: var(--step--1); }
   .stack-l > * + * { margin-block-start: var(--space-l); }

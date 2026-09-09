@@ -35,11 +35,20 @@ fail the build on a bad entry, and `scripts/generate-cms-config.ts` turns it
 into `public/admin/config.yml`, which decides what the CMS form offers. The CMS
 cannot offer a field the build would reject.
 
-**Three themes, one markup.** `src/lib/themes.ts` holds the three designs as
-token sets — fonts, colours, a Utopia type and space scale, and a few
-structural choices. `src/components/Tokens.astro` emits all three, scoped to a
-`data-theme` attribute. No theme has its own stylesheet, which is what keeps the
-switcher cheap.
+**Three designs, one markup.** `src/lib/themes.ts` holds each design's tokens —
+fonts, colours, a Utopia type and space scale, a few shape values — and
+`src/components/Tokens.astro` emits all three, scoped to a `data-theme`
+attribute. Beyond tokens, each design has its own stylesheet in
+`src/styles/themes/`, extending the same cascade layers `base.css` declares, so
+a design can change arrangement and component detail rather than only tint.
+What stays shared is the content, the routes and the markup, which is what the
+switcher relies on: it swaps an attribute, never a page.
+
+Navigation, the identity block and `<main>` are each emitted exactly once, in
+`BaseLayout`, because a per-design copy of one of them would put two "Primary"
+landmarks and every link twice into every page. Where a design needs markup the
+others do not have, it comes from `src/components/Themed.astro`, which ships
+every variant and lets the active design's stylesheet reveal one.
 
 **Publications come from ORCID.** `pnpm sync:orcid` writes
 `src/data/orcid-snapshot.json`; the build reads only that file, so builds are

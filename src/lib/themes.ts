@@ -1,9 +1,11 @@
 /**
  * The three design directions being compared.
  *
- * All three render the same markup and the same content: only tokens change.
- * That is what makes the runtime switcher honest — Sophie is comparing designs,
- * not three different sites.
+ * Each is a token set here — fonts, colours, a type and space scale, a few
+ * shape values — and each also has its own stylesheet in `styles/themes/`,
+ * where its arrangement and its component variants live. What all three share
+ * is the content, the routes and the markup: that is what makes the runtime
+ * switcher honest — Sophie is comparing designs, not three different sites.
  *
  * Design language is our own; the content model and some structural ideas are
  * adapted from MIT-licensed projects listed in CREDITS.md.

@@ -1,0 +1,25 @@
+/*
+ * Theme C. Structure, arrangement and component variants for this design only.
+ *
+ * Everything here is scoped to `:root[data-theme='c']` and declared inside the
+ * layers `base.css` already ordered, so this file extends the one cascade
+ * rather than competing with it. Colour, type and spacing are not here: those
+ * are tokens, generated from `ThemeSpec` by `Tokens.astro`.
+ */
+@layer layout {
+  /* Identity above navigation, in a sidebar beside the content. */
+  @media (min-width: 60rem) {
+    :root[data-theme='c'] .page {
+      grid-template-columns: 16rem minmax(0, 1fr);
+      grid-template-areas: 'identity main' 'nav main';
+      grid-template-rows: auto 1fr;
+      align-items: start;
+    }
+    :root[data-theme='c'] .site-nav { flex-direction: column; }
+    :root[data-theme='c'] .page > main { margin-block-start: 0; }
+  }
+}
+
+@layer utilities {
+  :root[data-theme='c'] .themed:not([data-themes~='c']) { display: none; }
+}

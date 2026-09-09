@@ -1,0 +1,34 @@
+/*
+ * Theme A. Structure, arrangement and component variants for this design only.
+ *
+ * Everything here is scoped to `:root[data-theme='a']` and declared inside the
+ * layers `base.css` already ordered, so this file extends the one cascade
+ * rather than competing with it. Colour, type and spacing are not here: those
+ * are tokens, generated from `ThemeSpec` by `Tokens.astro`.
+ */
+@layer layout {
+  /* Identity above navigation, in a sidebar beside the content. */
+  @media (min-width: 60rem) {
+    :root[data-theme='a'] .page {
+      grid-template-columns: 16rem minmax(0, 1fr);
+      grid-template-areas: 'identity main' 'nav main';
+      grid-template-rows: auto 1fr;
+      align-items: start;
+    }
+    :root[data-theme='a'] .site-nav { flex-direction: column; }
+    :root[data-theme='a'] .page > main { margin-block-start: 0; }
+  }
+}
+
+@layer components {
+  :root[data-theme='a'] .person {
+    background: none;
+    border: 0;
+    border-block-start: var(--rule) solid var(--color-border);
+    border-radius: 0;
+  }
+}
+
+@layer utilities {
+  :root[data-theme='a'] .themed:not([data-themes~='a']) { display: none; }
+}

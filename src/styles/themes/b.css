@@ -1,0 +1,46 @@
+/*
+ * Theme B. Structure, arrangement and component variants for this design only.
+ *
+ * Everything here is scoped to `:root[data-theme='b']` and declared inside the
+ * layers `base.css` already ordered, so this file extends the one cascade
+ * rather than competing with it. Colour, type and spacing are not here: those
+ * are tokens, generated from `ThemeSpec` by `Tokens.astro`.
+ */
+@layer components {
+  :root[data-theme='b'] .identity__photo { border-radius: 50%; }
+  :root[data-theme='b'] .person__avatar { border-radius: 50%; }
+
+  /*
+    The top-nav theme has no sidebar, so identity becomes a compact hero band
+    instead of a full-width column that would push the content below the fold.
+  */
+  @media (min-width: 40rem) {
+    :root[data-theme='b'] .identity {
+      display: grid;
+      grid-template-areas: 'photo name' 'photo meta' 'photo social';
+      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-rows: auto auto 1fr;
+      gap: var(--space-3xs) var(--space-m);
+      align-content: start;
+    }
+    :root[data-theme='b'] .identity__name { grid-area: name; align-self: end; }
+    :root[data-theme='b'] .identity__photo { grid-area: photo; max-inline-size: 9rem; align-self: start; }
+    :root[data-theme='b'] .identity__meta { grid-area: meta; }
+    :root[data-theme='b'] .identity .social { grid-area: social; align-self: start; }
+  }
+
+  /*
+    The top-nav theme separates navigation from content with a rule across the
+    content column. A viewport-wide rule was tried and reverted: sizing it in vw
+    overflows by the scrollbar's width, and containing that needs an
+    `overflow-x` on an ancestor, which is a lot of machinery for a longer line.
+  */
+  :root[data-theme='b'] .site-nav {
+    border-block-end: var(--rule) solid var(--color-border);
+    padding-block-end: var(--space-s);
+  }
+}
+
+@layer utilities {
+  :root[data-theme='b'] .themed:not([data-themes~='b']) { display: none; }
+}

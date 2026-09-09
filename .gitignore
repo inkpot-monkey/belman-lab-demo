@@ -22,3 +22,4 @@ result-*
 .DS_Store
 *.log
 public/admin/sveltia-cms.mjs
+public/admin/index.html

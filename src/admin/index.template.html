@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
+    <!-- TEMPLATE. scripts/generate-cms-config.ts writes public/admin/index.html from this. -->
     <title>Edit the site</title>
     <link href="./config.yml" type="text/yaml" rel="cms-config-url" />
     <style>
@@ -60,6 +61,7 @@
       <summary>Signed out, or your access token stopped working? Open this.</summary>
       <div class="help__body">
         <p>
+          This CMS edits <code>{{REPO}}</code>.
           Signing in needs a <strong>GitHub access token</strong>. It is a long password that
           GitHub generates for you. It expires, so this will need doing again roughly once a year.
         </p>
@@ -82,7 +84,7 @@
           <li>
             Under <strong>Repository access</strong>, choose
             <strong>Only select repositories</strong> and pick
-            <code>sophbel.github.io</code>.
+            <code>{{REPO_NAME}}</code>.
           </li>
           <li>
             Under <strong>Permissions → Repository permissions</strong>, find

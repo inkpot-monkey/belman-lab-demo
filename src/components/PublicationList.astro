@@ -44,6 +44,16 @@ const { publications, notes = {} } = Astro.props;
           {publication.year && <span class="pub__meta-year"> · {publication.year}</span>}
           {publication.isPreprint && <> · <span class="tag">Preprint</span></>}
         </p>
+        {/*
+          The DOI, given a line of its own for a design that reads a paper as a
+          record with an identifier rather than as a title with a citation
+          under it. Hidden by default, so it is out of the accessibility tree
+          as well as off the screen wherever it is not the dialect - the same
+          arrangement as the year above.
+        */}
+        {publication.doi && (
+          <p class="pub__doi"><a href={`https://doi.org/${publication.doi}`} rel="noopener">doi:{publication.doi}</a></p>
+        )}
         {note && <p class="small">{note}</p>}
       </li>
     );

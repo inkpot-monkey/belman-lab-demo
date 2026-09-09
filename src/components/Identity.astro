@@ -15,13 +15,13 @@ const { primary = false } = Astro.props;
 ---
 <div class="identity">
   {/*
-    The lab's own name, above the institutional taxonomy underneath it. Themed
-    markup rather than a line every design has to find room for: Record sets it
-    as a small tracked label over the strapline, Feature as the masthead flag
-    the rest of the page hangs off. This is a line inside the identity block,
-    not a second identity block.
+    The lab's own name, above the institutional taxonomy underneath it. All
+    three designs want it and each sets it differently: Record as a small
+    tracked label over the strapline, Feature as the masthead flag the rest of
+    the page hangs off, Instrument as the first line of the metadata rail. One
+    line inside the identity block, not a second identity block.
   */}
-  <Themed themes={['a', 'b']}><p class="identity__lab">{site.labName}</p></Themed>
+  <p class="identity__lab">{site.labName}</p>
   {primary
     ? <h1 class="identity__name">{site.name}</h1>
     : <p class="identity__name">{site.name}</p>}
@@ -37,11 +37,29 @@ const { primary = false } = Astro.props;
       {site.name}. Photograph credit to be added before launch.
     </figcaption>
   </figure>
+  {/*
+    Each line carries the name of the field it came from. The keys are hidden
+    by default and shown by the design that sets this block as a keyed
+    metadata rail; the others get exactly the four lines they had before, since
+    a hidden <span> inside a <p> changes nothing about the <p>. Written in the
+    markup rather than generated in CSS so they are real text a screen reader
+    reads and a translator can reach.
+
+    One line each, so no whitespace lands between the key and its value.
+  */}
   <div class="identity__meta">
-    <p>{site.discipline}</p>
-    <p>{site.jobTitle}</p>
-    <p>{site.department}</p>
-    <p>{site.institution}</p>
+    <p><span class="identity__key">role</span>{site.discipline}</p>
+    <p><span class="identity__key">title</span>{site.jobTitle}</p>
+    <p><span class="identity__key">dept</span>{site.department}</p>
+    <p><span class="identity__key">inst</span>{site.institution}</p>
+    {/*
+      The identifier itself rather than the word "ORCID". One design reads the
+      lab as something addressable and wants the number on the page; the other
+      two have the link below and would only be repeating it.
+    */}
+    <Themed themes="c">
+      <p class="identity__id"><span class="identity__key">orcid</span>{site.orcid}</p>
+    </Themed>
   </div>
   <div class="social">
     <a href={`https://orcid.org/${site.orcid}`} rel="noopener">ORCID</a>

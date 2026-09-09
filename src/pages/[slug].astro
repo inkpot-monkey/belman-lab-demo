@@ -22,7 +22,11 @@ const sections: [string, string][] = headings
   .filter((heading) => heading.depth === 2)
   .map((heading) => [heading.slug, heading.text]);
 ---
-<BaseLayout title={page.data.title as string} description={page.data.description as string | undefined}>
+<BaseLayout
+  title={page.data.title as string}
+  description={page.data.description as string | undefined}
+  source={`src/content/pages/${page.id}.md`}
+>
   <Fragment slot="rail"><Themed themes="a"><SectionIndex sections={sections} /></Themed></Fragment>
 
   <h1>{page.data.title}</h1>

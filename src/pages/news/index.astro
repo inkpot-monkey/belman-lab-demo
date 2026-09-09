@@ -9,6 +9,7 @@ const news = (await getCollection('news')).sort(
 );
 const format = (date: Date) =>
   date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
 ---
 <BaseLayout title="News" description="Announcements and updates from the lab.">
   <h1>News</h1>

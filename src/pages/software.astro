@@ -2,9 +2,10 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-// Off the menu for now. Software and Data get top-level navigation parity
-// with Publications as part of the computational design's own run; until
-// then the page builds and is reachable by URL, the way /how-this-works is.
+// In the menu directly under Publications. That placement is the point of the
+// page: code and data named at the top level rather than folded into a GitHub
+// link, which is the fastest thing separating a research group's site from a
+// departmental template. See COLLECTION_NAV in src/lib/nav.ts.
 const sorted = (await getCollection('software')).sort(
   (a, b) => (a.data.order as number) - (b.data.order as number),
 );
@@ -22,6 +23,7 @@ const entries = await Promise.all(
     Content: (await render(entry)).Content,
   })),
 );
+
 ---
 <BaseLayout title="Software and data" description="Research code and data released by the lab.">
   <h1>Software and data</h1>

@@ -35,6 +35,8 @@ export interface SiteDetails {
   orcid: string;
   github?: string;
   scholar?: string;
+  /** Where the site's own source lives. Absent means no source affordances. */
+  repo?: string;
 }
 
 export const site = parsed.data as unknown as SiteDetails;

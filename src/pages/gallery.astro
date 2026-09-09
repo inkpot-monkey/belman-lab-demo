@@ -9,6 +9,7 @@ import { url } from '../lib/paths.ts';
 // Fixtures shaped like @palebluebytes/cms `Photo[]`. Swapping in
 // `await fetchPhotos({ folderId, auth })` is the only change needed to go live.
 const state = galleryState(fixtures as GalleryPhoto[]);
+
 ---
 <BaseLayout title="Gallery" description="Photographs from the lab.">
   <h1>Gallery</h1>

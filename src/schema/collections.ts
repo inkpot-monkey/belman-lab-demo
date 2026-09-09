@@ -146,6 +146,13 @@ export const fileCollections: FileCollectionSpec[] = [
           { name: 'address', label: 'Postal address', widget: 'text', required: false },
           { name: 'orcid', label: 'ORCID iD', widget: 'string' },
           { name: 'github', label: 'GitHub username', widget: 'string', required: false },
+          {
+            name: 'repo',
+            label: 'Site repository',
+            widget: 'string',
+            required: false,
+            hint: 'Where this site\u2019s own source lives, e.g. https://github.com/sophbel/sophbel.github.io. Drives the "edit this page" links and the revision line in the footer.',
+          },
           { name: 'scholar', label: 'Google Scholar user id', widget: 'string', required: false },
         ],
       },

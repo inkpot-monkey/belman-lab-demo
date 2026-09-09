@@ -13,7 +13,11 @@ const { item } = Astro.props;
 const { Content } = await render(item);
 const date = item.data.date as Date;
 ---
-<BaseLayout title={item.data.title as string} description={(item.data.summary as string | undefined) ?? undefined}>
+<BaseLayout
+  title={item.data.title as string}
+  description={(item.data.summary as string | undefined) ?? undefined}
+  source={`src/content/news/${item.id}.md`}
+>
   <h1>{item.data.title}</h1>
   <p class="muted"><time datetime={date.toISOString()}>{date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</time></p>
   <DemoBanner what="This is a placeholder news item, not a real announcement." />

@@ -26,6 +26,7 @@ const groups = PERSON_RANKS.map((rank) => ({
 })).filter((group) => group.members.length > 0);
 
 const sections: [string, string][] = groups.map((group) => [group.id, group.rank]);
+
 ---
 <BaseLayout title="Team" description="People in the Belman Lab.">
   <Fragment slot="rail"><Themed themes="a"><SectionIndex sections={sections} heading="Positions" /></Themed></Fragment>

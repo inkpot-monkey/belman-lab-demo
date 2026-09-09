@@ -18,7 +18,12 @@ export interface ThemeSpec {
   shortName: string;
   /** One line shown in the switcher explaining the intent. */
   description: string;
-  fonts: { display: string; body: string };
+  /**
+   * `mono` is optional: it is the one design that gives monospace a job beyond
+   * `<code>` that needs a real face for it, and a theme that says nothing
+   * keeps the system stack.
+   */
+  fonts: { display: string; body: string; mono?: string };
   /** Utopia type scale, in px at each end of the viewport range. */
   type: { minBase: number; maxBase: number; minRatio: number; maxRatio: number };
   /** Base space step in px at each end. */
@@ -64,9 +69,21 @@ const GROTESQUE = "'Archivo Variable', 'Helvetica Neue', Helvetica, Arial, sans-
 const DISPLAY_SERIF = "'Fraunces Variable', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif";
 const EDITORIAL_SANS = "'Instrument Sans Variable', 'Helvetica Neue', Helvetica, Arial, sans-serif";
 
-const SERIF = "'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif";
-const SANS = "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
 const MONO = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace";
+
+/*
+ * IBM Plex Sans with Source Code Pro, for the design where monospace is not a
+ * code style but the voice metadata is written in. The mono partner comes from
+ * a different family because Plex Mono has no variable cut - which is a
+ * mismatch worth knowing about: Source Code Pro is a little narrower and a
+ * little larger on the body than Plex Mono, so the two faces are set at the
+ * same step and left alone rather than optically corrected.
+ *
+ * The mono fallback chain keeps the system monospace stack behind it, because
+ * a metadata rail that falls back to a proportional face stops being a rail.
+ */
+const PLEX_SANS = "'IBM Plex Sans Variable', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
+const SOURCE_MONO = `'Source Code Pro Variable', ${MONO}`;
 
 export const THEMES: ThemeSpec[] = [
   {
@@ -167,29 +184,72 @@ export const THEMES: ThemeSpec[] = [
   },
   {
     id: 'c',
-    name: 'Editorial scientific',
-    shortName: 'Editorial',
-    description: 'Serif display against sans body, with her lavender carried forward.',
-    fonts: { display: SERIF, body: SANS },
-    type: { minBase: 16, maxBase: 20, minRatio: 1.25, maxRatio: 1.414 },
-    space: { minBase: 16, maxBase: 26 },
+    name: 'Instrument',
+    shortName: 'Instrument',
+    description: 'Monospaced identifiers against a humanist sans, on a labelled panel. The site is something the lab keeps.',
+    fonts: { display: PLEX_SANS, body: PLEX_SANS, mono: SOURCE_MONO },
+    /*
+     * The narrowest scale of the three, and deliberately so. Hierarchy here
+     * comes from weight, case, colour and rules; a page title is about twice
+     * the body rather than Record's four times or Feature's six, so nothing on
+     * the page shouts and the data is the largest thing on it.
+     */
+    type: { minBase: 16.5, maxBase: 17.5, minRatio: 1.14, maxRatio: 1.19 },
+    /* And the tightest spacing. Compression is the point: this is a panel. */
+    space: { minBase: 14, maxBase: 16 },
+    /*
+     * Cool near-monochrome, and one accent lifted straight out of viridis - the
+     * colormap this field plots its data in. That is the colour idea: the one
+     * hue on the page is a hue the reader has already seen on a figure, so it
+     * belongs to the work rather than being picked to look like something.
+     *
+     * `#365c8d` is the third stop of eight-class viridis. It clears 4.5:1 both
+     * ways - as link text on the ground, and as the ground under white in the
+     * demo banner - which the teal and green stops further along the ramp do
+     * not, so the accent is the darkest stop that is still recognisably the
+     * colormap.
+     *
+     * Three rule colours at one width, because the rules do all the dividing
+     * here and a single weight flattens every list into every other one:
+     * `heading` opens a block, `border` closes a heading, `hairline` separates
+     * the rows inside. A page of uniformly pale rules reads as unfinished
+     * rather than as restrained, which is the trap this design walks into if
+     * every line on it is the same grey.
+     */
     colors: {
-      bg: '#fdfcfe',
-      surface: '#f6f1f8',
-      text: '#3a3440',
-      muted: '#6b6375',
-      heading: '#1d1823',
-      accent: '#7b4b8a',
+      bg: '#f6f7f9',
+      surface: '#eceef1',
+      text: '#1b2024',
+      muted: '#576068',
+      heading: '#0b0f12',
+      accent: '#365c8d',
       accentText: '#ffffff',
-      border: '#e7dfeb',
+      border: '#98a2ab',
+      hairline: '#ccd3d9',
     },
-    shape: { radius: '4px', rule: '2px', measure: '66ch' },
+    /*
+     * Nothing is rounded, and the rules are hairlines. The measure is the
+     * widest of the three because this design's content column is the
+     * narrowest: the page is held to 74rem rather than 78 and the rail takes
+     * 15 of them, so 70ch fills the column instead of leaving a band of empty
+     * width the section rules point into.
+     */
+    shape: { radius: '0', rule: '1px', measure: '70ch' },
+    thesis:
+      'The site is an instrument the lab keeps, not a brochure about it. Monospace carries every identifier and every identifier is labelled with the field it came from, hairline rules do all the dividing, software and data sit in the menu beside publications, and each page says which file it is written in and which commit built it.',
+    saysAboutYou:
+      'That the work is reproducible and that you expect to be checked. It reads as a working group with an output rather than as a person with a profile — closer to a Nextstrain build page than to a university site.',
+    cost:
+      'Warmth, and the widest audience. Nothing on the page is large, so nothing reaches a visitor who is not already looking for you, and the machinery it puts on show — file paths, commit hashes, an ORCID iD — means nothing to a reader outside research and reads as cold to one inside it. The identity panel is also repeated at full height on every page, which is a plate on an instrument and a lot of chrome above the content on a phone.',
+    precedent:
+      'Nextstrain and bedford.io; Tufte on data-ink, where the ornament is removed until only the measurement is left.',
   },
 ];
 
 export const DEFAULT_THEME = THEMES[0]!.id;
 
-export const FONT_STACKS = { serif: SERIF, sans: SANS, mono: MONO };
+/** Fallbacks for anything a design does not name a face for. */
+export const FONT_STACKS = { mono: MONO };
 
 /** Viewport range every fluid value interpolates across. */
 export const VIEWPORT = { minViewport: 320, maxViewport: 1240 };

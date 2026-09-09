@@ -121,6 +121,11 @@ collections:
         label: Image
         widget: image
         required: false
+      - name: imageAlt
+        label: Image description
+        widget: string
+        required: false
+        hint: For screen readers. Leave blank if the image is purely decorative.
       - name: body
         label: Content
         widget: markdown
@@ -146,6 +151,11 @@ collections:
         label: Image
         widget: image
         required: false
+      - name: imageAlt
+        label: Image description
+        widget: string
+        required: false
+        hint: For screen readers. Leave blank if the image is purely decorative.
       - name: funder
         label: Funder
         widget: string

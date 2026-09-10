@@ -1,6 +1,12 @@
-# How a design differs from the other two
+# How a design differs from the others
 
-Three designs share one set of markup, one content model and one set of routes.
+Six designs share one set of markup, one content model and one set of routes:
+the three candidates, each with an identity of its own, and the three
+token-only designs the demo started from, kept so the switcher can show the
+before as well as the after. A starting point is a `ThemeSpec` and nothing
+else — it has no stylesheet in `src/styles/themes/` and is not getting one,
+because being only tokens is the whole of what it has to demonstrate.
+
 The switcher swaps `data-theme` on `<html>` and nothing else — no reload, no
 second page, no second copy of the content. Everything a design can change, it
 changes from inside that constraint.
@@ -12,9 +18,10 @@ This is the map of what those levers are, in the order you would reach for them.
 ## 1. Tokens — `src/lib/themes.ts`
 
 Each design is a `ThemeSpec`: two or three faces, a Utopia type scale, a space
-scale, a colour set, and four shape values. `src/components/Tokens.astro` turns
-all three into one stylesheet of custom properties, each block scoped to
-`:root[data-theme="<id>"]`.
+scale, a colour set, and five shape values. `src/components/Tokens.astro` turns
+every design into one stylesheet of custom properties, each block scoped to
+`:root[data-theme="<id>"]`. A starting point stops here; a candidate carries on
+through the four levers below.
 
 Nothing that belongs here belongs in a stylesheet. If you find yourself writing
 a literal `2px` or `#f0f0f0` in `src/styles/themes/`, the value wants to be a
@@ -36,8 +43,10 @@ its position rather than leaving it to be inferred from an absence.
 ## 2. Arrangement — the shared grid
 
 `base.css` declares one grid, `.page`, with four named areas: `nav`,
-`identity`, `main` and an optional `rail`. Every design rearranges those areas
-from its own file; none of them moves the markup.
+`identity`, `main` and an optional `rail`. Each candidate rearranges those areas
+from its own file and none of them moves the markup; the starting points take
+the default arrangement, which is what the candidates all looked like before
+their identity runs.
 
 ```
 Record (≥62rem)              Feature (any width)   Instrument (≥48rem)
@@ -94,10 +103,15 @@ Three files, one shape each:
 Where a design needs an element the others do not — Feature's cover question,
 Record's funder strip, Instrument's software listing and source line — it comes
 from `<Themed themes="b">`. The wrapper ships every variant into every page and
-each design's stylesheet hides the ones that are not its own, because the
-switcher swaps an attribute at runtime and a variant cannot be chosen at build
-time. `display: none` takes the hidden ones out of the accessibility tree as
-well as off the screen, so a screen reader hears one version, not three.
+each design's stylesheet reveals the ones that are its own, because the switcher
+swaps an attribute at runtime and a variant cannot be chosen at build time.
+`display: none` takes the rest out of the accessibility tree as well as off the
+screen, so a screen reader hears one version, not three.
+
+Hidden by default, revealed by name — not the other way round. A design with no
+stylesheet of its own would otherwise show every variant at once, which is
+exactly what the three starting points are, and failing closed turns a
+forgotten reveal into a missing block rather than three stacked ones.
 
 The wrapper is `display: contents`, so it never takes a grid track. That has one
 consequence worth knowing: a section a design supplies for itself sits in the
@@ -117,7 +131,9 @@ Three rules for using it:
 ## 5. Naming — how one component means three things
 
 Most of the separation is not new markup at all. It is one element, named
-precisely enough that three designs can each have an opinion about it.
+precisely enough that three designs can each have an opinion about it. A
+starting point has an opinion about none of them, and takes the shared
+treatment in every row below.
 
 | Class | What it names | Record | Feature | Instrument |
 | --- | --- | --- | --- | --- |
@@ -142,7 +158,7 @@ this goes wrong, and it broke the moment a third paragraph appeared.
 Anything here that a change would break is pinned by a test or a checker.
 
 - **One `<nav>`, one identity block, one `<main>`, one `<h1>` per page**, in
-  every design — `test/single-emission.test.ts` and `pnpm check:responsive`.
+  all six designs — `test/single-emission.test.ts` and `pnpm check:responsive`.
 - **The measure constrains prose, not the column.** `--measure` applies to
   paragraphs and headings, never to a grid container: applying it to the
   container squeezes the team grid, the gallery and the card lists.

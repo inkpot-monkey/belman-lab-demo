@@ -72,7 +72,20 @@
   .switcher__legend { color: var(--color-muted); letter-spacing: 0.06em; text-transform: uppercase; }
   .switcher__current { color: var(--color-heading); font-weight: 600; }
 
-  .switcher__options { display: grid; gap: var(--space-3xs); padding: var(--space-2xs) var(--space-xs) var(--space-xs); }
+  /*
+    The list scrolls rather than the panel, so the summary stays put and a
+    short window still gets a control it can shut. Six designs at full
+    description is 600px of panel, which is most of a laptop's viewport height.
+  */
+  .switcher__body { max-block-size: min(45vh, 30rem); overflow-y: auto; }
+
+  /* `min-inline-size: 0` because a fieldset's intrinsic minimum is its
+     content's, which would push the panel wider than its own max. */
+  .switcher__set { border: 0; margin: 0; min-inline-size: 0; padding: var(--space-2xs) var(--space-xs); }
+  .switcher__set + .switcher__set { border-block-start: var(--rule) solid var(--color-border); }
+  .switcher__group { color: var(--color-muted); letter-spacing: 0.06em; padding: 0; text-transform: uppercase; }
+
+  .switcher__options { display: grid; gap: var(--space-3xs); padding-block-start: var(--space-3xs); }
   .switcher__option { display: grid; grid-template-columns: auto 1fr; gap: var(--space-2xs); align-items: start; cursor: pointer; padding: var(--space-3xs); border-radius: var(--radius); }
   .switcher__option:hover { background: var(--color-bg); }
   .switcher__text, .switcher__name, .switcher__desc { display: block; }
@@ -88,6 +101,7 @@
   @media (max-width: 34rem) {
     .switcher { inset-inline: var(--space-2xs); max-inline-size: none; }
     .switcher__legend, .switcher__desc, .switcher__name { display: none; }
+    .switcher__set { padding-block: var(--space-3xs); }
     .switcher__short { display: block; }
     .switcher__options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     /* Comfortable to hit with a thumb rather than only with a cursor. */

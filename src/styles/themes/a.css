@@ -584,5 +584,5 @@
 }
 
 @layer utilities {
-  :root[data-theme='a'] .themed:not([data-themes~='a']) { display: none; }
+  :root[data-theme='a'] .themed[data-themes~='a'] { display: contents; }
 }

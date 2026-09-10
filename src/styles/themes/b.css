@@ -858,5 +858,5 @@
 }
 
 @layer utilities {
-  :root[data-theme='b'] .themed:not([data-themes~='b']) { display: none; }
+  :root[data-theme='b'] .themed[data-themes~='b'] { display: contents; }
 }

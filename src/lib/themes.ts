@@ -56,6 +56,17 @@ export interface ThemeSpec {
   saysAboutYou?: string;
   cost?: string;
   precedent?: string;
+  /**
+   * One of the three the demo started from, kept so the switcher can show the
+   * before as well as the after.
+   *
+   * These have no stylesheet in `styles/themes/` and are not getting one: what
+   * they are is a token set over the shared arrangement, which is exactly what
+   * the three candidates were before their identity runs. That is the
+   * comparison - a design that is a palette and a font stack against a design
+   * that is a palette, a font stack, a grammar and an argument.
+   */
+  startingPoint?: boolean;
 }
 
 /*
@@ -94,6 +105,14 @@ const MONO = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospac
  */
 const PLEX_SANS = "'IBM Plex Sans Variable', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
 const SOURCE_MONO = `'Source Code Pro Variable', ${MONO}`;
+
+/*
+ * The system stacks the three starting points were set in. No web fonts at
+ * all: that was the point of them, and self-hosting a face for a design nobody
+ * is going to pick would ship four more files for a comparison.
+ */
+const SERIF = "'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif";
+const SANS = "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
 
 export const THEMES: ThemeSpec[] = [
   {
@@ -254,7 +273,102 @@ export const THEMES: ThemeSpec[] = [
     precedent:
       'Nextstrain and bedford.io; Tufte on data-ink, where the ornament is removed until only the measurement is left.',
   },
+
+  /*
+   * The three the demo opened with, kept as they were.
+   *
+   * They differ from each other in colour, in a system font stack and in a few
+   * shape values, and in nothing else: one arrangement, one set of components,
+   * three palettes. That was the honest starting position and it is worth being
+   * able to go back to, because "these three now look like three designs" is a
+   * claim, and the switcher is where it can be checked rather than believed.
+   *
+   * Two things about them are not archaeology. Their colours are the light half
+   * of what were `light-dark()` pairs - the site is light-only now and the dark
+   * halves have nowhere to go. And their heavier rule weights are written out
+   * because base.css used literal 2px and 3px marker bars back then; the values
+   * are what those rules actually were.
+   *
+   * No `thesis`, `saysAboutYou`, `cost` or `precedent`: none of them was ever
+   * written, which is the difference these six entries exist to show.
+   */
+  {
+    id: 'classic',
+    name: 'Classic academic',
+    shortName: 'Classic',
+    description: 'Serif, dense, restrained. Conservative and unmistakably scholarly.',
+    startingPoint: true,
+    fonts: { display: SERIF, body: SERIF },
+    type: { minBase: 17, maxBase: 19, minRatio: 1.2, maxRatio: 1.25 },
+    space: { minBase: 16, maxBase: 20 },
+    colors: {
+      bg: '#fffefb',
+      surface: '#f7f5ef',
+      text: '#23262d',
+      muted: '#5d626e',
+      heading: '#11131a',
+      accent: '#7a2e2e',
+      accentText: '#ffffff',
+      border: '#e2ded2',
+    },
+    shape: { radius: '2px', rule: '1px', ruleStrong: '2px', ruleHeavy: '3px', measure: '68ch' },
+  },
+  {
+    id: 'modern',
+    name: 'Modern lab',
+    shortName: 'Modern',
+    description: 'Sans-serif, open, photo-forward. Reads as a contemporary research group.',
+    startingPoint: true,
+    fonts: { display: SANS, body: SANS },
+    type: { minBase: 16, maxBase: 19, minRatio: 1.25, maxRatio: 1.333 },
+    space: { minBase: 18, maxBase: 28 },
+    colors: {
+      bg: '#ffffff',
+      surface: '#f2f6f8',
+      text: '#2b333d',
+      muted: '#5f6b78',
+      heading: '#101820',
+      /*
+       * `#0d7c8b`, one step darker than the `#0d7d8c` this shipped as. The
+       * original cleared 4.5:1 against the white page and missed it at 4.46:1
+       * against its own tinted surface - a DOI on a card, a section link in
+       * the manual, the placeholder mark on the team page. These three are
+       * re-rendered under today's rules rather than restored as artefacts, and
+       * the rule that no text on this site fails AA is one of them.
+       */
+      accent: '#0d7c8b',
+      accentText: '#ffffff',
+      border: '#dde5ea',
+    },
+    shape: { radius: '12px', rule: '1px', ruleStrong: '2px', ruleHeavy: '3px', measure: '72ch' },
+  },
+  {
+    id: 'editorial',
+    name: 'Editorial scientific',
+    shortName: 'Editorial',
+    description: 'Serif display against sans body, with her lavender carried forward.',
+    startingPoint: true,
+    fonts: { display: SERIF, body: SANS },
+    type: { minBase: 16, maxBase: 20, minRatio: 1.25, maxRatio: 1.414 },
+    space: { minBase: 16, maxBase: 26 },
+    colors: {
+      bg: '#fdfcfe',
+      surface: '#f6f1f8',
+      text: '#3a3440',
+      muted: '#6b6375',
+      heading: '#1d1823',
+      accent: '#7b4b8a',
+      accentText: '#ffffff',
+      border: '#e7dfeb',
+    },
+    shape: { radius: '4px', rule: '2px', ruleStrong: '2px', ruleHeavy: '3px', measure: '66ch' },
+  },
 ];
+
+/** The three with an identity of their own, in the order they were built. */
+export const CANDIDATES = THEMES.filter((theme) => !theme.startingPoint);
+/** The three the demo opened with, kept for comparison. */
+export const STARTING_POINTS = THEMES.filter((theme) => theme.startingPoint);
 
 export const DEFAULT_THEME = THEMES[0]!.id;
 

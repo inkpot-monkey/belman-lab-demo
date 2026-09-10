@@ -788,5 +788,5 @@
 }
 
 @layer utilities {
-  :root[data-theme='c'] .themed:not([data-themes~='c']) { display: none; }
+  :root[data-theme='c'] .themed[data-themes~='c'] { display: contents; }
 }

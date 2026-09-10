@@ -11,9 +11,23 @@
  * it is open persists too - a phone is where the panel is most in the way and
  * also where reopening it is most annoying.
  */
-import { THEMES, DEFAULT_THEME } from '../lib/themes.ts';
+import { THEMES, CANDIDATES, STARTING_POINTS, DEFAULT_THEME } from '../lib/themes.ts';
 
 const fallback = THEMES.find((theme) => theme.id === DEFAULT_THEME) ?? THEMES[0]!;
+
+/*
+ * Two sets, labelled, rather than six entries in one list.
+ *
+ * The three starting points are not six-way competition - they are the before.
+ * Listed flat beside the candidates they read as three more options to weigh,
+ * which is exactly the wrong thing to ask her to do; grouped and named, they
+ * are what the work moved away from, and switching into one is the fastest way
+ * to see what the work bought.
+ */
+const groups = [
+  { label: 'The three designs', themes: CANDIDATES },
+  { label: 'Where they started', themes: STARTING_POINTS },
+].filter((group) => group.themes.length > 0);
 ---
 <aside class="switcher" aria-label="Design preview">
   <details class="switcher__panel" open>
@@ -23,16 +37,28 @@ const fallback = THEMES.find((theme) => theme.id === DEFAULT_THEME) ?? THEMES[0]
       <span class="switcher__current"><span class="switcher__name">{fallback.name}</span><span class="switcher__short">{fallback.shortName}</span></span>
     </summary>
 
-    <div class="switcher__options" role="radiogroup" aria-label="Preview design">
-      {THEMES.map((theme) => (
-        <label class="switcher__option">
-          <input type="radio" name="theme" value={theme.id} />
-          <span class="switcher__text">
-            <span class="switcher__name">{theme.name}</span>
-            <span class="switcher__short">{theme.shortName}</span>
-            <span class="switcher__desc">{theme.description}</span>
-          </span>
-        </label>
+    {/*
+      A fieldset per set, which is the native grouping for radios and needs no
+      ARIA to say so. Every radio keeps the one `name`, so the two sets are one
+      choice to the browser and to a screen reader alike.
+    */}
+    <div class="switcher__body">
+      {groups.map((group) => (
+        <fieldset class="switcher__set">
+        <legend class="switcher__group">{group.label}</legend>
+          <div class="switcher__options">
+            {group.themes.map((theme) => (
+              <label class="switcher__option">
+                <input type="radio" name="theme" value={theme.id} />
+                <span class="switcher__text">
+                  <span class="switcher__name">{theme.name}</span>
+                  <span class="switcher__short">{theme.shortName}</span>
+                  <span class="switcher__desc">{theme.description}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
       ))}
     </div>
   </details>
@@ -79,6 +105,10 @@ const fallback = THEMES.find((theme) => theme.id === DEFAULT_THEME) ?? THEMES[0]
       Open on a screen with room for it, shut on one without, and whatever she
       last chose beats both. Run inline where the panel is parsed rather than on
       load, so a panel that should be shut is never painted open.
+
+      62rem, not the 34 the panel narrows at: a fixed overlay this tall is a
+      quarter of a tablet, and `check:responsive` fails a switcher that covers
+      that much of a page it is not the subject of.
     */
     let stored = null;
     try {
@@ -86,7 +116,7 @@ const fallback = THEMES.find((theme) => theme.id === DEFAULT_THEME) ?? THEMES[0]
     } catch {
       // Same as above: no memory, but a working control.
     }
-    panel.open = stored === null ? matchMedia('(min-width: 34rem)').matches : stored === 'open';
+    panel.open = stored === null ? matchMedia('(min-width: 62rem)').matches : stored === 'open';
 
     panel.addEventListener('toggle', () => {
       try {

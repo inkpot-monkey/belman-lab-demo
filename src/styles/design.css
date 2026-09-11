@@ -105,12 +105,27 @@
         'identity main main'
         'nav      main main';
       /*
-        `auto 1fr`, not two auto rows. The content column spans both rows, and
-        two auto rows would share its height between them — which puts the
-        navigation halfway down a long page, below a gap the size of the
-        article. The second row takes the slack instead.
+        `1fr` on the second row, not two auto rows. The content column spans
+        both rows, and two auto rows would share its height between them —
+        which puts the navigation halfway down a long page, below a gap the
+        size of the article. The second row takes the slack instead.
+
+        The first row has a floor rather than being purely auto, because the
+        menu sits under it and the menu is the one thing on the page a reader
+        moves between pages to use. Left to the content, the identity row is
+        236px in the column and 276px as the masthead, so the menu jumped 40px
+        on the way to and from the home page — and the jump is not even
+        constant, since the two heights are driven by different type steps and
+        close to 29px at 62rem. A floor tall enough for the masthead at its
+        tallest makes the row one height everywhere, and the menu lands in the
+        same place on every page.
+
+        `minmax`, not a fixed height: an extra line in the footer of someone's
+        title, or a name that wraps, grows the row rather than overlapping the
+        menu. That page then sits lower than the rest, which is the right
+        failure — visible, and not a collision.
       */
-      grid-template-rows: auto 1fr;
+      grid-template-rows: minmax(17.5rem, auto) 1fr;
     }
     .page:has(> .rail) {
       grid-template-areas:
@@ -129,10 +144,35 @@
         'nav      main     main';
     }
 
-    .identity-column,
+    /*
+      The identity fills its row and closes with the heavy rule at the foot of
+      it, so the rule is at the same height on every page and the menu starts
+      at the same place under it. On the home page the masthead nearly fills
+      the row; in the column there is a band of air above the rule, which is
+      the column reaching a common baseline rather than a gap.
+    */
+    .identity-column {
+      align-self: stretch;
+      border-block-end: var(--rule-heavy) solid var(--color-heading);
+    }
     .site-nav { align-self: start; }
-    /* One item per line in the column, so the menu reads as an index. */
-    .site-nav { flex-direction: column; gap: 0; }
+    /*
+      One item per line in the column, so the menu reads as an index, and it
+      follows the reader down the page.
+
+      The column is two grid rows - identity, then nav - and the second takes
+      the slack, so the nav has the height of the page to stick inside. It
+      needs `align-self: start` above to do it: a stretched grid item is
+      already the height of its row and has nowhere to move. Same offset as the
+      in-page index on the other side of the content, so the two columns settle
+      level with each other.
+    */
+    .site-nav {
+      flex-direction: column;
+      gap: 0;
+      inset-block-start: var(--space-m);
+      position: sticky;
+    }
     .page > main { margin-block-start: 0; }
 
     /*
@@ -223,7 +263,6 @@
       is still the name and the discipline rather than a face.
     */
     .page:has(h1.identity__name) .identity {
-      border-block-end: var(--rule-heavy) solid var(--color-heading);
       column-gap: var(--space-xl);
       display: grid;
       grid-template-areas:
@@ -410,6 +449,13 @@
     border-block-end: 1px solid var(--color-border);
     padding-block: var(--space-s);
   }
+  /*
+    The rule between two rows belongs to the pair, not to the row above it, so
+    the last one has nothing to divide. It also sat directly under the heavier
+    rule that opens the next section, which read as one thick rule drawn badly
+    rather than as two doing different jobs.
+  */
+  .pub:last-child { border-block-end: 0; }
   /*
     The year comes out of the citation and becomes the rail. The copy that
     lives inside the meta line goes away, so the year is announced once.

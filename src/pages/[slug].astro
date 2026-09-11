@@ -2,11 +2,14 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionIndex from '../components/SectionIndex.astro';
+import { SHELVED_PAGES } from '../lib/nav.ts';
 
 export async function getStaticPaths() {
   const pages = await getCollection('pages');
   return pages
-    .filter((page) => page.id !== 'home')
+    // Home is the index route, not a slug. The shelved ones are entries the
+    // CMS still edits and the site does not publish yet - see `SHELVED_PAGES`.
+    .filter((page) => page.id !== 'home' && !SHELVED_PAGES.includes(page.id))
     .map((page) => ({ params: { slug: page.id }, props: { page } }));
 }
 

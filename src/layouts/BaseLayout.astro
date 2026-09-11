@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import Tokens from '../components/Tokens.astro';
 import Identity from '../components/Identity.astro';
 import { site } from '../lib/site.ts';
-import { COLLECTION_NAV, url, isCurrent, type NavItem } from '../lib/nav.ts';
+import { NAV, SHELVED_PAGES, url, isCurrent, type NavItem } from '../lib/nav.ts';
 import { DEFAULT_THEME, THEMES } from '../lib/themes.ts';
 import { isIndexable } from '../lib/env.ts';
 import '../styles/fonts.css';
@@ -29,14 +29,14 @@ const summary = description ?? `${site.name}, ${site.jobTitle} at ${site.institu
 
 const pages = await getCollection('pages');
 const pageNav: NavItem[] = pages
-  .filter((page) => page.data.showInNav as boolean)
+  .filter((page) => (page.data.showInNav as boolean) && !SHELVED_PAGES.includes(page.id))
   .map((page) => ({
     label: page.data.title as string,
     href: page.id === 'home' ? '/' : `/${page.id}`,
     order: page.data.order as number,
   }));
 
-const nav = [...pageNav, ...COLLECTION_NAV].sort((a, b) => a.order - b.order);
+const nav = [...pageNav, ...NAV].sort((a, b) => a.order - b.order);
 const pathname = Astro.url.pathname;
 const themeIds = THEMES.map((theme) => theme.id);
 ---

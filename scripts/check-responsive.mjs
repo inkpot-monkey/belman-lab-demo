@@ -32,7 +32,9 @@ const VIEWPORTS = [
   { name: 'tablet', width: 768, height: 1024 },
   { name: 'desktop', width: 1440, height: 900 },
 ];
-const PAGES = ['/', '/research/', '/team/', '/publications/', '/software/', '/projects/', '/news/', '/events/', '/gallery/', '/how-this-works/', '/404.html'];
+// Only what the site publishes. The shelved sections are not built, so there
+// is nothing here to drive; see SHELVED_PAGES and `shelved` in src/lib/nav.ts.
+const PAGES = ['/', '/research/', '/publications/', '/how-this-works/', '/404.html'];
 
 /*
  * Three floors, not one.

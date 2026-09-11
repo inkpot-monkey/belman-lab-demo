@@ -6,7 +6,6 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../lib/site.ts';
 import { url } from '../lib/paths.ts';
-import { PERSON_RANKS } from '../schema/collections.ts';
 import { normalisePublications, stillMissing, type Snapshot, type MissingWork } from '../lib/orcid.ts';
 import snapshot from '../data/orcid-snapshot.json' with { type: 'json' };
 import claimedMissing from '../data/orcid-missing.json' with { type: 'json' };
@@ -24,9 +23,7 @@ const sections = [
   ['in-the-editor', 'Things in the editor that aren’t obvious'],
   ['publishing', 'Why a change takes a minute'],
   ['publications', 'Publications, and the ORCID list'],
-  ['team', 'The team page'],
-  ['events-photos', 'Events and photos'],
-  ['not-real', "What isn't real yet"],
+  ['shelved', 'What isn’t on the site yet'],
   ['signing-in', 'Signing in'],
   ['moving', 'If this ever has to move'],
 ];
@@ -251,84 +248,59 @@ const sections = [
       </details>
     </section>
 
-    <section id="team">
-      <h2>The team page</h2>
+    <section id="shelved">
+      <h2>What isn’t on the site yet</h2>
 
       <p>
-        Each person is an entry with a name, a position, and an order. The page
-        groups people by position and lists the groups in seniority
-        order — {PERSON_RANKS.slice(0, 3).join(', ')}, and so on down
-        to {PERSON_RANKS.at(-1)!.toLowerCase()}. Within a group, the order number
-        decides who comes first; lower numbers come first.
-      </p>
-
-      <p>
-        A group with nobody in it doesn’t appear at all, so there’s no need to
-        delete the empty ones. Everyone gets their own page automatically, with
-        whatever biography and links you give them. A person without a photo shows
-        their initials instead, which is fine and looks deliberate.
-      </p>
-    </section>
-
-    <section id="events-photos">
-      <h2>Events and photos</h2>
-
-      <p>
-        These two aren’t connected to anything yet. When they are, they’ll work
-        differently from everything else on this page: instead of being typed into
-        the CMS, <b>Events</b> will read a Google Calendar and <b>Gallery</b> will
-        read a shared Google Drive folder.
-      </p>
-
-      <p>
-        The point is that you already live in Google Calendar, and asking you to
-        re-enter a seminar into a second system is a battle nobody wins. Anyone in
-        the lab will be able to drop photos into the Drive folder without needing a
-        CMS login at all.
-      </p>
-
-      <aside class="note">
-        <p>
-          One thing to know in advance: if that Drive folder ever stops being
-          shared, Google reports it as an empty folder rather than as an error. The
-          gallery is built to say so plainly instead of showing an empty page.
-        </p>
-      </aside>
-    </section>
-
-    <section id="not-real">
-      <h2>What isn’t real yet</h2>
-
-      <p>
-        This is a demonstration, so some of it is filled with stand-in content to
-        show how the layouts behave at realistic size.
+        The site is Home, Research and Publications. Six other sections are
+        written and working but switched off, because every one of them is
+        currently filled with stand-in content, and a menu item that leads to
+        invented people or invented projects is worse than a short menu.
       </p>
 
       <div class="table-scroll">
         <table>
-        <caption>Where the content on each page comes from</caption>
+        <caption>What is on the site, and what is waiting</caption>
         <thead>
-          <tr><th scope="col">Page</th><th scope="col">Status</th></tr>
+          <tr><th scope="col">Section</th><th scope="col">Status</th></tr>
         </thead>
         <tbody>
-          <tr><th scope="row">Home, Research</th><td>Your real text, carried over</td></tr>
-          <tr><th scope="row">Publications</th><td>Your real ORCID record</td></tr>
-          <tr><th scope="row">Site details, footer</th><td>Real</td></tr>
-          <tr><th scope="row">Team</th><td>You are real; everyone else is a placeholder</td></tr>
-          <tr><th scope="row">News, Projects</th><td>Placeholder</td></tr>
-          <tr><th scope="row">Events, Gallery</th><td>Placeholder, not yet connected</td></tr>
-          <tr><th scope="row">Join us</th><td>An empty outline waiting for your words</td></tr>
+          <tr><th scope="row">Home, Research</th><td>Live. Your real text, carried over</td></tr>
+          <tr><th scope="row">Publications</th><td>Live. Your real ORCID record</td></tr>
+          <tr><th scope="row">Site details, footer</th><td>Live. Real</td></tr>
+          <tr><th scope="row">Team</th><td>Waiting. You are real; everyone else is a placeholder</td></tr>
+          <tr><th scope="row">Software &amp; data</th><td>Waiting. Your real repositories, but nothing links to them yet</td></tr>
+          <tr><th scope="row">News, Projects</th><td>Waiting. Placeholder entries</td></tr>
+          <tr><th scope="row">Events, Gallery</th><td>Waiting. Fixtures, not yet connected to Google</td></tr>
+          <tr><th scope="row">Join us</th><td>Waiting. An empty outline waiting for your words</td></tr>
         </tbody>
         </table>
       </div>
 
       <p>
+        Nothing has been deleted, and the editor still offers all of it — you can
+        write the real News items or fill in the real team long before the section
+        goes back on the site. Turning one back on is a two-line change for
+        whoever is working on the code; ask, and it is a minute’s work.
+      </p>
+
+      <p>
         The placeholder people are named things like “PhD Student Name” on purpose.
         Inventing plausible-looking researchers and putting them on a real
-        academic’s website is a bad idea even temporarily.
+        academic’s website is a bad idea even temporarily, which is most of why the
+        team page is waiting rather than live.
       </p>
-    </section>
 
+      <aside class="note">
+        <p>
+          Two of them will work differently from everything else when they come
+          back: instead of being typed into the editor, <b>Events</b> will read a
+          Google Calendar and <b>Gallery</b> will read a shared Google Drive
+          folder. You already live in Google Calendar, and asking you to re-enter
+          a seminar into a second system is a battle nobody wins.
+        </p>
+      </aside>
+    </section>
 
     <section id="signing-in">
       <h2>Signing in</h2>

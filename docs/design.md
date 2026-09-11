@@ -80,12 +80,12 @@ by what a rule is about, not by which file got there first: `base.css` is the
 reset, the shared components and the default single-column arrangement;
 `design.css` is every choice this design made.
 
-`.page` has four named areas — `nav`, `identity`, `main` and an optional
-`rail`. Navigation, the identity block and `<main>` are emitted exactly once, in
-`BaseLayout`, and placed by grid-area, so the layout changes where things sit
+`.page` has three named areas — `nav`, `identity` and `main`. Navigation, the
+identity block and `<main>` are emitted exactly once, in `BaseLayout`, and
+placed by grid-area, so the layout changes where things sit
 without changing the markup. They are emitted in the order a reader meets them
-— nav, identity, rail, main — because grid placement moves the picture and not
-the document, and a keyboard or a screen reader gets the source order at every
+— nav, identity, main — because grid placement moves the picture and not the
+document, and a keyboard or a screen reader gets the source order at every
 width. Above 62rem the menu sits under the identity inside the left column, so
 those two swap on screen; that is the one place the order is not literal, and
 the site's navigation before the site's name is the right way round for a
@@ -96,36 +96,64 @@ Three arrangements, not two:
 ```
 Below 42rem              42rem to 62rem            62rem and up
 
-├───────────────┤        ┌──────────┬─────┐        ┌────────┬──────┬──────┐
-│  nav (a bar)  │        │ identity │ nav │        │identity│ main │ rail │
-├═══════════════┤        ├──────────┴─────┤        ├────────┤      │      │
-│   identity    │        │  rail (strip)  │        │  nav   │      │      │
-├───────────────┤        ├────────────────┤        └────────┴──────┴──────┘
-│  rail (strip) │        │      main      │
-├───────────────┤        └────────────────┘        14rem / 1fr / 13rem
-│     main      │
-└───────────────┘        1fr / auto
+┌───────────────┐        ┌──────────┬─────┐        ┌────────┬──────┬──────┐
+│  BELMAN LAB   │        │ identity │ nav │        │identity│ main │ index│
+│   main        │        ├──────────┴─────┤        ├────────┤      │      │
+│    (h1,       │        │      main      │        │  nav   │      │      │
+│     index,    │        │  (h1, index,   │        └────────┴──────┴──────┘
+│     the page) │        │   the page)    │
+├═══════════════┤        └────────────────┘        14rem / 1fr / 13rem
+│  nav (a bar)  │        1fr / auto
+└───────────────┘
 ```
 
-Narrow, the menu is a bar across the top and is drawn as one: it bleeds past
-the page's margin to both edges of the screen and up over its top padding, its
-items are spread across the full width, and a heavy rule closes it off from
-everything under it. Stacked in the middle of the chrome it was a row of
-tracked capitals directly under another row of tracked capitals — the identity
-links — and nothing said which of them was the site's navigation. A rule that
-stops where the text column stops divides two blocks of a page; a rule that
-runs edge to edge is the floor of a band, and that is what a reader already
-knows how to name. The tracking tightens to 0.04em there, because at 320px the
-three items otherwise come to 289px inside 272px and wrap, and a bar whose last
-item has dropped onto a line of its own is not a bar.
+Narrow, the page comes first and the menu goes to the foot of the screen. It is
+drawn as a bar: it bleeds past the page's margin to both edges of the screen, a
+heavy rule closes it off from the page above it, its three items divide the
+width between them, and a hairline in the grid grey separates each compartment
+from the next.
+
+It was a bar across the top, and the top of a phone screen turned out to be the
+wrong place for it. The menu, the identity, the profile links and the in-page
+index made four blocks of chrome, and on `/research` at 375×812 the page's own
+`<h1>` sat 361px down — 44% of the first screen, behind five horizontal rules,
+three of them the same closing weight. It was also gone the moment a reader
+scrolled: `/publications` is nearly five screens at 375px and the footer holds
+no links, so the only way back to the menu was to scroll to the top. At the
+foot it costs the page nothing, it is under a thumb rather than across the
+screen from one, and it is there from anywhere. The `<h1>` is at 49px now and
+the first sentence of the article is on the first screen.
+
+What is left of the identity there is one line: the lab, in the accent, over
+the page's own title. The name, the strapline and the profile links are on the
+home page — the page they are about, one tap away — and the footer carries the
+lab and her name on every page. The home page keeps all of it, because there
+the identity is not chrome in front of the content; it is the content.
+
+The items divide the bar with `flex: 1 1 auto` and centre their labels in what
+they get, which puts every compartment boundary exactly halfway between two
+words at every width, with no number to keep in step. `flex: 1` is the version
+that looks the same and is not: it zeroes the basis, the items come out equal
+in width, and the boundary lands on the geometric third — 7 to 11px off the
+midpoint, and visibly so between the shortest label and the longest.
+
+The tracking is the design's own 0.08em in the bar and in the module, and
+tightens to 0.04em only in the band between them, where the menu is an `auto`
+track and every pixel of tracking comes out of the identity column beside it.
+That is the one place in this design a measurement gets smaller as the screen
+gets bigger, and it is the column beside it that asks for it.
 
 The middle one exists because the module needs 62rem and a second column needs
 far less: a tablet held upright was drawing a full-width identity with half the
 screen empty beside it and the page's own title most of a screen down. There
 the identity keeps the fraction and the menu takes what it needs, so the rule
 closing the strapline stops short of the menu — two rules of two lengths, which
-is the module's argument arriving early. The home page opts out and keeps the
-stack, because there the identity is the row rather than a label beside a menu.
+is the module's argument arriving early. The menu comes back into the flow at
+the top of the page here: there is room beside the identity, so none of the
+reasons for fixing it to the foot of the screen apply, and a bar across the
+foot of a tablet is a phone's answer to a question this width did not ask. The
+home page opts out and keeps the stack, because there the identity is the row
+rather than a label beside a menu.
 
 Where that band starts is set by what the narrower column has to hold, not by a
 round number: the menu takes its content's width and the identity gets the
@@ -157,12 +185,33 @@ The gutters are drawn rather than implied: the hairline sits in the middle of
 the gutter, so each column is pulled half a gutter left and pads the same amount
 back, and the text lands exactly where the grid puts it. Below 62rem there is
 one column and so no gutter to draw: the motif is a desktop one, and the narrow
-arrangement says the same thing with the bar across its top and the rules that
-open and close each block under it.
+arrangement says the same thing with the bar across its foot and the rules that
+open and close each block above it.
 
-The `rail` slot is the one piece of page structure a page cannot write from
-inside `<main>`, because it is a sibling of it in that grid. It is filled
-through `BaseLayout`'s named slot and rendered only when a page fills it.
+**The in-page index is the one piece of page structure `BaseLayout` cannot
+place.** It belongs between a page's title and the page, and both of those are
+inside `<main>`, so a sibling of `<main>` can only be drawn above the whole
+article or below it — which is how it came to sit above the `<h1>`, offering a
+reader "01 Core research themes" before it told them they were on Research. The
+pages render `<SectionIndex>` themselves now, directly after their own `<h1>`;
+`test/reading-order.test.ts` holds that, because nothing in the stylesheet can
+put it right if a page emits it somewhere else.
+
+Above 62rem it is still the third column, and getting it there from inside
+`<main>` is the one place this design positions rather than places. `<main>`
+stays exactly one column wide and the index is taken out of its flow and
+anchored against `.page`, in the same track the third column has always
+occupied. The obvious alternative — widen `<main>` across both tracks and
+divide it again — is wrong for a reason worth writing down: `<main>` is the
+container the justification threshold is measured against, so growing it by a
+column that is not text justified the module's prose at 992px, where the
+column is 23 characters short of taking it. The element a container query
+measures has to go on being the thing it claims to measure.
+
+The column is one box and the index inside it is another, because a box that
+stretches to its column has nowhere to travel and `position` takes one value:
+the outer one is full height and carries the hairline, the inner one is what
+follows the reader down the page.
 
 ## 3. Naming — one element, one fact
 
@@ -181,8 +230,13 @@ wrong, and it broke the moment a third paragraph appeared.
 
 Anything here that a change would break is pinned by a test or a checker.
 
-- **One `<nav>`, one identity block, one `<main>`, one `<h1>` per page** —
-  `test/single-emission.test.ts` and `pnpm check:responsive`.
+- **One `<nav aria-label="Primary">`, one identity block, one `<main>`, one
+  `<h1>` per page** — `test/single-emission.test.ts` and
+  `pnpm check:responsive`.
+- **The in-page index is rendered by the page, directly after its `<h1>`** —
+  `test/reading-order.test.ts`. The stylesheet cannot correct a page that puts
+  it anywhere else, and above 62rem it is positioned on the assumption it is
+  there.
 - **The measure constrains prose, not the column.** `--measure` applies to
   paragraphs and headings, never to a grid container: applying it to the
   container squeezes the card lists.
@@ -190,6 +244,9 @@ Anything here that a change would break is pinned by a test or a checker.
   browser over every page and viewport: standing controls ≥44px, body text
   ≥16px on mobile, nothing under 12px, no sideways scroll, the first heading on
   the page is the `<h1>`, and `.page` sizes every column its areas name.
+- **Nothing hides under the fixed menu.** Below 42rem the bar is out of the
+  flow, and `body` pads its own height — `--menu-bar`, built from the parts of
+  the bar rather than from a number — back at the foot of the page.
 - **Light only.** There is no dark palette and no `light-dark()` outside
   `src/admin/`, which is a tool surface rather than part of this design.
 - **No parallel stylesheet, no colour literals, no hardcoded type or space.**

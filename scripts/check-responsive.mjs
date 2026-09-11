@@ -55,6 +55,8 @@ const MIN_BODY_PX = 16;
 const MIN_TOUCH_PX = 44;
 /** Under this width the visitor is holding the page, and the floors apply. */
 const MOBILE_MAX_PX = 700;
+/** 62rem: where the three-column module opens and the identity becomes 14rem. */
+const MODULE_MIN_PX = 992;
 
 const browser = await chromium.launch({ executablePath: EXEC, args: ['--no-sandbox'] });
 const problems = [];
@@ -103,6 +105,18 @@ for (const vp of VIEWPORTS) {
           // Neither body text nor the fine-print step, but under the body
           // floor: something shrank text by hand rather than by scale.
           shrunk: sizes.filter((size) => size < minBody && size > finePx + 0.5).length,
+          /*
+            The identity links, and how many rows they take. In the 14rem
+            column they come to within about ten pixels of the width, so a
+            nudge to the type scale, the space scale or the tracking wraps
+            one of the three onto a line of its own - which reads as a link
+            having fallen off rather than as a deliberate second row. Half a
+            pixel of it is invisible in the source and obvious on the page.
+          */
+          socialRows: new Set(
+            [...document.querySelectorAll('.identity .social a')]
+              .map((el) => Math.round(el.getBoundingClientRect().top)),
+          ).size,
         };
       },
       { minFine: MIN_FINE_PX, minBody: MIN_BODY_PX },
@@ -133,6 +147,11 @@ for (const vp of VIEWPORTS) {
       problems.push(`${where}: ${r.shrunk} elements between the fine-print step (${r.finePx.toFixed(1)}px) and the ${MIN_BODY_PX}px body floor`);
     }
     if (mobile && smallTargets.length > 0) problems.push(`${where}: small touch targets (${smallTargets.join(', ')})`);
+    // Only where the identity is a column. Below that it is a full-width
+    // block with room to wrap into, and wrapping there is correct.
+    if (vp.width >= MODULE_MIN_PX && r.socialRows > 1) {
+      problems.push(`${where}: identity links wrap onto ${r.socialRows} rows`);
+    }
   }
   await ctx.close();
 }

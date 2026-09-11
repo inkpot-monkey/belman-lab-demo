@@ -242,6 +242,19 @@
     .page:has(h1.identity__name) .identity__meta { grid-area: meta; }
     .page:has(h1.identity__name) .identity .social { grid-area: social; }
     .identity .social a { min-block-size: 0; }
+    /*
+      Off the home page the identity is a 14rem column, and the three links set
+      at the shared gap come to 224.6px in a 224px column - they wrap by half a
+      pixel, which reads as one link having fallen off rather than as two rows
+      of anything. A tighter gap is also the right rhythm for a column: the
+      masthead above has a row to spread across and keeps the wider one.
+
+      The column is a fixed 14rem while the type and the gap are both fluid, so
+      this is checked at both ends of the range rather than at one width.
+    */
+    .page:not(:has(h1.identity__name)) .identity .social {
+      column-gap: var(--space-xs);
+    }
     .page:has(h1.identity__name) .identity__photo {
       align-self: end;
       grid-area: photo;

@@ -15,6 +15,10 @@ copies their stylesheets.
   (here, ORCID) rather than maintaining them by hand.
 - **[Utopia](https://utopia.fyi/)** — the fluid type and space method
   implemented in `src/lib/utopia.ts`.
+- **[Simple Icons](https://simpleicons.org/)** (CC0 1.0) — the ORCID, GitHub
+  and Google Scholar paths inlined in `src/components/Icon.astro`. The marks
+  themselves are trademarks of their owners, used here to link to her record on
+  each service.
 
 Deliberately not used: any project without a licence file.
 

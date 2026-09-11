@@ -1,6 +1,7 @@
 ---
 import { site } from '../lib/site.ts';
 import { url } from '../lib/paths.ts';
+import Icon, { type IconName } from './Icon.astro';
 
 interface Props {
   /**
@@ -11,6 +12,22 @@ interface Props {
   primary?: boolean;
 }
 const { primary = false } = Astro.props;
+
+/*
+ * Where else she is, in one list rather than three near-identical lines.
+ *
+ * Each entry is a service, its mark and the field of site.json that says
+ * whether she has an account there - ORCID is required by the schema, the
+ * other two are not, so the list is filtered rather than each link being
+ * wrapped in its own conditional.
+ */
+const profiles: { name: IconName; label: string; href: string }[] = [
+  { name: 'orcid', label: 'ORCID', href: `https://orcid.org/${site.orcid}` },
+  ...(site.github ? [{ name: 'github' as const, label: 'GitHub', href: `https://github.com/${site.github}` }] : []),
+  ...(site.scholar
+    ? [{ name: 'scholar' as const, label: 'Scholar', href: `https://scholar.google.com/citations?user=${site.scholar}` }]
+    : []),
+];
 ---
 <div class="identity">
   {/*
@@ -65,8 +82,8 @@ const { primary = false } = Astro.props;
     <p class="identity__affiliation">{site.institution}</p>
   </div>
   <div class="social">
-    <a href={`https://orcid.org/${site.orcid}`} rel="noopener">ORCID</a>
-    {site.github && <a href={`https://github.com/${site.github}`} rel="noopener">GitHub</a>}
-    {site.scholar && <a href={`https://scholar.google.com/citations?user=${site.scholar}`} rel="noopener">Scholar</a>}
+    {profiles.map((profile) => (
+      <a href={profile.href} rel="noopener"><Icon name={profile.name} />{profile.label}</a>
+    ))}
   </div>
 </div>

@@ -124,11 +124,17 @@ for (const vp of VIEWPORTS) {
             one of the three onto a line of its own - which reads as a link
             having fallen off rather than as a deliberate second row. Half a
             pixel of it is invisible in the source and obvious on the page.
+
+            One row or one row each, never the state in between. Both ends are
+            deliberate shapes - a row across the masthead, a column down the
+            14rem sidebar - and what the check is for is the ragged middle,
+            where nothing on the page says whether the break was meant.
           */
           socialRows: new Set(
             [...document.querySelectorAll('.identity .social a')]
               .map((el) => Math.round(el.getBoundingClientRect().top)),
           ).size,
+          socialLinks: document.querySelectorAll('.identity .social a').length,
         };
       },
       { minFine: MIN_FINE_PX, minBody: MIN_BODY_PX },
@@ -202,8 +208,10 @@ for (const vp of VIEWPORTS) {
     if (mobile && smallTargets.length > 0) problems.push(`${where}: small touch targets (${smallTargets.join(', ')})`);
     // Only where the identity is a column. Below that it is a full-width
     // block with room to wrap into, and wrapping there is correct.
-    if (vp.width >= MODULE_MIN_PX && r.socialRows > 1) {
-      problems.push(`${where}: identity links wrap onto ${r.socialRows} rows`);
+    if (vp.width >= MODULE_MIN_PX && r.socialRows > 1 && r.socialRows !== r.socialLinks) {
+      problems.push(
+        `${where}: ${r.socialLinks} identity links wrap raggedly onto ${r.socialRows} rows`,
+      );
     }
   }
   await ctx.close();

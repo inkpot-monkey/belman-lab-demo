@@ -51,6 +51,22 @@ somewhere; in a list where every entry is a link, colouring them all would say
 nothing, so those take the heading colour with a grey underline and turn
 lavender only under the cursor.
 
+One list is the exception, and it is the identity block's ORCID, GitHub and
+Scholar. Those three are the only links on the site that leave it, and they are
+the record the site is a record of, so they keep the accent — and they are the
+one place a mark is set beside the words. The marks are inline SVG in
+`components/Icon.astro`, drawn in `currentColor` so each is its link's colour by
+construction rather than by a second declaration that can drift from it. ORCID
+publishes brand guidance asking for its iD in ORCID green; a single green mark
+in an achromatic palette would read as a foreign object rather than as a brand,
+so all three take the hue this site already has.
+
+Where those three sit is decided by how much room they have, not by the
+viewport: a row where the identity is a full-width masthead, one per line where
+it is a column. The shape in between — two on one line and the third below —
+is the one `pnpm check:responsive` rejects, because nothing on the page says
+whether the break was meant.
+
 ## 2. Arrangement — `base.css` and `design.css`
 
 `base.css` declares the layer order once, and the grid:
@@ -78,7 +94,7 @@ reader who cannot see the column.
 Three arrangements, not two:
 
 ```
-Below 40rem              40rem to 62rem            62rem and up
+Below 42rem              42rem to 62rem            62rem and up
 
 ├───────────────┤        ┌──────────┬─────┐        ┌────────┬──────┬──────┐
 │  nav (a bar)  │        │ identity │ nav │        │identity│ main │ rail │
@@ -111,8 +127,13 @@ closing the strapline stops short of the menu — two rules of two lengths, whic
 is the module's argument arriving early. The home page opts out and keeps the
 stack, because there the identity is the row rather than a label beside a menu.
 
+Where that band starts is set by what the narrower column has to hold, not by a
+round number: the menu takes its content's width and the identity gets the
+rest, and the identity has to stay wide enough for the row of profile links at
+its foot.
+
 **A band only owns its widths if the cascade lets it.** A media query does not
-change specificity, so a rule qualified with `:has()` inside the 40rem block
+change specificity, so a rule qualified with `:has()` inside the 42rem block
 goes on beating the plain `.page` at 62rem for as long as the page is wide. The
 exceptions inside that block are therefore wrapped in `:where()`, which
 contributes nothing, and source order does the rest. Getting this wrong is

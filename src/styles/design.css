@@ -143,12 +143,19 @@
     Not the home page: there the identity is the content of the first row, and
     the menu belongs under it rather than beside it.
 
+    42rem rather than the 40rem it started at, because the threshold is set by
+    what the narrower column has to hold rather than by a round number. The
+    menu is an `auto` track and takes its content's width; the identity gets
+    the rest, and it has to be wide enough for the row of profile links at the
+    foot of it. At 640px that left the identity 258px against the 266px the
+    row needs and one link wrapped onto a line of its own; 672px leaves 289.
+
     The identity keeps the fraction and the menu takes what it needs, so the
     rule that closes the strapline stops short of the menu instead of running
     the width of the page. Two rules of two lengths is the module's own
     argument arriving early, which is the point of the step.
   */
-  @media (min-width: 40rem) {
+  @media (min-width: 42rem) {
     /*
       Every exception here is wrapped in `:where()`, and that is load-bearing
       rather than a style preference.
@@ -241,12 +248,19 @@
         tallest makes the row one height everywhere, and the menu lands in the
         same place on every page.
 
+        It was 17.5rem while the profile links were a row. Stacked one per line
+        in the 14rem column they are three times that height, the column
+        overshot the floor, and the jump came back the other way round - the
+        menu sitting 25px lower away from the home page than on it. The floor
+        is a measurement of the tallest thing the row has to hold, so it is
+        remeasured whenever that thing changes.
+
         `minmax`, not a fixed height: an extra line in the footer of someone's
         title, or a name that wraps, grows the row rather than overlapping the
         menu. That page then sits lower than the rest, which is the right
         failure — visible, and not a collision.
       */
-      grid-template-rows: minmax(17.5rem, auto) 1fr;
+      grid-template-rows: minmax(19.5rem, auto) 1fr;
     }
     .page:has(> .rail) {
       grid-template-areas:
@@ -412,14 +426,14 @@
     the right of it, bottom-aligned to the strapline, so the first thing read
     is still the name and the discipline rather than a face.
 
-    From 40rem, not from 62rem. It sat inside the module's own query, so every
+    From 42rem, not from 62rem. It sat inside the module's own query, so every
     width below it stacked the portrait under the strapline instead — which on
     a tablet held upright is a 9rem plate alone on a line with most of the page
     empty beside it, and the first sentence of the site pushed half a screen
     down. What this arrangement needs is a second column, not the whole module,
     and 9rem beside a name fits from 640px on.
   */
-  @media (min-width: 40rem) {
+  @media (min-width: 42rem) {
     .page:has(h1.identity__name) .identity {
       column-gap: var(--space-xl);
       display: grid;
@@ -468,7 +482,18 @@
       to it whatever its specificity.
     */
     .identity { block-size: 100%; }
-    .identity .social { margin-block-start: auto; }
+    /*
+      The auto margin takes the slack and the padding is the floor under it.
+      Stacked one per line the links are three times the height they were as a
+      row, so on a page whose column has little slack left they came to rest
+      hard against the last line of the address above them - an auto margin
+      pins a block to the foot of its container and promises nothing about
+      what it lands next to.
+    */
+    .identity .social {
+      margin-block-start: auto;
+      padding-block-start: var(--space-s);
+    }
 
     /*
       The taxonomy comes back. Here the identity is a column beside the
@@ -481,36 +506,78 @@
 
     .identity .social a { min-block-size: 0; }
     /*
-      Off the home page the identity is a 14rem column, and the three links set
-      at the shared gap come to 224.6px in a 224px column - they wrap by half a
-      pixel, which reads as one link having fallen off rather than as two rows
-      of anything. A tighter gap is also the right rhythm for a column: the
-      masthead above has a row to spread across and keeps the wider one.
+      Off the home page the identity is a 14rem column, and one link per line
+      is what fits in it - the three of them came to 224.6px in a 224px column
+      before they had marks beside them, and the marks add sixty. A column of
+      them is also the right rhythm here: the menu directly under this is a
+      stacked index for the same reason, and two stacked lists read as one
+      column where a wrapped row would read as a mistake.
 
-      The column is a fixed 14rem while the type and the gap are both fluid, so
-      this is checked at both ends of the range rather than at one width.
+      The masthead on the home page has a whole row to spread across and keeps
+      the row. `scripts/check-responsive.mjs` allows either shape and rejects
+      the one in between - a ragged wrap, where one link has fallen onto a line
+      of its own and nothing says whether that was meant.
     */
     .page:not(:has(h1.identity__name)) .identity .social {
-      column-gap: var(--space-xs);
+      align-items: start;
+      flex-direction: column;
+      row-gap: var(--space-3xs);
     }
   }
   /*
-    Three standing links, so they are set as controls rather than as prose: the
-    menu's colour and tracking, with the underline kept because unlike the menu
-    they leave the site. They were full accent, which is the one thing this
-    design says a row of links must not be - every entry marked is nothing
-    marked - and they sat directly under a strapline that uses the accent for
-    the lab name, so the colour was saying two different things four lines
-    apart.
+    The one row of links that keeps the accent, and the only place on the site
+    with a mark beside the words.
+
+    It is the exception to the rule that an all-link list takes the heading
+    colour, and it earns it on a different axis: these three are the only links
+    that leave the site, and they are the record the page is a record of. The
+    colour and the mark say the same thing twice on purpose - this is where she
+    is elsewhere - and nothing near them competes, because the accent is
+    otherwise one word in a sentence.
+
+    The mark is drawn in `currentColor`, so it is the link's colour by
+    construction rather than by a second declaration that can drift from it.
   */
+  /*
+    Tighter between the three than the shared row gap. With a mark in front of
+    each label the row is sixty pixels wider than it was, and at 320px it came
+    to 282px inside 272px - one link onto a second line for want of ten. The
+    marks are their own separation: a gap that reads as too small between two
+    words reads as right between two marked items.
+  */
+  .identity .social { column-gap: var(--space-2xs); }
+  @media (min-width: 42rem) {
+    /*
+      Wider again once the row is not trying to fit across a phone. Not all the
+      way back to the shared `space-s`: off the home page this is a fraction of
+      a two-column row, and at the narrow end of that band it is 289px against
+      the 278px the row needs at this gap - `space-s` would want 282 and leave
+      seven, which is the margin something eventually wraps by.
+    */
+    .identity .social { column-gap: var(--space-xs); }
+  }
+
   .identity .social a {
-    color: var(--color-text);
+    color: var(--color-accent);
+    column-gap: var(--space-3xs);
     display: inline-flex;
     letter-spacing: 0.08em;
-    text-decoration-color: var(--color-linkRule);
     text-transform: uppercase;
   }
-  .identity .social a:hover { text-decoration-color: var(--color-accent); }
+
+  /*
+    Sized against the label rather than in pixels, so it tracks the fluid step
+    the row is set in and stays the same weight beside it at every width.
+    `flex: none` because a flex item with an intrinsic aspect ratio will
+    otherwise give up width before the text does, and a squashed mark is worse
+    than a wrapped row.
+  */
+  .icon {
+    block-size: 1.15em;
+    fill: currentColor;
+    flex: none;
+    inline-size: 1.15em;
+  }
 
   /*
     Standing controls are thumb-sized. 44px is what a thumb actually hits, and
@@ -555,7 +622,7 @@
     to edge is the floor of a band, and a band across the top of a screen is a
     thing every reader already knows how to name.
 
-    Below 40rem only. From there the menu sits beside the identity in its own
+    Below 42rem only. From there the menu sits beside the identity in its own
     column and the row it shares is the bar; above 62rem it is the stacked
     index down the side of the module.
   */
@@ -590,8 +657,8 @@
       320px the three items come to 289px inside a 272px column and wrap - and
       a bar whose last item has dropped onto a line of its own is not a bar.
       0.04em brings them to 243px, which fits with room at the narrowest width
-      the site supports. The wide setting comes back at 40rem, where the menu
-      has a column of its own and no longer has to fit across a phone.
+      the site supports. The wide setting comes back at 62rem; the band in
+      between keeps this one, and there is a reason for that over there.
     */
     letter-spacing: 0.04em;
     padding-block: var(--space-2xs);
@@ -649,13 +716,12 @@
     }
   }
 
-  @media (min-width: 40rem) {
+  @media (min-width: 42rem) {
     /*
       The band is undone. The menu shares a row with the identity here, and
       that row is what reads as the bar; a rule under the menu alone would
       underline three links and stop halfway across the page. The tracking
-      goes back to the 0.08em this design sets its labels at, because the menu
-      is no longer trying to fit across a phone.
+      stays tight until 62rem - see there for why.
     */
     .site-nav {
       border-block-end: 0;
@@ -666,12 +732,23 @@
       padding-block: 0;
       padding-inline: 0;
     }
-    .nav a { letter-spacing: 0.08em; }
   }
 
   @media (min-width: 62rem) {
     /* A stacked index down the side of the module: nothing to distribute. */
     .site-nav { justify-content: normal; }
+    /*
+      And the tracking the rest of this design sets its labels at, kept back
+      until here rather than restored at 42rem.
+
+      In the band the menu is an `auto` track: it takes its content's width and
+      the identity gets what is left, so every pixel of tracking across three
+      items comes out of the column beside it. At 0.08em the menu is 300px wide
+      at 640px, the identity is squeezed to 245, and the identity links - now
+      sixty pixels wider for having marks - wrap one onto a line of its own.
+      At 0.04em the menu is 245 and the column has room for the row it holds.
+    */
+    .nav a { letter-spacing: 0.08em; }
   }
 
   /* ---- Running prose ---------------------------------------------------- */

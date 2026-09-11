@@ -64,18 +64,22 @@ const pathname = Astro.url.pathname;
     <a class="skip" href="#main">Skip to content</a>
 
     {/*
-      Source order is reading order: navigation, identity, the in-page index,
-      then the content. Grid placement moves the picture and not the document,
-      so anyone following the page by keyboard or by screen reader gets this
-      order whatever width they are at — which is why it matches the narrow
-      arrangement, where the menu is the bar across the top of the page. An
-      index of a page belongs before the page it indexes, wherever it is drawn.
+      Source order is reading order: navigation, the identity block, then the
+      content — and inside the content, the page's own title, its index and
+      then the page. Grid placement moves the picture and not the document, so
+      anyone following the page by keyboard or by screen reader gets this order
+      whatever width they are at.
 
-      It used to be navigation, identity, content, index, which disagreed with
-      the picture in two places at once. On a phone that read as one scramble —
-      tab out of the menu and you were thrown back up to the identity links,
-      then into the middle of the article, then back up to the index.
-      test/reading-order.test.ts is what holds it now.
+      The in-page index is not here. It belongs between a page's title and the
+      page, and both of those are inside <main>, so no arrangement of this grid
+      can put it there — a sibling of <main> can only go above the whole
+      article or below it. The pages that have one render it themselves, after
+      their <h1>; `design.css` puts it in the third column of the module above
+      62rem and leaves it where it is below.
+
+      It used to be a `rail` slot emitted here, drawn as a strip above the
+      article on a phone. That put a page's contents ahead of the page's title:
+      a reader met "01 Core research themes" before they met "Research".
 
       Above 62rem the menu sits under the identity inside the left column, so
       the two are the other way round on screen. That is the one place the
@@ -92,21 +96,11 @@ const pathname = Astro.url.pathname;
       {/*
         <header>, not <aside>. This is the site's identity on every page and on
         the home page it holds the <h1>; the complementary landmark says the
-        opposite of both. The rail below is genuinely complementary and keeps
-        its <aside>.
+        opposite of both.
       */}
       <header class="identity-column">
         <Identity primary={identityIsHeading} />
       </header>
-
-      {/*
-        A second column beside the content, for a page that wants one: an
-        in-page index. Rendered only when a page fills it, so it costs nothing
-        on the pages that do not, and placed by `design.css`.
-      */}
-      {Astro.slots.has('rail') && (
-        <aside class="rail"><slot name="rail" /></aside>
-      )}
 
       <main id="main" class="flow prose">
         <slot />
@@ -130,6 +124,5 @@ const pathname = Astro.url.pathname;
         {site.address && <p>{site.address}</p>}
       </div>
     </footer>
-
   </body>
 </html>

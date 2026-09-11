@@ -14,7 +14,7 @@ import { join, relative } from 'node:path';
  *
  * The rule is the same for <main>: two of them is two main landmarks, and
  * "skip to content" can only point at one. A page that needs a different
- * shape gets it from CSS, or from the `rail` slot BaseLayout already offers.
+ * shape gets it from CSS, or by rendering it inside <main> as the pages do.
  *
  * Counted in the source rather than the built HTML so the check needs no build
  * step, matching test/rendered-fields.test.ts and test/astro-whitespace.test.ts.

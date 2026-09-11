@@ -28,8 +28,7 @@ const sections: [string, string][] = headings
   title={page.data.title as string}
   description={page.data.description as string | undefined}
 >
-  <Fragment slot="rail"><SectionIndex sections={sections} /></Fragment>
-
   <h1>{page.data.title}</h1>
+  <SectionIndex sections={sections} />
   <Content />
 </BaseLayout>

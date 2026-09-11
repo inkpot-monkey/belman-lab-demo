@@ -28,9 +28,8 @@ const sections: [string, string][] = groups.map((group) => [group.id, group.rank
 
 ---
 <BaseLayout title="Team" description="People in the Belman Lab.">
-  <Fragment slot="rail"><SectionIndex sections={sections} heading="Positions" /></Fragment>
-
   <h1>Team</h1>
+  <SectionIndex sections={sections} heading="Positions" />
   <p class="notice">
     <strong>Demo content.</strong> Every entry except Sophie is a placeholder, shown so the
     team layout can be judged at realistic size. None of them are real people.

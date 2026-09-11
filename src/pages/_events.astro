@@ -16,9 +16,8 @@ const sections: [string, string][] = [
 ];
 ---
 <BaseLayout title="Events" description="Seminars, lab meetings and other dates.">
-  <Fragment slot="rail"><SectionIndex sections={sections} /></Fragment>
-
   <h1>Events</h1>
+  <SectionIndex sections={sections} />
 
   <section id="upcoming">
     <h2>Upcoming</h2>

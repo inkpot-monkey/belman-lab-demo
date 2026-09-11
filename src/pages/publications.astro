@@ -59,9 +59,8 @@ const sections: [string, string][] = [
 ];
 ---
 <BaseLayout title="Publications" description="Publications, synchronised from ORCID.">
-  <Fragment slot="rail"><SectionIndex sections={sections} /></Fragment>
-
   <h1>Publications</h1>
+  <SectionIndex sections={sections} />
 
   <p class="muted small">
     Last updated from <a href="https://orcid.org/0000-0002-9778-7174" rel="noopener">ORCID</a> on {synced}.

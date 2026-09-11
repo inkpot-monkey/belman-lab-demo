@@ -99,11 +99,13 @@ for (const vp of VIEWPORTS) {
           The first heading on the page is the <h1>.
 
           Grid placement lets a page be drawn in one order and written in
-          another, and the rail is written before <main> so that the source
-          order is the order a phone meets things in. That put the in-page
+          another. The in-page index used to be emitted before <main> so that
+          the source order was the order a phone met things in, which put the
           index's own <h2> ahead of the page's <h1>: a document that opens one
           level down and then climbs, which is the heading-order failure every
-          audit tool names and which nothing else here would see.
+          audit tool names and which nothing else here would see. The index is
+          inside <main> under the <h1> now and its label is a <p>, so both ways
+          of getting this wrong are closed - and this is what says so.
         */
         const headings = [...document.querySelectorAll('h1, h2, h3, h4, h5, h6')];
         return {

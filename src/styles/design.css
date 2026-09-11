@@ -13,7 +13,7 @@
  * this design made. `docs/design.md` is the prose version.
  *
  * The design in one paragraph: one grotesque (Archivo, variable, self-hosted),
- * an achromatic palette with a single vermilion, and a three-column module
+ * an achromatic palette with a single lavender, and a three-column module
  * whose gutters are drawn rather than implied. Hierarchy comes from weight,
  * case and rules; nothing is rounded, nothing is shadowed, and the only hue on
  * the page marks something — a link, a preprint, the current page, a number.
@@ -58,7 +58,7 @@
     The accent is reserved for links inside prose, where it marks the one word
     in a sentence that goes somewhere. In a list of names, papers or projects
     every entry is a link, so colouring them all says nothing: those take the
-    heading colour with a grey underline, and turn vermilion under the cursor,
+    heading colour with a grey underline, and take the accent under the cursor,
     which is the only moment the colour carries information.
   */
   :is(.person__name, .pub__title, .card__title) a {
@@ -553,12 +553,14 @@
   .manual tbody th { color: var(--color-heading); }
 
   /*
-    Inline code, boxed rather than filled. The shared style sets it on the grey
-    surface, and a vermilion link inside one - `/admin` on the how-it-works
-    page is exactly that - lands at 4.26:1 against #f0f0f0 where the same words
-    clear 4.5:1 against the page. A hairline box does the same job on this
-    design without tinting the ground under the one colour that has to stay
-    readable.
+    Inline code, boxed rather than filled. Nothing on this design is a filled
+    panel - structure is drawn with rules - so a grey block in the middle of a
+    sentence is the shared style asserting something this design does not.
+
+    It began as a contrast fix: the accent was a vermilion that fell to 4.26:1
+    against the grey surface, and `/admin` on this page is a link inside a
+    `<code>`. The accent has since moved to the lavender, which clears 5.73:1
+    there, so the box is now kept for the reason above rather than that one.
   */
   .manual code {
     background: none;

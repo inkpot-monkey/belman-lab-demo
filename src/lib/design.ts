@@ -65,13 +65,21 @@ export const DESIGN: DesignSpec = {
   type: { minBase: 17, maxBase: 18, minRatio: 1.2, maxRatio: 1.333 },
   space: { minBase: 16, maxBase: 22 },
   /*
-   * Achromatic, plus one vermilion. Every grey here is neutral - red, green
-   * and blue equal - so the accent is the only hue on the page and therefore
-   * always means something. `grid` is the gutter rule: quieter than `border`,
-   * because it draws the structure rather than separating content.
+   * Achromatic, plus one hue. Every grey here is neutral - red, green and blue
+   * equal - so the accent is the only colour on the page and therefore always
+   * means something. `grid` is the gutter rule: quieter than `border`, because
+   * it draws the structure rather than separating content.
    *
-   * Vermilion is #d6320f rather than a brighter one so it clears 4.5:1 both
-   * ways - as link text on the page, and as the ground under white.
+   * The hue is #7b4b8a, which is the colour of the favicon and of the site she
+   * had before this one. It is the one thing about the old site worth keeping:
+   * a tab strip and a browser history are where a site is recognised, and a
+   * mark in one colour beside a site in another is two labs.
+   *
+   * It clears 4.5:1 four ways, which the vermilion this replaced did not: as
+   * link text on the page (6.26), as link text on a card (5.73), as the ground
+   * under white (6.53), and as the placeholder label on a team card - that
+   * last one was 4.26 in vermilion, and is the reason to check all four rather
+   * than only the two a colour is usually picked against.
    */
   colors: {
     bg: '#fafafa',
@@ -79,7 +87,7 @@ export const DESIGN: DesignSpec = {
     text: '#171717',
     muted: '#5a5a5a',
     heading: '#000000',
-    accent: '#d6320f',
+    accent: '#7b4b8a',
     accentText: '#ffffff',
     border: '#c2c2c2',
     grid: '#e4e4e4',

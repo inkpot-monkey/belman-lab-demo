@@ -44,10 +44,12 @@ before becoming `ruleStrong` and `ruleHeavy`.
 | `colors` | `--color-<name>` | Light only. Every grey is neutral, so the one hue always means something |
 | `shape` | `--radius`, `--rule`, `--rule-strong`, `--rule-heavy`, `--measure` | Three rule weights: divide a row, open a section, close a masthead |
 
-The accent is `#d6320f`, and it is reserved. In prose it marks the one word in
-a sentence that goes somewhere; in a list where every entry is a link, colouring
-them all would say nothing, so those take the heading colour with a grey
-underline and turn vermilion only under the cursor.
+The accent is `#7b4b8a` — the favicon's colour, and the colour of the site she
+had before this one, so a tab strip and a browser history still recognise her.
+It is also reserved. In prose it marks the one word in a sentence that goes
+somewhere; in a list where every entry is a link, colouring them all would say
+nothing, so those take the heading colour with a grey underline and turn
+lavender only under the cursor.
 
 ## 2. Arrangement — `base.css` and `design.css`
 

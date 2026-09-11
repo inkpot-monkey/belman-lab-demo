@@ -67,10 +67,16 @@
 @layer layout {
   /*
     The grid, and its single-column arrangement. `design.css` rearranges the
-    same four areas above 62rem; navigation, identity and content are emitted
+    same three areas above 62rem; navigation, identity and content are emitted
     exactly once and placed by grid-area, so the layout changes where things
     sit without changing the markup. A second nav emitted and hidden at one
     width would put two "Primary" landmarks and every link twice into the page.
+
+    Three areas, not four. The in-page index used to be a fourth, filled
+    through a slot in BaseLayout; it is now rendered by the page inside <main>
+    under its <h1>, because that is the one place in the document a sibling of
+    <main> cannot reach. `design.css` puts it back in a column of its own above
+    62rem.
   */
   .page {
     display: grid;
@@ -84,15 +90,6 @@
   }
 
   .site-nav { grid-area: nav; }
-  /*
-    An optional second column, filled by a page through BaseLayout's `rail`
-    slot. It is the one piece of page structure that cannot be written from
-    inside <main>, because it is a sibling of it in this grid. Any rule that
-    rearranges the grid has to name this area itself; below is only the
-    default.
-  */
-  .page:has(> .rail) { grid-template-areas: 'nav' 'identity' 'main' 'rail'; }
-  .rail { grid-area: rail; }
   .identity-column { grid-area: identity; }
   /*
     No top margin here. The row gap already separates the content from whatever

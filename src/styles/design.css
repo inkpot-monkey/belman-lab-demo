@@ -334,16 +334,16 @@
 
   /*
     Standing controls are thumb-sized. 44px is what a thumb actually hits, and
-    the menu, the identity links and the in-page index are the three places on
-    this site where a row of small links is the interface rather than a phrase
-    in a sentence. Written once, here, rather than as a padding value tuned per
-    control until each happens to clear it — which is how the menu came to be
-    40px. `scripts/check-responsive.mjs` measures these three selectors.
+    the menu, the identity links, the in-page index and the footer's email are
+    the places on this site where a small link is the interface rather than a
+    phrase in a sentence. Written once, here, rather than as a padding value
+    tuned per control until each happens to clear it — which is how the menu
+    came to be 40px. `scripts/check-responsive.mjs` measures these selectors.
 
     Lifted again above 62rem by each of them: at that width the pointer is a
     mouse, and a stacked menu of 44px rows is a different design.
   */
-  :where(.nav, .identity .social, .section-index) a {
+  :where(.nav, .identity .social, .section-index, .footer) a {
     align-items: center;
     display: inline-flex;
     min-block-size: 2.75rem;
@@ -714,6 +714,10 @@
     border-block-start: var(--rule-strong) solid var(--color-heading);
     margin-block-start: var(--space-2xl);
     padding-inline: 0;
+  }
+  /* The email is a link in a paragraph again here, not a control to hit. */
+  @media (min-width: 62rem) {
+    .footer a { min-block-size: 0; }
   }
   .footer__inner { padding-inline: var(--space-m); }
   .footer__inner { display: grid; gap: var(--space-3xs); }

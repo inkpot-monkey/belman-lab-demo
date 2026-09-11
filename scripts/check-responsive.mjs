@@ -95,10 +95,22 @@ for (const vp of VIEWPORTS) {
         const sizes = [...document.querySelectorAll('p, li, td, dd, span')]
           .map((el) => parseFloat(getComputedStyle(el).fontSize))
           .filter((size) => size > 0);
+        /*
+          The first heading on the page is the <h1>.
+
+          Grid placement lets a page be drawn in one order and written in
+          another, and the rail is written before <main> so that the source
+          order is the order a phone meets things in. That put the in-page
+          index's own <h2> ahead of the page's <h1>: a document that opens one
+          level down and then climbs, which is the heading-order failure every
+          audit tool names and which nothing else here would see.
+        */
+        const headings = [...document.querySelectorAll('h1, h2, h3, h4, h5, h6')];
         return {
           overflow: de.scrollWidth > de.clientWidth + 1,
           offenders,
           h1: document.querySelectorAll('h1').length,
+          firstHeading: headings[0]?.tagName ?? null,
           finePx,
           bodyPx,
           tiny: sizes.filter((size) => size < minFine).length,
@@ -122,6 +134,36 @@ for (const vp of VIEWPORTS) {
       { minFine: MIN_FINE_PX, minBody: MIN_BODY_PX },
     );
 
+    /*
+      The grid's areas and its tracks have to agree.
+
+      `.page` names its areas in one rule and its columns in another, and the
+      two are set at four widths by selectors of different specificity. Get one
+      of them wrong and `grid-template-areas` still names three columns while
+      `grid-template-columns` lists one: the browser invents the missing tracks
+      at 0px, every area in them collapses, and the page is still a page - no
+      overflow, no error, nothing under any floor. That is how the home page
+      shipped a 99px-wide `<main>` eight thousand pixels tall while the checker
+      and every test stayed green, and it is only obvious if you happen to open
+      the one page at the one width.
+    */
+    const grid = await page.evaluate(() => {
+      const el = document.querySelector('.page');
+      const style = getComputedStyle(el);
+      if (style.display !== 'grid' || style.gridTemplateAreas === 'none') return null;
+      const tracks = style.gridTemplateColumns.split(/\s+/).filter(Boolean);
+      const named = (style.gridTemplateAreas.match(/"[^"]*"/g) ?? []).map(
+        (row) => row.slice(1, -1).trim().split(/\s+/).length,
+      );
+      return {
+        tracks: tracks.length,
+        collapsed: tracks.filter((track) => parseFloat(track) === 0).length,
+        named: Math.max(...named),
+        columns: style.gridTemplateColumns,
+        areas: style.gridTemplateAreas,
+      };
+    });
+
     const smallTargets = await page.evaluate(
       ({ minTouch }) => {
         const STANDING = '.site-nav a, .social a, .footer a, .skip, .section-index a';
@@ -139,6 +181,17 @@ for (const vp of VIEWPORTS) {
     const mobile = vp.width < MOBILE_MAX_PX;
     if (r.overflow) problems.push(`${where}: scrolls sideways (${r.offenders.join(', ')})`);
     if (r.h1 !== 1) problems.push(`${where}: ${r.h1} h1 elements`);
+    if (r.firstHeading && r.firstHeading !== 'H1') {
+      problems.push(`${where}: first heading is ${r.firstHeading}, not the h1`);
+    }
+    if (grid && grid.named > grid.tracks) {
+      problems.push(
+        `${where}: .page names ${grid.named} columns in grid-template-areas but sizes ${grid.tracks} (${grid.columns})`,
+      );
+    }
+    if (grid && grid.collapsed > 0) {
+      problems.push(`${where}: .page has ${grid.collapsed} column track(s) at 0px (${grid.columns})`);
+    }
     if (r.tiny > 0) problems.push(`${where}: ${r.tiny} elements under ${MIN_FINE_PX}px`);
     if (mobile && r.bodyPx < MIN_BODY_PX) {
       problems.push(`${where}: body text resolves to ${r.bodyPx.toFixed(1)}px, under the ${MIN_BODY_PX}px floor`);

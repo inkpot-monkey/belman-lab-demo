@@ -9,6 +9,14 @@
  * It is a <nav>, but not the primary one: "Primary" is emitted once, in
  * BaseLayout, and test/single-emission.test.ts enforces that. The in-page
  * index on /how-this-works is the same idea written inline, and predates this.
+ *
+ * Its label is a <p>, not an <h2>. The rail is emitted before <main> so that
+ * the source order matches the order a reader meets things on a phone, which
+ * puts this ahead of the page's own <h1> - and an <h2> there opens the
+ * document one level down and then goes up, which is a real heading-order
+ * failure rather than a tidiness point. It was never a section heading
+ * anyway: it names a navigation landmark, `aria-labelledby` is what carries
+ * that, and a landmark's name does not belong in the outline of the page.
  */
 interface Props {
   /** `[id, label]` pairs, in page order. The id must exist on the page. */
@@ -20,7 +28,7 @@ const { sections, heading = 'On this page' } = Astro.props;
 ---
 {sections.length > 1 && (
   <nav class="section-index" aria-labelledby="section-index-heading">
-    <h2 class="section-index__heading" id="section-index-heading">{heading}</h2>
+    <p class="section-index__heading" id="section-index-heading">{heading}</p>
     <ol class="section-index__list">
       {sections.map(([id, label], index) => (
         <li class="section-index__item">

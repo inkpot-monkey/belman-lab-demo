@@ -60,14 +60,26 @@
     every entry is a link, so colouring them all says nothing: those take the
     heading colour with a grey underline, and take the accent under the cursor,
     which is the only moment the colour carries information.
+
+    The list of lists is the whole of it. Three were missed for a while — the
+    manual's contents, the 404 page's way out, and the identity links — and
+    nine accent links stacked down the 404 page were the most colour anywhere
+    on the site, on the page with the least information.
+
+    `--color-linkRule`, not `--color-border`. The title takes the heading
+    colour, so the underline is the entire affordance, and `border` is 1.71:1
+    against the page: a hairline that quiet is a decoration, not a control.
+    Under the cursor it still goes to the accent, but a phone never gets there,
+    so the resting state has to carry it alone.
   */
-  :is(.person__name, .pub__title, .card__title) a {
+  :is(.person__name, .pub__title, .card__title, .toc, .link-list) a {
     color: var(--color-heading);
-    text-decoration-color: var(--color-border);
+    text-decoration-color: var(--color-linkRule);
   }
-  :is(.person__name, .pub__title, .card__title) a:hover {
+  :is(.person__name, .pub__title, .card__title, .toc, .link-list) a:hover {
     text-decoration-color: var(--color-accent);
   }
+
 
   hr {
     border-block-start: var(--rule-strong) solid var(--color-heading);
@@ -326,11 +338,24 @@
       margin-block-start: 0;
     }
   }
+  /*
+    Three standing links, so they are set as controls rather than as prose: the
+    menu's colour and tracking, with the underline kept because unlike the menu
+    they leave the site. They were full accent, which is the one thing this
+    design says a row of links must not be - every entry marked is nothing
+    marked - and they sat directly under a strapline that uses the accent for
+    the lab name, so the colour was saying two different things four lines
+    apart.
+  */
   .identity .social a {
+    color: var(--color-text);
     display: inline-flex;
     letter-spacing: 0.08em;
+    text-decoration-color: var(--color-linkRule);
     text-transform: uppercase;
   }
+  .identity .social a:hover { text-decoration-color: var(--color-accent); }
+
 
   /*
     Standing controls are thumb-sized. 44px is what a thumb actually hits, and

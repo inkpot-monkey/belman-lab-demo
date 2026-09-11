@@ -80,6 +80,22 @@ export const DESIGN: DesignSpec = {
    * under white (6.53), and as the placeholder label on a team card - that
    * last one was 4.26 in vermilion, and is the reason to check all four rather
    * than only the two a colour is usually picked against.
+   *
+   * Those four ratios, and the non-text ones below, are asserted in
+   * test/contrast.test.ts. A number quoted in a comment does not fail a build,
+   * and this palette has already had to replace an accent once.
+   *
+   * Three greys draw lines, and they are three because they are answerable to
+   * different thresholds. `grid` is the gutter hairline: structure, not
+   * information, so it may be as quiet as it likes. `border` divides rows and
+   * edges cards: it groups content, and at 1.71:1 it is deliberately almost
+   * nothing. `linkRule` is the underline under a title in a list of titles,
+   * and that one identifies a control - the title takes the heading colour
+   * because colouring every entry of an all-link list says nothing, so the
+   * underline is the whole of what says "link", and the hover that promotes it
+   * to the accent is the one state a phone never reaches. WCAG 1.4.11 asks 3:1
+   * of it; #8a8a8a is the lightest neutral that clears it against the page and
+   * against a card both.
    */
   colors: {
     bg: '#fafafa',
@@ -90,6 +106,7 @@ export const DESIGN: DesignSpec = {
     accent: '#7b4b8a',
     accentText: '#ffffff',
     border: '#c2c2c2',
+    linkRule: '#8a8a8a',
     grid: '#e4e4e4',
   },
   shape: { radius: '0', rule: '1px', ruleStrong: '2px', ruleHeavy: '3px', measure: '60ch' },

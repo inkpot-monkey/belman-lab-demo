@@ -3,7 +3,6 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PeopleGrid from '../../components/PeopleGrid.astro';
 import SectionIndex from '../../components/SectionIndex.astro';
-import Themed from '../../components/Themed.astro';
 import { PERSON_RANKS } from '../../schema/collections.ts';
 
 const people = await getCollection('people');
@@ -29,7 +28,7 @@ const sections: [string, string][] = groups.map((group) => [group.id, group.rank
 
 ---
 <BaseLayout title="Team" description="People in the Belman Lab.">
-  <Fragment slot="rail"><Themed themes="a"><SectionIndex sections={sections} heading="Positions" /></Themed></Fragment>
+  <Fragment slot="rail"><SectionIndex sections={sections} heading="Positions" /></Fragment>
 
   <h1>Team</h1>
   <p class="demo-note">

@@ -2,20 +2,15 @@
 import { getCollection } from 'astro:content';
 import Tokens from '../components/Tokens.astro';
 import Identity from '../components/Identity.astro';
-import ThemeSwitcher from '../components/ThemeSwitcher.astro';
-import Themed from '../components/Themed.astro';
 import { site } from '../lib/site.ts';
-import { revision } from '../lib/build.ts';
 import { COLLECTION_NAV, url, isCurrent, type NavItem } from '../lib/nav.ts';
 import { DEFAULT_THEME, THEMES } from '../lib/themes.ts';
 import { isIndexable } from '../lib/env.ts';
 import '../styles/fonts.css';
 import '../styles/base.css';
-// One file per design, each extending the layers base.css declares. Imported
+// The design's own file, extending the layers base.css declares. Imported
 // after it so a same-specificity rule resolves in the design's favour.
 import '../styles/themes/a.css';
-import '../styles/themes/b.css';
-import '../styles/themes/c.css';
 import '../styles/demo.css';
 
 interface Props {
@@ -25,19 +20,8 @@ interface Props {
   noindex?: boolean;
   /** Marks the page whose subject is the person, so their name is its heading. */
   identityIsHeading?: boolean;
-  /**
-   * Repository path of the one file this page is written in, where there is
-   * one. Index pages that assemble a collection have no single source and
-   * leave it unset.
-   */
-  source?: string;
 }
-const { title, description, noindex, identityIsHeading, source } = Astro.props;
-
-// "Edit this page" needs somewhere to send the editor, so both halves have to
-// be present before the affordance is offered.
-const editHref = source && site.repo ? `${site.repo}/edit/main/${source}` : undefined;
-const revisionHref = revision && site.repo ? `${site.repo}/commit/${revision.hash}` : undefined;
+const { title, description, noindex, identityIsHeading } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(url(site.photo), Astro.site);
@@ -109,22 +93,6 @@ const themeIds = THEMES.map((theme) => theme.id);
 
       <main id="main" class="flow prose">
         <slot />
-
-        {/*
-          The design that treats the site as something the lab built says where
-          the page comes from and offers to open it. The others do not - one is
-          a record and one is a feature, and neither wants its plumbing in the
-          margin - so this is themed markup rather than a line every design has
-          to find room for.
-        */}
-        {editHref && (
-          <Themed themes="c">
-            <p class="source-line">
-              <span class="source-line__path">{source}</span>
-              <a class="source-line__edit" href={editHref} rel="noopener">Edit this page on GitHub</a>
-            </p>
-          </Themed>
-        )}
       </main>
 
       {/*
@@ -146,21 +114,8 @@ const themeIds = THEMES.map((theme) => theme.id);
         <p>{site.jobTitle} | {site.department}</p>
         {site.office && <p>{site.office}</p>}
         {site.address && <p>{site.address}</p>}
-        {/* The revision this build came from. Shown by the design that treats
-            the site as an instrument; the others hide it. */}
-        {revision && (
-          <Themed themes="c">
-            <p class="build-line">
-              {/* The hash and the date are adjacent on one line: a newline
-                  between two expressions becomes a space, which would put one
-                  in front of the separator. */}
-              rev <>{revisionHref ? <a href={revisionHref} rel="noopener">{revision.hash}</a> : revision.hash}</><span class="build-line__date"> · built from {revision.date}</span>
-            </p>
-          </Themed>
-        )}
       </div>
     </footer>
 
-    <ThemeSwitcher />
   </body>
 </html>

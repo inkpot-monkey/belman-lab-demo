@@ -1,54 +1,24 @@
 /*
- * Self-hosted variable faces, from Fontsource npm packages.
- *
- * Nothing here is applied yet: `ThemeSpec.fonts` still names system stacks, so
- * these are `@font-face` declarations with no matching text and the browser
- * downloads none of them. Each design's own run points its `fonts` entry at
- * one of these families, at which point only that design's faces load.
+ * Archivo, self-hosted and variable, from the Fontsource npm package.
  *
  * Three mechanics that fail silently, all of them verified against the
- * installed packages rather than the docs:
+ * installed package rather than the docs:
  *
  * - The CSS family name carries a ` Variable` suffix: `'Archivo Variable'`.
  * - Italic is a separate import. Body text needs it — the content is full of
  *   species names like *Streptococcus pneumoniae*, and a synthesised oblique
- *   on these faces looks broken.
- * - A bare `@fontsource-variable/x` is byte-identical to that package's
+ *   on this face looks broken.
+ * - A bare `@fontsource-variable/archivo` is byte-identical to that package's
  *   `wght.css`, not to its full build, contrary to the Fontsource docs. So the
- *   axis build is always named explicitly below.
+ *   axis build is named explicitly below.
  *
  * Weight is a range on the `@font-face`, so `font-weight: 550` interpolates
  * with no `font-variation-settings`; reach for that only for a custom axis.
- * `opsz` applies on its own through `font-optical-sizing: auto`.
- */
-
-/*
- * Archivo, for the design that wants one family doing all the work.
  *
- * `wght` here rather than `standard`: the width axis is only in the
+ * `wght` rather than `standard`: the width axis is only in the
  * `standard`/`wdth` builds, and it costs 90KB per latin file against 35KB —
- * about 2.6x — so condensed headlines are a choice to make deliberately, not
- * something to have by default.
+ * about 2.6x — so condensed headlines would be a choice to make deliberately,
+ * not something to have by default.
  */
 @import '@fontsource-variable/archivo/wght.css';
 @import '@fontsource-variable/archivo/wght-italic.css';
-
-/*
- * Fraunces over Instrument Sans, for the editorial design. Fraunces takes its
- * optical-size build: `opsz` 9-144 covers hero down to caption from one file,
- * and mixing an `opsz` roman with a `wght` italic would put two different
- * builds of the same family under one name.
- */
-@import '@fontsource-variable/fraunces/opsz.css';
-@import '@fontsource-variable/fraunces/opsz-italic.css';
-@import '@fontsource-variable/instrument-sans/wght.css';
-@import '@fontsource-variable/instrument-sans/wght-italic.css';
-
-/*
- * IBM Plex Sans with Source Code Pro, for the computational design. The mono
- * partner comes from another family because Plex Mono has no variable cut.
- */
-@import '@fontsource-variable/ibm-plex-sans/wght.css';
-@import '@fontsource-variable/ibm-plex-sans/wght-italic.css';
-@import '@fontsource-variable/source-code-pro/wght.css';
-@import '@fontsource-variable/source-code-pro/wght-italic.css';

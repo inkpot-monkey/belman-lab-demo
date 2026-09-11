@@ -134,7 +134,6 @@
     that sets the block as a keyed metadata rail; written once in the markup so
     it is real text rather than a CSS-generated string.
   */
-  .identity__key { display: none; }
 
   .nav { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-s); }
   .nav a {
@@ -355,7 +354,6 @@
     with a source, so the other two are not asked to find room for a line about
     the machinery.
   */
-  .source-line, .build-line { display: none; }
 
   .footer {
     border-block-start: var(--rule) solid var(--color-border);
@@ -391,22 +389,6 @@
     position: absolute;
     white-space: nowrap;
   }
-  /*
-    Per-theme markup, from the Themed component. The switcher swaps
-    `data-theme` without reloading, so a variant cannot be picked at build
-    time: every variant ships in the page and each design's stylesheet reveals
-    the ones that are its own. `display: none` takes the rest out of the
-    accessibility tree as well as off the screen.
-
-    Hidden by default, revealed by name. The other way round - shown by default
-    and hidden by everyone else - means a design with no stylesheet of its own
-    shows every variant at once, which is what the three starting points are:
-    a token set over the shared arrangement and nothing else. Failing closed
-    also makes a forgotten reveal a missing block rather than three stacked
-    ones.
-  */
-  .themed { display: none; }
-
   .muted { color: var(--color-muted); }
   .small { font-size: var(--step--1); }
   .stack-l > * + * { margin-block-start: var(--space-l); }

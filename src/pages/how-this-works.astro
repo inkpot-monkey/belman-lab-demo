@@ -7,7 +7,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../lib/site.ts';
 import { url } from '../lib/paths.ts';
 import { PERSON_RANKS } from '../schema/collections.ts';
-import { THEMES } from '../lib/themes.ts';
 import { normalisePublications, stillMissing, type Snapshot, type MissingWork } from '../lib/orcid.ts';
 import snapshot from '../data/orcid-snapshot.json' with { type: 'json' };
 import claimedMissing from '../data/orcid-missing.json' with { type: 'json' };
@@ -20,17 +19,6 @@ const synced = new Date(syncedAt).toLocaleDateString('en-GB', {
   day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
 });
 
-/*
- * The three designs, described in their own words.
- *
- * Read from `ThemeSpec` rather than retyped here, the same way the numbers
- * further up this page are read from the data the site renders: a description
- * of a design that lives somewhere other than the design drifts from it, and
- * this page exists to be trusted while she decides. A design with no statement
- * written yet is skipped rather than rendered half-empty.
- */
-const designs = THEMES.filter((theme) => theme.thesis);
-
 const sections = [
   ['changing-things', 'Changing things'],
   ['in-the-editor', 'Things in the editor that aren’t obvious'],
@@ -39,7 +27,6 @@ const sections = [
   ['team', 'The team page'],
   ['events-photos', 'Events and photos'],
   ['not-real', "What isn't real yet"],
-  ['designs', 'The design switcher'],
   ['signing-in', 'Signing in'],
   ['moving', 'If this ever has to move'],
 ];
@@ -342,62 +329,6 @@ const sections = [
       </p>
     </section>
 
-    <section id="designs">
-      <h2>The design switcher</h2>
-
-      <p>
-        The panel in the corner swaps between designs. Every one of them shows the
-        same content and the same pages — only the design changes — so you can judge
-        them against your own words rather than against a mock-up. The three at the
-        top of the panel are the ones to choose between.
-      </p>
-
-      <p>
-        It’s temporary. Once you’ve chosen, every design you didn’t pick and the
-        switcher itself get deleted, along with the banner at the top of every page.
-      </p>
-
-      <p>
-        Under a second heading in that panel are the three designs this demo opened
-        with, before any of the three above had an identity of its own. They are
-        colour and a font stack over one shared layout, which is what all three
-        started as. Switch into one and back to see what the work since then
-        bought — that comparison is the reason they are still there.
-      </p>
-
-      <p>
-        The three current designs are written down below: what each argues, what it
-        would say about you, what it costs you, and where it comes from.
-      </p>
-
-      <aside class="note">
-        <p>
-          Read the cost lines first. Three descriptions of what each design is good
-          at would not help you choose between them — what separates them is what
-          each one gives up, and every one of them gives something up.
-        </p>
-      </aside>
-
-      {designs.map((theme) => (
-        <article class="design">
-          <h3>{theme.name}</h3>
-          <p class="design__short">{theme.description}</p>
-          <dl>
-            <dt>What it argues</dt>
-            <dd>{theme.thesis}</dd>
-
-            <dt>What it says about you</dt>
-            <dd>{theme.saysAboutYou}</dd>
-
-            <dt>What it costs</dt>
-            <dd>{theme.cost}</dd>
-
-            <dt>Where it comes from</dt>
-            <dd>{theme.precedent}</dd>
-          </dl>
-        </article>
-      ))}
-    </section>
 
     <section id="signing-in">
       <h2>Signing in</h2>

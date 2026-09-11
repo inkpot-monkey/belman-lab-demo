@@ -1,7 +1,6 @@
 ---
 import { site } from '../lib/site.ts';
 import { url } from '../lib/paths.ts';
-import Themed from './Themed.astro';
 
 interface Props {
   /**
@@ -35,29 +34,11 @@ const { primary = false } = Astro.props;
     credited where photographs are credited, not in the page header.
   */}
   <img class="identity__photo" src={url(site.photo)} alt="" width="400" height="400" />
-  {/*
-    Each line carries the name of the field it came from. The keys are hidden
-    by default and shown by the design that sets this block as a keyed
-    metadata rail; the others get exactly the four lines they had before, since
-    a hidden <span> inside a <p> changes nothing about the <p>. Written in the
-    markup rather than generated in CSS so they are real text a screen reader
-    reads and a translator can reach.
-
-    One line each, so no whitespace lands between the key and its value.
-  */}
   <div class="identity__meta">
-    <p><span class="identity__key">role</span>{site.discipline}</p>
-    <p><span class="identity__key">title</span>{site.jobTitle}</p>
-    <p><span class="identity__key">dept</span>{site.department}</p>
-    <p><span class="identity__key">inst</span>{site.institution}</p>
-    {/*
-      The identifier itself rather than the word "ORCID". One design reads the
-      lab as something addressable and wants the number on the page; the other
-      two have the link below and would only be repeating it.
-    */}
-    <Themed themes="c">
-      <p class="identity__id"><span class="identity__key">orcid</span>{site.orcid}</p>
-    </Themed>
+    <p>{site.discipline}</p>
+    <p>{site.jobTitle}</p>
+    <p>{site.department}</p>
+    <p>{site.institution}</p>
   </div>
   <div class="social">
     <a href={`https://orcid.org/${site.orcid}`} rel="noopener">ORCID</a>

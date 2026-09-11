@@ -13,7 +13,7 @@ const { project } = Astro.props;
 const { Content } = await render(project);
 const data = project.data as Record<string, unknown>;
 ---
-<BaseLayout title={data.title as string} description={data.summary as string} source={`src/content/projects/${project.id}.md`}>
+<BaseLayout title={data.title as string} description={data.summary as string}>
   <h1>{data.title}</h1>
   <p class="lede">{data.summary}</p>
   <DemoBanner what="This is a placeholder project, not a real description of the lab's work." />

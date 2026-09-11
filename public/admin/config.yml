@@ -266,11 +266,6 @@ collections:
             label: GitHub username
             widget: string
             required: false
-          - name: repo
-            label: Site repository
-            widget: string
-            required: false
-            hint: Where this site’s own source lives, e.g. https://github.com/sophbel/sophbel.github.io. Drives the "edit this page" links and the revision line in the footer.
           - name: scholar
             label: Google Scholar user id
             widget: string

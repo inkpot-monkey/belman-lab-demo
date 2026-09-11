@@ -575,14 +575,5 @@
 
   /* ---- Demo chrome ----------------------------------------------------- */
 
-  /* Flat is the point, so the one shadow on the site goes. */
-  :root[data-theme='a'] .switcher {
-    border-color: var(--color-heading);
-    box-shadow: none;
-  }
   :root[data-theme='a'] .demo-banner strong { letter-spacing: 0.14em; }
-}
-
-@layer utilities {
-  :root[data-theme='a'] .themed[data-themes~='a'] { display: contents; }
 }

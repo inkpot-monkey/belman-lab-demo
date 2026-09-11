@@ -1,6 +1,5 @@
 ---
-import { render, type CollectionEntry } from 'astro:content';
-import Themed from './Themed.astro';
+import { type CollectionEntry } from 'astro:content';
 import { url } from '../lib/paths.ts';
 
 /**
@@ -8,27 +7,20 @@ import { url } from '../lib/paths.ts';
  * can be rendered inside a <details> for alumni without the markup existing
  * twice, which is how the two copies would drift apart.
  *
- * Each entry's own words are rendered here as well as on their page. Only the
- * design that sets the team as a roster with portraits shows them - the other
- * two rank the page by name and rank alone and a paragraph per person would
- * change what their team page is - so the blurb is themed markup rather than a
- * line every design has to find room for. Rendered up front rather than in the
- * template, because `render()` is asynchronous and the map below is not.
+ * A name, a rank and a portrait, and nothing else: each person's own words are
+ * on their own page, and a paragraph per person here would make the team page
+ * a second copy of all of them.
  */
 interface Props {
   members: CollectionEntry<'people'>[];
 }
 const { members } = Astro.props;
 
-const entries = await Promise.all(
-  members.map(async (person) => ({ person, Content: (await render(person)).Content })),
-);
-
 const initials = (name: string) =>
   name.split(/\s+/).slice(0, 2).map((part) => part[0] ?? '').join('');
 ---
 <ul class="people__grid">
-  {entries.map(({ person, Content }) => (
+  {members.map((person) => (
     <li class="person">
       {person.data.photo
         ? <img class="person__avatar" src={url(person.data.photo as string)} alt="" width="300" height="300" />
@@ -38,9 +30,6 @@ const initials = (name: string) =>
       </h3>
       <p class="person__rank">{person.data.rank}</p>
       {person.data.placeholder && <p class="person__placeholder">Placeholder entry</p>}
-      <Themed themes="c">
-        <div class="person__about"><Content /></div>
-      </Themed>
     </li>
   ))}
 </ul>

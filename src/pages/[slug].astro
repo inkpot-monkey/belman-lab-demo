@@ -2,7 +2,6 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionIndex from '../components/SectionIndex.astro';
-import Themed from '../components/Themed.astro';
 
 export async function getStaticPaths() {
   const pages = await getCollection('pages');
@@ -25,9 +24,8 @@ const sections: [string, string][] = headings
 <BaseLayout
   title={page.data.title as string}
   description={page.data.description as string | undefined}
-  source={`src/content/pages/${page.id}.md`}
 >
-  <Fragment slot="rail"><Themed themes="a"><SectionIndex sections={sections} /></Themed></Fragment>
+  <Fragment slot="rail"><SectionIndex sections={sections} /></Fragment>
 
   <h1>{page.data.title}</h1>
   <Content />

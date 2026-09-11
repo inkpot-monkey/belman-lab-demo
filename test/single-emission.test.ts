@@ -4,23 +4,21 @@ import { join, relative } from 'node:path';
 
 /**
  * Navigation, the identity block and <main> are emitted exactly once, in
- * BaseLayout, on every page and in every design.
+ * BaseLayout, on every page.
  *
- * Each design now has its own stylesheet and can supply its own markup, and
- * the obvious way to give one a different navigation is to emit a second one
- * and hide whichever is not wanted. That puts two "Primary" landmarks and
- * every link twice into the page. It is invisible on screen — which is why it
- * needs a test rather than a review — and it is loud to anyone using a screen
- * reader, who hears the whole menu, then hears it again.
+ * The tempting shortcut, whenever one page wants a different menu, is to emit
+ * a second one and hide whichever is not wanted. That puts two "Primary"
+ * landmarks and every link twice into the page. It is invisible on screen —
+ * which is why it needs a test rather than a review — and it is loud to anyone
+ * using a screen reader, who hears the whole menu, then hears it again.
  *
  * The rule is the same for <main>: two of them is two main landmarks, and
- * "skip to content" can only point at one. Where a design needs markup the
- * others do not have, `Themed.astro` is the way to get it, and these three
- * things are exactly what must never go inside one.
+ * "skip to content" can only point at one. A page that needs a different
+ * shape gets it from CSS, or from the `rail` slot BaseLayout already offers.
  *
  * Counted in the source rather than the built HTML so the check needs no build
  * step, matching test/rendered-fields.test.ts and test/astro-whitespace.test.ts.
- * If a design ever does need a genuinely separate layout component, this test
+ * If a page ever does need a genuinely separate layout component, this test
  * will fail — and that is the conversation it exists to force, not a nuisance
  * to silence.
  */

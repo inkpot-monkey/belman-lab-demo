@@ -2,10 +2,9 @@
 /**
  * An index of the sections on the page, for the `rail` slot of BaseLayout.
  *
- * Only a design that has somewhere to put a rail renders it, so pages wrap it
- * in `<Themed>`; the markup is the same everywhere, and each design decides
- * whether it is a sticky column beside the content, a strip above it, or
- * nothing at all.
+ * A page fills the slot; where the rail lands — a sticky third column beside
+ * the content above 62rem, a strip above it below that — is the stylesheet's
+ * decision, not this component's.
  *
  * It is a <nav>, but not the primary one: "Primary" is emitted once, in
  * BaseLayout, and test/single-emission.test.ts enforces that. The in-page

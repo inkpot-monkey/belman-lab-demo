@@ -1,7 +1,9 @@
 ---
 import { getEntry, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import FunderStrip from '../components/FunderStrip.astro';
+// Commented out with the strip below, because an import nothing uses fails
+// `astro check` under the strict config.
+// import FunderStrip from '../components/FunderStrip.astro';
 
 const page = await getEntry('pages', 'home');
 if (!page) throw new Error('Missing src/content/pages/home.md');
@@ -14,6 +16,16 @@ const { Content } = await render(page);
 >
   <Content />
 
-  {/* The home page closes on who funds the work. */}
-  <FunderStrip />
+  {/*
+    The home page used to close on who funds the work, and should again once
+    the awards are real. `src/data/fixtures/funders.json` still holds three
+    stand-ins - "FBN, Funding Body Name" and two more - and with the demo
+    notices gone there is nothing on the page left to say so. Replace the
+    contents of that file and uncomment this and the import above.
+
+    Commented rather than deleted for the same reason the seven shelved
+    sections are only underscore-prefixed: this is waiting on content, not on
+    a decision. See `src/lib/nav.ts`.
+  */}
+  {/* <FunderStrip /> */}
 </BaseLayout>

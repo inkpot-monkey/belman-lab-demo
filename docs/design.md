@@ -68,25 +68,40 @@ reset, the shared components and the default single-column arrangement;
 `rail`. Navigation, the identity block and `<main>` are emitted exactly once, in
 `BaseLayout`, and placed by grid-area, so the layout changes where things sit
 without changing the markup. They are emitted in the order a reader meets them
-— identity, nav, rail, main — because grid placement moves the picture and not
+— nav, identity, rail, main — because grid placement moves the picture and not
 the document, and a keyboard or a screen reader gets the source order at every
-width.
+width. Above 62rem the menu sits under the identity inside the left column, so
+those two swap on screen; that is the one place the order is not literal, and
+the site's navigation before the site's name is the right way round for a
+reader who cannot see the column.
 
 Three arrangements, not two:
 
 ```
 Below 40rem              40rem to 62rem            62rem and up
 
-┌───────────────┐        ┌──────────┬─────┐        ┌────────┬──────┬──────┐
-│   identity    │        │ identity │ nav │        │identity│ main │ rail │
-├───────────────┤        ├──────────┴─────┤        ├────────┤      │      │
-│     nav       │        │  rail (strip)  │        │  nav   │      │      │
+├───────────────┤        ┌──────────┬─────┐        ┌────────┬──────┬──────┐
+│  nav (a bar)  │        │ identity │ nav │        │identity│ main │ rail │
+├═══════════════┤        ├──────────┴─────┤        ├────────┤      │      │
+│   identity    │        │  rail (strip)  │        │  nav   │      │      │
 ├───────────────┤        ├────────────────┤        └────────┴──────┴──────┘
 │  rail (strip) │        │      main      │
 ├───────────────┤        └────────────────┘        14rem / 1fr / 13rem
 │     main      │
 └───────────────┘        1fr / auto
 ```
+
+Narrow, the menu is a bar across the top and is drawn as one: it bleeds past
+the page's margin to both edges of the screen and up over its top padding, its
+items are spread across the full width, and a heavy rule closes it off from
+everything under it. Stacked in the middle of the chrome it was a row of
+tracked capitals directly under another row of tracked capitals — the identity
+links — and nothing said which of them was the site's navigation. A rule that
+stops where the text column stops divides two blocks of a page; a rule that
+runs edge to edge is the floor of a band, and that is what a reader already
+knows how to name. The tracking tightens to 0.04em there, because at 320px the
+three items otherwise come to 289px inside 272px and wrap, and a bar whose last
+item has dropped onto a line of its own is not a bar.
 
 The middle one exists because the module needs 62rem and a second column needs
 far less: a tablet held upright was drawing a full-width identity with half the
@@ -120,11 +135,9 @@ Two things stop it reading as the default serious-website answer:
 The gutters are drawn rather than implied: the hairline sits in the middle of
 the gutter, so each column is pulled half a gutter left and pads the same amount
 back, and the text lands exactly where the grid puts it. Below 62rem there is
-one column and so no gutter between columns, but there is still a margin: the
-same hairline is painted down the middle of the page's own inline padding, so
-the motif survives the arrangement with no room for it, and every horizontal
-rule on the page visibly starts off it. Painted rather than bordered, so it
-costs the text no width at all.
+one column and so no gutter to draw: the motif is a desktop one, and the narrow
+arrangement says the same thing with the bar across its top and the rules that
+open and close each block under it.
 
 The `rail` slot is the one piece of page structure a page cannot write from
 inside `<main>`, because it is a sibling of it in that grid. It is filled

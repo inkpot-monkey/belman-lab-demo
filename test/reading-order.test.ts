@@ -10,17 +10,20 @@ import { readFileSync } from 'node:fs';
  * not the document: anyone following the page by keyboard, by screen reader or
  * by switch gets the source order regardless of where the boxes landed.
  *
- * Below 62rem the visual order is identity, navigation, index, content. The
- * source used to be navigation, identity, content, index — two separate
- * disagreements, and on a phone they read as one scramble: tab out of the menu
- * and you are thrown back up to the identity links, then fifteen hundred
- * pixels down into the middle of the article, then back up to the in-page
- * index. Nothing on screen shows it, and `pnpm check:responsive` measures
- * boxes rather than sequence, so it needs a test rather than a look.
+ * Below 62rem the visual order is navigation, identity, index, content: the
+ * menu is the bar across the top of the page. The source used to be
+ * navigation, identity, content, index — two separate disagreements, and on a
+ * phone they read as one scramble: tab out of the menu and you are thrown back
+ * up to the identity links, then fifteen hundred pixels down into the middle
+ * of the article, then back up to the in-page index. Nothing on screen shows
+ * it, and `pnpm check:responsive` measures boxes rather than sequence, so it
+ * needs a test rather than a look.
  *
- * Above 62rem the same order still reads: the identity heads its column with
- * the menu under it, and an index of a page belongs before the page it
- * indexes, wherever it is drawn.
+ * Above 62rem the menu sits under the identity inside the left column, so
+ * those two swap on screen. That is the one place the order is not literal,
+ * and it is the right way round for a reader who cannot see the column: the
+ * site's navigation before the site's name. An index of a page belongs before
+ * the page it indexes, wherever it is drawn.
  *
  * Matched on the source rather than on built HTML for the same reason as
  * test/single-emission.test.ts: no build step, and the failure is a line in
@@ -34,8 +37,8 @@ const template = source.slice(source.indexOf('---', 3) + 3);
 
 /** Each grid area, and the first thing in the template that emits it. */
 const AREAS = [
-  { area: 'identity', pattern: /<Identity[\s/>]/ },
   { area: 'nav', pattern: /aria-label=["']Primary["']/ },
+  { area: 'identity', pattern: /<Identity[\s/>]/ },
   { area: 'rail', pattern: /slot=["']rail["']|<slot name=["']rail["']/ },
   { area: 'main', pattern: /<main[\s/>]/ },
 ];
@@ -50,7 +53,7 @@ describe('BaseLayout emits the grid areas in reading order', () => {
     expect(at, `${area} is not emitted in the template`).toBeGreaterThanOrEqual(0);
   });
 
-  it('orders them identity, nav, rail, main', () => {
+  it('orders them nav, identity, rail, main', () => {
     expect(found.map((entry) => entry.area)).toEqual(
       [...found].sort((a, b) => a.at - b.at).map((entry) => entry.area),
     );

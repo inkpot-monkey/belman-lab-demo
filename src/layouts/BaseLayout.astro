@@ -64,21 +64,31 @@ const pathname = Astro.url.pathname;
     <a class="skip" href="#main">Skip to content</a>
 
     {/*
-      Source order is reading order: identity, navigation, the in-page index,
+      Source order is reading order: navigation, identity, the in-page index,
       then the content. Grid placement moves the picture and not the document,
       so anyone following the page by keyboard or by screen reader gets this
       order whatever width they are at — which is why it matches the narrow
-      arrangement, where it is also the visual one. It still reads above 62rem:
-      the identity heads its column with the menu under it, and an index of a
-      page belongs before the page, wherever it happens to be drawn.
+      arrangement, where the menu is the bar across the top of the page. An
+      index of a page belongs before the page it indexes, wherever it is drawn.
 
       It used to be navigation, identity, content, index, which disagreed with
       the picture in two places at once. On a phone that read as one scramble —
       tab out of the menu and you were thrown back up to the identity links,
       then into the middle of the article, then back up to the index.
       test/reading-order.test.ts is what holds it now.
+
+      Above 62rem the menu sits under the identity inside the left column, so
+      the two are the other way round on screen. That is the one place the
+      order is not literal, and it is the right way round for a reader who
+      cannot see the column: the site's navigation before the site's name.
     */}
     <div class="page">
+      <nav class="site-nav nav" aria-label="Primary">
+        {nav.map((item) => (
+          <a href={url(item.href)} aria-current={isCurrent(item.href, pathname) ? 'page' : undefined}>{item.label}</a>
+        ))}
+      </nav>
+
       {/*
         <header>, not <aside>. This is the site's identity on every page and on
         the home page it holds the <h1>; the complementary landmark says the
@@ -88,12 +98,6 @@ const pathname = Astro.url.pathname;
       <header class="identity-column">
         <Identity primary={identityIsHeading} />
       </header>
-
-      <nav class="site-nav nav" aria-label="Primary">
-        {nav.map((item) => (
-          <a href={url(item.href)} aria-current={isCurrent(item.href, pathname) ? 'page' : undefined}>{item.label}</a>
-        ))}
-      </nav>
 
       {/*
         A second column beside the content, for a page that wants one: an

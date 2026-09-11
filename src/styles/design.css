@@ -108,30 +108,20 @@
     any page has its own; then navigation; then the in-page index if the page
     has one; then the content.
   */
+  /*
+    The menu is the bar across the top, above the identity. A stacked page puts
+    a lot of chrome in front of the reader whatever the order, and of that
+    chrome the menu is the only part they came to use; a strapline they have
+    already read on the last page is not what the top of a phone screen is for.
+    The bar is drawn as one below - see `.site-nav` under Navigation.
+  */
   .page {
     column-gap: var(--space-xl);
     row-gap: var(--space-s);
-    grid-template-areas: 'identity' 'nav' 'main';
-    /*
-      The gutter, drawn, in the arrangement that has no gutters.
-
-      This is the motif — a grid you can see — and it lived entirely inside the
-      62rem query, so on a phone the design was one grotesque and a stack of
-      black rules, which is the template answer the whole thing was built to
-      avoid. Below 62rem there is one column and nothing between columns to
-      draw, but there is still a margin, and a rule down the margin is the same
-      claim: the page is measured, and the text starts where the grid says.
-
-      Painted rather than bordered, because a border would move the text and
-      alignment is the argument. The line sits in the middle of the page's own
-      inline padding, so every horizontal rule on the page now visibly starts
-      off it, which is what makes a grid read at all.
-    */
-    background: linear-gradient(var(--color-grid), var(--color-grid)) no-repeat
-      calc(var(--space-m) / 2) 0 / var(--rule) 100%;
+    grid-template-areas: 'nav' 'identity' 'main';
   }
   .page:has(> .rail) {
-    grid-template-areas: 'identity' 'nav' 'rail' 'main';
+    grid-template-areas: 'nav' 'identity' 'rail' 'main';
   }
   /*
     The row gap already separates the content from whatever is above it. This
@@ -202,10 +192,13 @@
       column above 62rem. Anchored to the bottom of the row rather than the
       top, so it keeps that relationship whatever the identity grows to.
     */
-    .page > .site-nav {
-      align-self: end;
-      justify-content: flex-end;
-    }
+    /*
+      Grid placement only. How the menu is drawn at this width - the band
+      undone, the items to the right - is in `components` beside the rest of
+      `.site-nav`, because `components` comes after `layout` in the layer
+      order and a reset written here would lose to it however specific it was.
+    */
+    .page > .site-nav { align-self: end; }
 
     /* The home page keeps the stack: there the identity is the row, not a label beside the menu. */
     .page:where(:has(h1.identity__name)) {
@@ -228,8 +221,6 @@
     */
     .page {
       align-items: stretch;
-      /* Real gutters from here, so the margin rule that stood in for them goes. */
-      background: none;
       grid-template-columns: 14rem minmax(0, 1fr) 13rem;
       grid-template-areas:
         'identity main main'
@@ -304,12 +295,6 @@
       gap: 0;
       inset-block-start: var(--space-m);
       position: sticky;
-      /*
-        Both undone from the 40rem step, where the menu was a row anchored to
-        the foot of the identity beside it. In a column `flex-end` would stack
-        the items against the bottom of the page instead.
-      */
-      justify-content: normal;
     }
 
     /*
@@ -555,18 +540,60 @@
   /* ---- Navigation ------------------------------------------------------ */
 
   /*
-    No row gap. Three items do not fit one line at 320px and wrapping is the
-    right answer, but each is a 44px box, so a gap on top of that left the item
-    that wrapped sitting fifty pixels below the others - which reads as one
-    link having fallen off the menu rather than as a menu on two lines. The
-    boxes are their own separation.
+    A bar, and drawn as one.
+
+    Stacked between the identity block and the page, the menu was a row of
+    tracked capitals directly under another row of tracked capitals - the
+    identity's links - and nothing said which of them was the site's
+    navigation. It reads as a bar now because it is built as one: it sits at
+    the top of the page, it bleeds past the page's margin to both edges of the
+    screen, its items are spread across the full width rather than clustered at
+    the left, and a heavy rule closes it off from everything underneath.
+
+    The bleed is the part that does the work. A rule that stops where the text
+    column stops is a rule between two blocks of a page; a rule that runs edge
+    to edge is the floor of a band, and a band across the top of a screen is a
+    thing every reader already knows how to name.
+
+    Below 40rem only. From there the menu sits beside the identity in its own
+    column and the row it shares is the bar; above 62rem it is the stacked
+    index down the side of the module.
   */
-  .nav { row-gap: 0; }
+  .site-nav {
+    border-block-end: var(--rule-heavy) solid var(--color-heading);
+    /*
+      The gap is a floor, not the spacing: `space-between` distributes whatever
+      is left over. It has to be small enough that three items still count as
+      fitting - at the shared `space-s` they come to 275px inside 272px and
+      wrap by three pixels, which is the whole bar undone for want of them.
+    */
+    column-gap: var(--space-2xs);
+    justify-content: space-between;
+    row-gap: 0;
+    /*
+      Out to both edges of the screen and up to the top of it, past the page's
+      own padding. The text still starts on the page's margin, so the bar is
+      the only thing that bleeds and the column underneath it stays where the
+      grid puts it.
+    */
+    margin-block-start: calc(var(--space-l) * -1);
+    margin-inline: calc(var(--space-m) * -1);
+    padding-block: var(--space-2xs) var(--space-3xs);
+    padding-inline: var(--space-m);
+  }
 
   .nav a {
     font-size: var(--step--1);
     font-weight: 500;
-    letter-spacing: 0.08em;
+    /*
+      Tighter than the 0.08em this design tracks its labels at, because at
+      320px the three items come to 289px inside a 272px column and wrap - and
+      a bar whose last item has dropped onto a line of its own is not a bar.
+      0.04em brings them to 243px, which fits with room at the narrowest width
+      the site supports. The wide setting comes back at 40rem, where the menu
+      has a column of its own and no longer has to fit across a phone.
+    */
+    letter-spacing: 0.04em;
     padding-block: var(--space-2xs);
     text-transform: uppercase;
   }
@@ -620,6 +647,31 @@
     .nav a[aria-current='page'] {
       border-inline-start-color: var(--color-accent);
     }
+  }
+
+  @media (min-width: 40rem) {
+    /*
+      The band is undone. The menu shares a row with the identity here, and
+      that row is what reads as the bar; a rule under the menu alone would
+      underline three links and stop halfway across the page. The tracking
+      goes back to the 0.08em this design sets its labels at, because the menu
+      is no longer trying to fit across a phone.
+    */
+    .site-nav {
+      border-block-end: 0;
+      column-gap: var(--space-s);
+      justify-content: flex-end;
+      margin-block-start: 0;
+      margin-inline: 0;
+      padding-block: 0;
+      padding-inline: 0;
+    }
+    .nav a { letter-spacing: 0.08em; }
+  }
+
+  @media (min-width: 62rem) {
+    /* A stacked index down the side of the module: nothing to distribute. */
+    .site-nav { justify-content: normal; }
   }
 
   /* ---- Running prose ---------------------------------------------------- */

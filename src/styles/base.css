@@ -94,7 +94,13 @@
   .page:has(> .rail) { grid-template-areas: 'nav' 'identity' 'main' 'rail'; }
   .rail { grid-area: rail; }
   .identity-column { grid-area: identity; }
-  .page > main { grid-area: main; margin-block-start: var(--space-l); }
+  /*
+    No top margin here. The row gap already separates the content from whatever
+    sits above it, and a margin on top of that made the seam under the in-page
+    index twice every other seam on the page. Stated once, in the grid that
+    owns the spacing.
+  */
+  .page > main { grid-area: main; }
 
   .flow > * + * { margin-block-start: var(--space-s); }
   .flow h2 + *, .flow h3 + * { margin-block-start: var(--space-2xs); }
@@ -137,15 +143,21 @@
   */
 
   .nav { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-s); }
+  /*
+    The current page is marked, and where the mark goes is the design's
+    business rather than this file's. Hanging it off the block edge only works
+    while the box is the height of its line, and these are 44px touch targets
+    on a phone: the rule landed sixteen pixels below the word and read as a
+    dash that had come loose. `design.css` draws it on the text below 62rem and
+    on the inline edge above, and both used to have to undo a border from here
+    first.
+  */
   .nav a {
     color: var(--color-text);
     padding-block: var(--space-3xs);
     text-decoration: none;
-    border-block-end: var(--rule) solid transparent;
   }
-  .nav a:hover { border-block-end-color: var(--color-border); }
   .nav a[aria-current='page'] {
-    border-block-end-color: var(--color-accent);
     color: var(--color-heading);
     font-weight: 600;
   }

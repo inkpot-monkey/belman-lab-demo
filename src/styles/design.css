@@ -44,9 +44,26 @@
   */
   h3:not([class]) {
     font-size: var(--step-0);
-    letter-spacing: 0.1em;
+    letter-spacing: 0.06em;
     line-height: 1.3;
     text-transform: uppercase;
+  }
+  @media (min-width: 34rem) {
+    /*
+      Tracked capitals are a label, and a label reads best on one line. In a
+      268px column a subheading like "Schmidt Science Fellowship" wraps to two
+      whatever the tracking - 0.06em does not save it, and nothing short of
+      going under the body size would - so the narrow end takes the tracking
+      that sets two lines of capitals best rather than the one that looks
+      widest. The wide setting comes back where there is a line to spread it
+      across.
+
+      What actually makes this read as a level again is the space above it:
+      see the margin under "Headings, ruled". This step carries no size of its
+      own, so at 320px, eight pixels under an <h2>, case and tracking were
+      being asked to do all of the work and could not.
+    */
+    h3:not([class]) { letter-spacing: 0.1em; }
   }
 
   a {
@@ -79,7 +96,6 @@
   :is(.person__name, .pub__title, .card__title, .toc, .link-list) a:hover {
     text-decoration-color: var(--color-accent);
   }
-
 
   hr {
     border-block-start: var(--rule-strong) solid var(--color-heading);
@@ -114,11 +130,15 @@
     background: linear-gradient(var(--color-grid), var(--color-grid)) no-repeat
       calc(var(--space-m) / 2) 0 / var(--rule) 100%;
   }
-
   .page:has(> .rail) {
     grid-template-areas: 'identity' 'nav' 'rail' 'main';
   }
-  .page > main { margin-block-start: var(--space-s); }
+  /*
+    The row gap already separates the content from whatever is above it. This
+    margin was a second one, so the seam between the index and the article was
+    twice every other seam on the page.
+  */
+  .page > main { margin-block-start: 0; }
 
   /*
     Between a phone and the module, the identity and the menu share a row.
@@ -292,8 +312,6 @@
       justify-content: normal;
     }
 
-    .page > main { margin-block-start: 0; }
-
     /*
       The gutters, drawn. The rule belongs in the middle of the gutter rather
       than against the content, so each column is pulled half a gutter to the
@@ -335,13 +353,18 @@
   }
 
   /*
-    The second line of the strapline, and the rule that closes the unit. Named
-    rather than reached by position: `p:first-child` and `p + p` were correct
-    only while site.json declared its fields in this order, and said nothing
-    about which line was which to anyone reading either file.
+    The second line of the strapline, and the rule that closes the unit.
+
+    `ruleHeavy`, which is the weight this design gives to closing a masthead —
+    the same job the rule under an <h1> does, and the same one `.identity-column`
+    does at the foot of its column above 62rem. It was `ruleStrong`, which is
+    the weight that opens a section, and in one column that is a real
+    ambiguity: every rule on a phone is the width of the same single column, so
+    weight is the only thing left saying which rule is which, and the strapline
+    was closing itself with the mark that starts an <h2>.
   */
   .identity__discipline {
-    border-block-end: var(--rule-strong) solid var(--color-heading);
+    border-block-end: var(--rule-heavy) solid var(--color-heading);
     color: var(--color-text);
     font-size: var(--step-0);
     font-weight: 500;
@@ -350,6 +373,24 @@
     padding-block: var(--space-3xs) var(--space-2xs);
   }
   .identity__affiliation { line-height: 1.35; }
+
+  /*
+    Where she works, off the pages that are not about her.
+
+    In the column above 62rem the identity costs no vertical space at all: it
+    sits beside the content. Stacked on a phone it costs whatever it is tall,
+    and on an inner page all of it is repetition — at 320px the reader met
+    four lines of department and school, the menu and the index before the
+    page's own title, and the title was below the fold on a 568px screen.
+
+    The three lines are in the footer of every page, and the whole block is on
+    the home page, one tap away. What stays is the part that identifies the
+    site rather than describing it: the lab, the name, the discipline, and the
+    rule that closes them. The home page keeps all of it, because there the
+    identity is not chrome in front of the content — it is the content, which
+    is the argument the strapline row was built on and the one place it holds.
+  */
+  .page:not(:has(h1.identity__name)) .identity__affiliation { display: none; }
 
   /*
     The one photograph on the site, on the one page it is about. Everywhere
@@ -364,9 +405,16 @@
     order: 1;
   }
 
+  /*
+    Tight to the strapline above it. The links are 44px controls on a phone and
+    carry their own air inside the box, so a space-s on top of that put the
+    three of them adrift between the identity and the menu, reading as a third
+    block rather than as the last line of the first one. Above 62rem the column
+    pins them to its foot with an auto margin and this stops mattering.
+  */
   .identity .social {
     font-size: var(--step--1);
-    margin-block-start: var(--space-s);
+    margin-block-start: var(--space-3xs);
   }
 
   /* On its own page the name is the <h1>, and it is sized like one. */
@@ -437,6 +485,15 @@
     .identity { block-size: 100%; }
     .identity .social { margin-block-start: auto; }
 
+    /*
+      The taxonomy comes back. Here the identity is a column beside the
+      content rather than a block in front of it, so it costs no vertical space
+      at all, and the three lines are the column's own subject. What made them
+      repetition on a phone is only that the reader had to scroll past them to
+      reach the page.
+    */
+    .page:not(:has(h1.identity__name)) .identity__affiliation { display: block; }
+
     .identity .social a { min-block-size: 0; }
     /*
       Off the home page the identity is a 14rem column, and the three links set
@@ -470,7 +527,6 @@
   }
   .identity .social a:hover { text-decoration-color: var(--color-accent); }
 
-
   /*
     Standing controls are thumb-sized. 44px is what a thumb actually hits, and
     the menu, the identity links, the in-page index and the footer's email are
@@ -481,6 +537,14 @@
 
     Lifted again above 62rem by each of them: at that width the pointer is a
     mouse, and a stacked menu of 44px rows is a different design.
+
+    The height goes on the box and the box is not where a mark belongs. The
+    label is fifteen pixels of it, so a border on the block edge lands sixteen
+    pixels under the word and reads as a dash that has come loose rather than
+    as an underline — which is what the current-page marker did on every phone,
+    invisibly, because above 62rem the marker is an inline-start border and the
+    44px floor is switched off. Anything marking one of these controls marks
+    the text: see `.nav a[aria-current]`.
   */
   :where(.nav, .identity .social, .section-index, .footer) a {
     align-items: center;
@@ -490,6 +554,15 @@
 
   /* ---- Navigation ------------------------------------------------------ */
 
+  /*
+    No row gap. Three items do not fit one line at 320px and wrapping is the
+    right answer, but each is a 44px box, so a gap on top of that left the item
+    that wrapped sitting fifty pixels below the others - which reads as one
+    link having fallen off the menu rather than as a menu on two lines. The
+    boxes are their own separation.
+  */
+  .nav { row-gap: 0; }
+
   .nav a {
     font-size: var(--step--1);
     font-weight: 500;
@@ -497,7 +570,33 @@
     padding-block: var(--space-2xs);
     text-transform: uppercase;
   }
-  .nav a[aria-current='page'] { font-weight: 700; }
+
+  /*
+    The marker is drawn on the text, not on the control.
+
+    `base.css` hangs it off the block edge, which is right when the box is the
+    height of the line and wrong the moment the box is a 44px touch target: the
+    label is fifteen pixels of it and the rule landed sixteen pixels below the
+    word, reading as a loose dash. An underline follows the word instead, at
+    the same weight the rest of this design opens things with, so it stays a
+    mark rather than becoming a divider under the menu.
+
+    Both states, because both were on the box. Hover takes the quiet grey; the
+    current page takes the accent, which is the whole reason the marker exists.
+  */
+  .nav a {
+    text-decoration-thickness: var(--rule-strong);
+    text-underline-offset: 0.4em;
+  }
+  .nav a:hover {
+    text-decoration-color: var(--color-border);
+    text-decoration-line: underline;
+  }
+  .nav a[aria-current='page'] {
+    font-weight: 700;
+    text-decoration-color: var(--color-accent);
+    text-decoration-line: underline;
+  }
 
   @media (min-width: 62rem) {
     /*
@@ -507,11 +606,16 @@
     */
     .nav a {
       min-block-size: 0;
-      border-block-end: 0;
       border-inline-start: var(--rule-heavy) solid transparent;
       padding-block: var(--space-3xs);
       padding-inline-start: var(--space-2xs);
     }
+    /*
+      The box is the height of its line again here, so the marker goes back on
+      the edge and the underline that carries it on a phone comes off.
+    */
+    .nav a:hover,
+    .nav a[aria-current='page'] { text-decoration-line: none; }
     .nav a:hover { border-inline-start-color: var(--color-border); }
     .nav a[aria-current='page'] {
       border-inline-start-color: var(--color-accent);
@@ -558,6 +662,29 @@
     }
   }
 
+  /* ---- Lists in prose -------------------------------------------------- */
+
+  /*
+    An en-dash where the bullet was.
+
+    A disc is the one undrawn mark on a site whose argument is that structure
+    is drawn, and the Education list is where it shows: three entries, each a
+    degree over an institution, carrying the only piece of default browser
+    furniture on the page.
+
+    Through `::marker` rather than `list-style: none` and a `::before`, because
+    taking the list-style off a `<ul>` is what stops Safari announcing it as a
+    list at all. The list keeps its markers and its semantics; a browser that
+    does not support `content` here keeps the disc, which is the fallback
+    already in place.
+  */
+  .prose :is(ul, ol):not([class]) > li::marker {
+    color: var(--color-muted);
+  }
+  .prose ul:not([class]) > li::marker {
+    content: '– ';
+  }
+
   /* ---- Headings, ruled ------------------------------------------------- */
 
   /*
@@ -588,6 +715,17 @@
     the first heading is separating itself from that.
   */
   main > section:first-of-type > h2:not([class]) { margin-block-start: 0; }
+
+  /*
+    An <h3> is a level below the <h2>, not a kicker attached to it.
+
+    `.flow h2 + *` closes the gap after a heading to space-2xs, which is right
+    for the paragraph a heading is introducing and wrong for another heading.
+    This step carries no size — it is body size in tracked capitals — so the
+    space under the <h2> is most of what says a new thing has started, and at
+    eight pixels the two read as one title with a strapline under it.
+  */
+  :is(.flow, .manual) :is(h2, h3) + h3 { margin-block-start: var(--space-m); }
 
   /* ---- The in-page index ----------------------------------------------- */
 
@@ -623,10 +761,19 @@
     font-weight: 700;
   }
 
-  /* On a phone the index is a ruled strip above the content, not a column. */
+  /*
+    On a phone the index is a ruled strip above the content, not a column.
+
+    One rule, under it, not a pair. The heading already carries its own above
+    the entries, so a boxed strip put three horizontal rules into a hundred
+    vertical pixels — in a narrow column, where every rule is the width of the
+    same column and weight is the only thing distinguishing them, that is three
+    dividers and no structure. The one that stays is the one doing a job: it
+    closes the index off from the page it indexes.
+  */
   .rail {
-    border-block: var(--rule) solid var(--color-border);
-    padding-block: var(--space-2xs);
+    border-block-end: var(--rule) solid var(--color-border);
+    padding-block-end: var(--space-2xs);
   }
   .rail .section-index__list {
     display: flex;
@@ -635,7 +782,7 @@
   }
 
   @media (min-width: 62rem) {
-    .rail { border-block: 0; padding-block: 0; }
+    .rail { border-block-end: 0; padding-block-end: 0; }
     /*
       Back to a list of rows in the column, where a pointer rather than a thumb
       is doing the hitting and 44px each would space seven entries down half
@@ -654,10 +801,22 @@
 
   /* ---- Publications: years railed down the margin ---------------------- */
 
+  /*
+    The list opens with a rule of its own, under the heading that opened the
+    section, and the pair of them makes the heading a table head — which is
+    exactly what it is once the years are railed down the margin beside it.
+
+    Below 34rem the years are not railed, there is no table, and the same pair
+    reads as a heading someone has drawn a box around. So the list's rule is
+    tied to the same threshold the rail is: it appears when the thing it is
+    heading appears.
+  */
   .pubs {
-    border-block-start: var(--rule-strong) solid var(--color-heading);
     gap: 0;
     max-inline-size: none;
+  }
+  @media (min-width: 34rem) {
+    .pubs { border-block-start: var(--rule-strong) solid var(--color-heading); }
   }
   .pub {
     border-block-end: var(--rule) solid var(--color-border);
@@ -683,9 +842,41 @@
     letter-spacing: 0.08em;
   }
   .pub__meta-year { display: none; }
-  .pub__title { font-weight: 700; max-inline-size: var(--measure); }
+  /*
+    Tighter than the 1.6 body copy inherits. A title is a title at any length,
+    and at 1.6 a six-line one — which is what a paper about a 15A-CC63
+    sub-lineage comes to in a 268px column — sets six separately underlined
+    bars rather than one block of bold with a line under it.
+  */
+  .pub__title {
+    font-weight: 700;
+    line-height: 1.25;
+    max-inline-size: var(--measure);
+  }
   .pub__authors,
   .pub__meta { max-inline-size: var(--measure); }
+
+  /*
+    The author list is the one piece of fine print on this site that is running
+    text: six names and an "et al." wrap to three lines in a narrow column,
+    and the step below body is for labels — a year, a dateline, a menu — where
+    short and tracked is what makes small legible.
+
+    It matters most exactly where it reads worst. The scale interpolates over
+    320-1240px from a 1.2 ratio to a 1.333, so fine print is 0.84x body on a
+    phone against 0.75x on a desk: the distinction the small step exists to
+    draw is at its weakest on the smallest screen, and what is left is three
+    lines of grey at fourteen pixels. From 34rem the citation gets its rail and
+    its table, the line is short again, and the step goes back.
+
+    `pnpm check:responsive` cannot see this one: it flags text between the
+    fine-print step and the body floor as an ad-hoc shrink, and this resolved
+    exactly to the step, so it passed by construction.
+  */
+  .pub__authors { font-size: var(--step-0); }
+  @media (min-width: 34rem) {
+    .pub__authors { font-size: var(--step--1); }
+  }
 
   /*
     The rail is scoped to the citation lists, not to every `.pub`. News and
@@ -815,10 +1006,19 @@
 
   /* ---- Long-form pages ------------------------------------------------- */
 
-  /* The manual's index is the same device as the rail, so it is set the same. */
+  /*
+    The manual's index is the same device as the rail, so it is set the same:
+    opened by a rule, closed by the thing that comes next.
+
+    Not `border-block`. The first section under it opens with its own rule, one
+    space-l down, so a rule on the foot of this one put two identical marks
+    forty-nine pixels apart with nothing whatever between them — a band of
+    empty page that reads as a divider drawn twice by mistake. The section
+    rule is the divider; this one only has to start the list.
+  */
   .toc {
     background: none;
-    border-block: var(--rule-strong) solid var(--color-heading);
+    border-block-start: var(--rule-strong) solid var(--color-heading);
     border-inline-start: 0;
     padding-inline: 0;
   }

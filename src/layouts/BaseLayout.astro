@@ -4,13 +4,12 @@ import Tokens from '../components/Tokens.astro';
 import Identity from '../components/Identity.astro';
 import { site } from '../lib/site.ts';
 import { NAV, SHELVED_PAGES, url, isCurrent, type NavItem } from '../lib/nav.ts';
-import { DEFAULT_THEME, THEMES } from '../lib/themes.ts';
 import { isIndexable } from '../lib/env.ts';
 import '../styles/fonts.css';
 import '../styles/base.css';
 // The design's own file, extending the layers base.css declares. Imported
 // after it so a same-specificity rule resolves in the design's favour.
-import '../styles/themes/a.css';
+import '../styles/design.css';
 
 interface Props {
   title: string;
@@ -38,9 +37,8 @@ const pageNav: NavItem[] = pages
 
 const nav = [...pageNav, ...NAV].sort((a, b) => a.order - b.order);
 const pathname = Astro.url.pathname;
-const themeIds = THEMES.map((theme) => theme.id);
 ---
-<html lang="en" data-theme={DEFAULT_THEME}>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -48,7 +46,7 @@ const themeIds = THEMES.map((theme) => theme.id);
     <meta name="description" content={summary} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
-    <meta name="theme-color" content="#7b4b8a" />
+    <meta name="theme-color" content="#d6320f" />
     {(noindex || !isIndexable) && <meta name="robots" content="noindex" />}
 
     <!-- Link previews: this URL gets pasted into email and chat. -->
@@ -60,15 +58,6 @@ const themeIds = THEMES.map((theme) => theme.id);
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
     <Tokens />
-    <!-- Applied before first paint so switching themes never flashes. -->
-    <script is:inline define:vars={{ themeIds, fallback: DEFAULT_THEME }}>
-      try {
-        const stored = localStorage.getItem('demo-theme');
-        document.documentElement.dataset.theme = themeIds.includes(stored) ? stored : fallback;
-      } catch {
-        document.documentElement.dataset.theme = fallback;
-      }
-    </script>
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -90,9 +79,8 @@ const themeIds = THEMES.map((theme) => theme.id);
 
       {/*
         A second column beside the content, for a page that wants one: an
-        in-page index, a metadata rail. Rendered only when a page fills it, so
-        it costs nothing on the pages that do not, and placed by each design
-        from its own stylesheet.
+        in-page index. Rendered only when a page fills it, so it costs nothing
+        on the pages that do not, and placed by `design.css`.
       */}
       {Astro.slots.has('rail') && (
         <aside class="rail"><slot name="rail" /></aside>

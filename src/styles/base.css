@@ -1,9 +1,10 @@
 /*
  * Layer order is declared once so later rules never depend on source position.
  *
- * Each design then extends these same layers from its own file in
- * `styles/themes/`, scoped to `:root[data-theme='x']`. Those files are
- * imported by BaseLayout after this one.
+ * `styles/design.css` extends these same layers and is imported by BaseLayout
+ * after this file. The split is by what a rule is about: here the reset, the
+ * shared components and the default single-column arrangement; there every
+ * choice that belongs to the design.
  */
 @layer reset, base, layout, components, utilities;
 
@@ -65,12 +66,11 @@
 
 @layer layout {
   /*
-    The shared grid, and the default arrangement of it. Each design refines
-    this from its own file in `styles/themes/`; navigation, identity and
-    content are still emitted exactly once and placed by grid-area, so a theme
-    changes where things sit without changing the markup. Hiding a duplicate
-    nav per theme would put two "Primary" landmarks and every link twice into
-    every page.
+    The grid, and its single-column arrangement. `design.css` rearranges the
+    same four areas above 62rem; navigation, identity and content are emitted
+    exactly once and placed by grid-area, so the layout changes where things
+    sit without changing the markup. A second nav emitted and hidden at one
+    width would put two "Primary" landmarks and every link twice into the page.
   */
   .page {
     display: grid;
@@ -87,8 +87,9 @@
   /*
     An optional second column, filled by a page through BaseLayout's `rail`
     slot. It is the one piece of page structure that cannot be written from
-    inside <main>, because it is a sibling of it in this grid. A theme that
-    rearranges the grid has to name the area itself; this is only the default.
+    inside <main>, because it is a sibling of it in this grid. Any rule that
+    rearranges the grid has to name this area itself; below is only the
+    default.
   */
   .page:has(> .rail) { grid-template-areas: 'nav' 'identity' 'main' 'rail'; }
   .rail { grid-area: rail; }

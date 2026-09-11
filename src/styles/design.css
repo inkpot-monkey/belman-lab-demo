@@ -154,7 +154,9 @@
     .identity-column {
       align-self: stretch;
       border-block-end: var(--rule-heavy) solid var(--color-heading);
+      padding-block-end: var(--space-s);
     }
+
     .site-nav { align-self: start; }
     /*
       One item per line in the column, so the menu reads as an index, and it
@@ -271,13 +273,37 @@
         'meta   photo'
         'social photo';
       grid-template-columns: minmax(0, 1fr) 9rem;
-      padding-block-end: var(--space-s);
+      /*
+        The address row takes the slack, which is what pins the links to the
+        foot here: an auto margin has no free space to claim inside a grid row
+        sized to its own content, so the row above has to give it up.
+      */
+      grid-template-rows: auto auto 1fr auto;
     }
     .page:has(h1.identity__name) .identity__lab { grid-area: lab; }
     .page:has(h1.identity__name) .identity__name {
       font-size: var(--step-5);
       grid-area: name;
     }
+    /*
+      The identity fills the column and its last line is pinned to the foot of
+      it, so ORCID, GitHub and Scholar sit at one height on every page in the
+      same way the rule below them and the menu below that do. The slack goes
+      above the links instead - into the gap under the address, where a column
+      short of the common baseline can absorb it without anything looking
+      misplaced.
+
+      Top and bottom both, which is the whole reason to pin one line rather
+      than to align the block: the lab name still starts level on every page,
+      because the block is not pushed down as a unit.
+
+      Declared here rather than beside the grid, because `.identity .social`
+      sets its own top margin in this layer and a rule in `layout` would lose
+      to it whatever its specificity.
+    */
+    .identity { block-size: 100%; }
+    .identity .social { margin-block-start: auto; }
+
     .page:has(h1.identity__name) .identity__meta { grid-area: meta; }
     .page:has(h1.identity__name) .identity .social { grid-area: social; }
     .identity .social a { min-block-size: 0; }

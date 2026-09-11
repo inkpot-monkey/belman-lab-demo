@@ -39,10 +39,20 @@ const { publications, notes = {} } = Astro.props;
             {truncated && ' et al.'}
           </p>
         )}
+        {/*
+          The venue line. A work with no journal is a preprint, and the tag at
+          the end already says so, so the word is not set twice - which it was,
+          as "Preprint · PREPRINT", once the journal took bold.
+
+          Each separator lives inside the element it precedes rather than
+          between them. The year is hidden wherever the design rails it down
+          the margin instead, and a separator sitting outside that span would
+          survive the hiding and leave a stray bullet behind.
+        */}
         <p class="pub__meta">
-          {publication.journal ?? 'Preprint'}
-          {publication.year && <span class="pub__meta-year"> · {publication.year}</span>}
-          {publication.isPreprint && <> · <span class="tag">Preprint</span></>}
+          {publication.journal && <span class="pub__journal">{publication.journal}</span>}
+          {publication.year && <span class="pub__meta-year">{publication.journal ? ' · ' : ''}{publication.year}</span>}
+          {publication.isPreprint && <>{publication.journal ? ' · ' : ''}<span class="tag">Preprint</span></>}
         </p>
         {/*
           The DOI, given a line of its own for a design that reads a paper as a

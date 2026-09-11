@@ -213,7 +213,19 @@
   /* The DOI on a line of its own. Shown only by a design that cites by identifier. */
   .pub__doi { display: none; }
   .pub__authors, .pub__meta { color: var(--color-muted); font-size: var(--step--1); }
+  /*
+    Two things are worth picking out of a citation at a glance, and they are
+    picked out differently so neither is mistaken for the other: her name takes
+    weight, and the journal takes italic, which is how a journal has been set
+    in a citation for a century. The author list italicises nothing, so the
+    <em> around her name is turned back upright to make room for that.
+
+    Archivo ships a real italic and `font-synthesis: none` in design.css
+    refuses a faked one, so this resolves to a drawn face or to the fallback's
+    own italic - never to a slanted roman.
+  */
   .pub__authors em { color: var(--color-heading); font-style: normal; font-weight: 600; }
+  .pub__journal { color: var(--color-heading); font-style: italic; }
   .tag {
     background: var(--color-accent);
     border-radius: var(--radius);

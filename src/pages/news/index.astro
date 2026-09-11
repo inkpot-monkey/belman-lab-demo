@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import DemoBanner from '../../components/DemoBanner.astro';
 import { url } from '../../lib/nav.ts';
 
 const news = (await getCollection('news')).sort(
@@ -13,7 +12,6 @@ const format = (date: Date) =>
 ---
 <BaseLayout title="News" description="Announcements and updates from the lab.">
   <h1>News</h1>
-  <DemoBanner what="Every item below is a placeholder, not a real announcement." />
 
   <ul class="pubs pubs--dated">
     {news.map((item) => (

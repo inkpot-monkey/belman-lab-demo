@@ -11,7 +11,6 @@ import '../styles/base.css';
 // The design's own file, extending the layers base.css declares. Imported
 // after it so a same-specificity rule resolves in the design's favour.
 import '../styles/themes/a.css';
-import '../styles/demo.css';
 
 interface Props {
   title: string;
@@ -73,12 +72,6 @@ const themeIds = THEMES.map((theme) => theme.id);
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
-
-    <p class="demo-banner">
-      <strong>Design preview</strong> — three candidate designs over real content,
-      and the three they started from. People, news, projects, events and gallery
-      entries are placeholders.
-    </p>
 
     <div class="page">
       <nav class="site-nav nav" aria-label="Primary">

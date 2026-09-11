@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import DemoBanner from '../components/DemoBanner.astro';
 import SectionIndex from '../components/SectionIndex.astro';
 import { formatEventDate, splitByDate, type CalendarEvent } from '../lib/events.ts';
 import fixtures from '../data/fixtures/events.json' with { type: 'json' };
@@ -20,7 +19,6 @@ const sections: [string, string][] = [
   <Fragment slot="rail"><SectionIndex sections={sections} /></Fragment>
 
   <h1>Events</h1>
-  <DemoBanner what="These are fixtures shaped like a real Google Calendar feed, not a real calendar." />
 
   <section id="upcoming">
     <h2>Upcoming</h2>

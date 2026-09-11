@@ -1,5 +1,4 @@
 ---
-import DemoBanner from './DemoBanner.astro';
 import funders from '../data/fixtures/funders.json' with { type: 'json' };
 
 /**
@@ -22,7 +21,6 @@ const entries = funders as Funder[];
 {entries.length > 0 && (
   <section class="funders" aria-labelledby="funders-heading">
     <h2 class="funders__heading" id="funders-heading">Funding</h2>
-    <DemoBanner what="The funders below are placeholders, not real awards." />
     <ul class="funders__list">
       {entries.map((funder) => (
         <li class="funder">

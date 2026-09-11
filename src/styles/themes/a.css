@@ -479,7 +479,6 @@
     margin-block-start: var(--space-2xl);
     padding-block-start: var(--space-2xs);
   }
-  :root[data-theme='a'] .funders .demo-note { max-inline-size: var(--measure); }
   :root[data-theme='a'] .funders__heading {
     font-size: var(--step--1);
     letter-spacing: 0.12em;
@@ -572,8 +571,4 @@
     :root[data-theme='a'] .footer__inner > p:first-child { grid-column: 1; grid-row: 1; }
     :root[data-theme='a'] .footer__inner > p:not(:first-child) { grid-column: 2; }
   }
-
-  /* ---- Demo chrome ----------------------------------------------------- */
-
-  :root[data-theme='a'] .demo-banner strong { letter-spacing: 0.14em; }
 }

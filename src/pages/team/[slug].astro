@@ -19,7 +19,7 @@ const data = person.data as Record<string, unknown>;
   <p class="muted">{data.rank}{data.pronouns ? ` · ${data.pronouns}` : ''}</p>
 
   {data.placeholder && (
-    <p class="demo-note"><strong>Placeholder entry.</strong> This is not a real person.</p>
+    <p class="notice"><strong>Placeholder entry.</strong> This is not a real person.</p>
   )}
 
   <Content />

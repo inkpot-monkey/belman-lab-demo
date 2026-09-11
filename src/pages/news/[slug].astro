@@ -1,7 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import DemoBanner from '../../components/DemoBanner.astro';
 import { url } from '../../lib/paths.ts';
 
 export async function getStaticPaths() {
@@ -19,7 +18,6 @@ const date = item.data.date as Date;
 >
   <h1>{item.data.title}</h1>
   <p class="dateline"><time datetime={date.toISOString()}>{date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</time></p>
-  <DemoBanner what="This is a placeholder news item, not a real announcement." />
   {item.data.image && <img src={url(item.data.image as string)} alt={(item.data.imageAlt as string | undefined) ?? ''} width="1200" height="800" />}
   <Content />
 </BaseLayout>

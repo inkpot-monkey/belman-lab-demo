@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import DemoBanner from '../components/DemoBanner.astro';
 import fixtures from '../data/fixtures/gallery.json' with { type: 'json' };
 
 import { galleryState, type GalleryPhoto } from '../lib/gallery.ts';
@@ -13,10 +12,9 @@ const state = galleryState(fixtures as GalleryPhoto[]);
 ---
 <BaseLayout title="Gallery" description="Photographs from the lab.">
   <h1>Gallery</h1>
-  <DemoBanner what="These are fixtures shaped like a real Google Drive folder, not real lab photos." />
 
   {state.kind === 'empty' ? (
-    <p class="demo-note"><strong>Gallery unavailable.</strong> {state.warning}</p>
+    <p class="notice"><strong>Gallery unavailable.</strong> {state.warning}</p>
   ) : (
     <ul class="gallery">
       {state.photos.map((photo) => (

@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import DemoBanner from '../../components/DemoBanner.astro';
 import { url } from '../../lib/paths.ts';
 
 const projects = (await getCollection('projects')).sort(
@@ -11,7 +10,6 @@ const projects = (await getCollection('projects')).sort(
 ---
 <BaseLayout title="Projects" description="Research projects running in the lab.">
   <h1>Projects</h1>
-  <DemoBanner what="Every project below is a placeholder, not a real description of the lab's work." />
 
   <ul class="cards">
     {projects.map((project) => (

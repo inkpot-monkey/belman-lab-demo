@@ -65,7 +65,7 @@ const sections: [string, string][] = [
   </p>
 
   {missing.length > 0 && (
-    <div class="demo-note">
+    <div class="notice">
       <p>
         <strong>{missingSubject} missing from the ORCID record</strong>,
         so {missingVerb} not appear below. Adding {missingObject} at <a
@@ -85,7 +85,7 @@ const sections: [string, string][] = [
   )}
 
   {missingHighlights.length > 0 && (
-    <p class="demo-note">
+    <p class="notice">
       <strong>{missingHighlights.length} highlighted {missingHighlights.length === 1 ? 'DOI is' : 'DOIs are'} not on the ORCID record</strong>
       {' '}({missingHighlights.join(', ')}), so {missingHighlights.length === 1 ? 'it cannot' : 'they cannot'} be shown.
       Adding {missingHighlights.length === 1 ? 'it' : 'them'} to ORCID will fix this.

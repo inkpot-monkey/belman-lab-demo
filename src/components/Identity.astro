@@ -25,15 +25,39 @@ const { primary = false } = Astro.props;
     ? <h1 class="identity__name">{site.name}</h1>
     : <p class="identity__name">{site.name}</p>}
   {/*
-    The portrait. `alt=""` because the name is set beside it in text, so a
-    screen reader announcing the face as well would only say it twice.
+    The portrait, on the one page it is about. `alt=""` because the name is set
+    beside it in text, so a screen reader announcing the face as well would
+    only say it twice.
+
+    Rendered on the condition that shows it rather than emitted everywhere and
+    hidden. `display: none` hides the box and does not cancel the request, so
+    every page was fetching the largest asset on the site — four fifths of the
+    weight of a page on `/research`, for an image `/research` never draws. The
+    component already knows, from the same prop that decides whether the name
+    is the page's heading; the stylesheet should not have had to guess.
+
+    `width`/`height` are the file's own dimensions, so the space is reserved at
+    the right shape before it arrives. They said 400x400 while the file was
+    860x850, which `aspect-ratio: 1` and `object-fit: cover` between them hid.
 
     No caption. A photograph of the person whose page this is needs no
     explanation, and a standing "credit to be added" line is a note to
     ourselves printed on her site. Whoever takes the real photograph gets
     credited where photographs are credited, not in the page header.
   */}
-  <img class="identity__photo" src={url(site.photo)} alt="" width="400" height="400" />
+  {primary && (
+    <img class="identity__photo" src={url(site.photo)} alt="" width="480" height="474" loading="eager" decoding="async" />
+  )}
+  {/*
+    Two facts, named, rather than four paragraphs in a known order.
+
+    The discipline is the second line of the strapline and carries the rule
+    that closes it; the three under it are where she works. The stylesheet used
+    to tell them apart with `p:first-child` and `p + p`, which is the exact
+    shape `docs/design.md` warns about: it is correct only while site.json
+    declares its fields in this order, and it says nothing about which line is
+    which to anyone reading either file.
+  */}
   <div class="identity__meta">
     <p>{site.discipline}</p>
     <p>{site.jobTitle}</p>

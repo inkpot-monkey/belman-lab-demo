@@ -246,7 +246,6 @@
     max-inline-size: 9rem;
     order: 1;
   }
-  .identity:not(:has(h1.identity__name)) .identity__photo { display: none; }
 
   .identity .social {
     font-size: var(--step--1);

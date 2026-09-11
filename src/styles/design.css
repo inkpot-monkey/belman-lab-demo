@@ -380,6 +380,46 @@
     }
   }
 
+  /* ---- Running prose ---------------------------------------------------- */
+
+  /*
+    Body copy is justified. A design built on a visible grid wants a text
+    column with two straight edges rather than one.
+
+    Flow paragraphs only, named one level at a time rather than as `p`
+    anywhere. Everything this leaves ragged is something justification would
+    damage: an author list and a citation line inside a publication row, the
+    address in the identity column, a caption, the menu. Lists are ragged for
+    the same reason and were asked to be - a bullet is a short line, and
+    stretching it to the measure spaces three words across the column.
+
+    Only where the line is long enough to take it. Justification works by
+    stretching the spaces in a line, so a short line stretches few spaces a
+    long way: at 33 characters this prose opens rivers of white you can read
+    down the page, and the long words the subject is made of - epidemiological,
+    sociodemographic - are what makes it that bad.
+
+    A container query and not a media query, because the content column is not
+    a function of the viewport here. It is 70 characters at 768px, and then
+    43 at 992px, where the three-column module opens and takes 27rem of the
+    width back for the identity and the index. A breakpoint on the window
+    would justify precisely the narrowest column on the site.
+
+    `hyphens: auto` belongs with it rather than with the ragged setting: it
+    exists to close those gaps, and it hyphenates nothing in a browser with no
+    dictionary for the language, so the threshold has to hold on its own.
+  */
+  main { container-type: inline-size; }
+
+  @container (min-width: 32rem) {
+    .prose > p,
+    .prose > section > p,
+    .manual > section > p {
+      hyphens: auto;
+      text-align: justify;
+    }
+  }
+
   /* ---- Headings, ruled ------------------------------------------------- */
 
   /*

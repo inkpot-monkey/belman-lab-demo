@@ -1,7 +1,7 @@
 ---
 title: Join us
 order: 10
-showInNav: true
+showInNav: false
 description: Opportunities to join the Belman Lab at the Yale School of Public Health.
 ---
 

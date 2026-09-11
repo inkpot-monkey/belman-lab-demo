@@ -50,7 +50,7 @@
   }
 
   a {
-    text-decoration-thickness: 1px;
+    text-decoration-thickness: var(--rule);
     text-underline-offset: 0.18em;
   }
 
@@ -200,7 +200,7 @@
     */
     .page > main,
     .page > .rail {
-      border-inline-start: 1px solid var(--color-grid);
+      border-inline-start: var(--rule) solid var(--color-grid);
       margin-inline-start: calc(var(--space-xl) / -2);
       padding-inline-start: calc(var(--space-xl) / 2);
     }
@@ -230,12 +230,12 @@
   }
 
   /*
-    The second line of the strapline. `.identity__meta` holds one <p> per field
-    of site.json in the order those fields are declared, so its first child is
-    the discipline; the three after it are the institutional taxonomy, and are
-    set as the smaller thing they are. The rule closes the strapline unit.
+    The second line of the strapline, and the rule that closes the unit. Named
+    rather than reached by position: `p:first-child` and `p + p` were correct
+    only while site.json declared its fields in this order, and said nothing
+    about which line was which to anyone reading either file.
   */
-  .identity__meta p:first-child {
+  .identity__discipline {
     border-block-end: var(--rule-strong) solid var(--color-heading);
     color: var(--color-text);
     font-size: var(--step-0);
@@ -244,7 +244,7 @@
     margin-block-end: var(--space-2xs);
     padding-block: var(--space-3xs) var(--space-2xs);
   }
-  .identity__meta p + p { line-height: 1.35; }
+  .identity__affiliation { line-height: 1.35; }
 
   /*
     The one photograph on the site, on the one page it is about. Everywhere
@@ -253,7 +253,7 @@
     not a face.
   */
   .identity__photo {
-    border: 1px solid var(--color-border);
+    border: var(--rule) solid var(--color-border);
     margin-block-start: var(--space-m);
     max-inline-size: 9rem;
     order: 1;
@@ -511,7 +511,7 @@
 
   /* On a phone the index is a ruled strip above the content, not a column. */
   .rail {
-    border-block: 1px solid var(--color-border);
+    border-block: var(--rule) solid var(--color-border);
     padding-block: var(--space-2xs);
   }
   .rail .section-index__list {
@@ -534,7 +534,7 @@
       position: sticky;
     }
     .section-index__item {
-      border-block-end: 1px solid var(--color-border);
+      border-block-end: var(--rule) solid var(--color-border);
     }
   }
 
@@ -546,7 +546,7 @@
     max-inline-size: none;
   }
   .pub {
-    border-block-end: 1px solid var(--color-border);
+    border-block-end: var(--rule) solid var(--color-border);
     padding-block: var(--space-s);
   }
   /*
@@ -626,7 +626,7 @@
   .person {
     background: none;
     border: 0;
-    border-block-start: 1px solid var(--color-border);
+    border-block-start: var(--rule) solid var(--color-border);
     border-radius: 0;
     padding: var(--space-2xs) 0 var(--space-s);
   }

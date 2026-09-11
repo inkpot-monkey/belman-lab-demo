@@ -59,10 +59,10 @@ const { primary = false } = Astro.props;
     which to anyone reading either file.
   */}
   <div class="identity__meta">
-    <p>{site.discipline}</p>
-    <p>{site.jobTitle}</p>
-    <p>{site.department}</p>
-    <p>{site.institution}</p>
+    <p class="identity__discipline">{site.discipline}</p>
+    <p class="identity__affiliation">{site.jobTitle}</p>
+    <p class="identity__affiliation">{site.department}</p>
+    <p class="identity__affiliation">{site.institution}</p>
   </div>
   <div class="social">
     <a href={`https://orcid.org/${site.orcid}`} rel="noopener">ORCID</a>

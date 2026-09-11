@@ -400,6 +400,16 @@
     margin-block-start: var(--space-l);
     padding-block-start: var(--space-2xs);
   }
+  /*
+    That margin is the space between one section and the last line of the one
+    before it. The first section on a page has no section before it - only the
+    page's own opening line - so it claims space it is not separating anything
+    across, and the rule it carries ends up adrift between the two.
+
+    `main` and not `.manual`: the manual opens on a contents list, and there
+    the first heading is separating itself from that.
+  */
+  main > section:first-of-type > h2:not([class]) { margin-block-start: 0; }
 
   /* ---- The in-page index ----------------------------------------------- */
 

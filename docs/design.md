@@ -41,7 +41,7 @@ before becoming `ruleStrong` and `ruleHeavy`.
 | `fonts` | `--font-display`, `--font-body`, `--font-mono` | One family, Archivo, doing both jobs; mono is the system stack, for `<code>` |
 | `type` | `--step--1` … `--step-5` | Fluid, interpolating over 320–1240px. No `-2`: it resolves under 12px |
 | `space` | `--space-3xs` … `--space-3xl` | Multiples of one fluid base step |
-| `colors` | `--color-<name>` | Light only. Every grey is neutral, so the one hue always means something |
+| `colors` | `--color-<name>` | Light only. Every grey is neutral, so the one hue always means something. Three draw lines, against different thresholds: `grid` is structure, `border` groups, `linkRule` identifies a control and so clears 3:1 |
 | `shape` | `--radius`, `--rule`, `--rule-strong`, `--rule-heavy`, `--measure` | Three rule weights: divide a row, open a section, close a masthead |
 
 The accent is `#7b4b8a` — the favicon's colour, and the colour of the site she
@@ -67,21 +67,43 @@ reset, the shared components and the default single-column arrangement;
 `.page` has four named areas — `nav`, `identity`, `main` and an optional
 `rail`. Navigation, the identity block and `<main>` are emitted exactly once, in
 `BaseLayout`, and placed by grid-area, so the layout changes where things sit
-without changing the markup.
+without changing the markup. They are emitted in the order a reader meets them
+— identity, nav, rail, main — because grid placement moves the picture and not
+the document, and a keyboard or a screen reader gets the source order at every
+width.
+
+Three arrangements, not two:
 
 ```
-Below 62rem                 62rem and up
+Below 40rem              40rem to 62rem            62rem and up
 
-┌───────────────┐           ┌────────┬──────┬──────┐
-│   identity    │           │identity│ main │ rail │
-├───────────────┤           ├────────┤      │      │
-│     nav       │           │  nav   │      │      │
-├───────────────┤           └────────┴──────┴──────┘
-│  rail (strip) │
-├───────────────┤           14rem / 1fr / 13rem
+┌───────────────┐        ┌──────────┬─────┐        ┌────────┬──────┬──────┐
+│   identity    │        │ identity │ nav │        │identity│ main │ rail │
+├───────────────┤        ├──────────┴─────┤        ├────────┤      │      │
+│     nav       │        │  rail (strip)  │        │  nav   │      │      │
+├───────────────┤        ├────────────────┤        └────────┴──────┴──────┘
+│  rail (strip) │        │      main      │
+├───────────────┤        └────────────────┘        14rem / 1fr / 13rem
 │     main      │
-└───────────────┘
+└───────────────┘        1fr / auto
 ```
+
+The middle one exists because the module needs 62rem and a second column needs
+far less: a tablet held upright was drawing a full-width identity with half the
+screen empty beside it and the page's own title most of a screen down. There
+the identity keeps the fraction and the menu takes what it needs, so the rule
+closing the strapline stops short of the menu — two rules of two lengths, which
+is the module's argument arriving early. The home page opts out and keeps the
+stack, because there the identity is the row rather than a label beside a menu.
+
+**A band only owns its widths if the cascade lets it.** A media query does not
+change specificity, so a rule qualified with `:has()` inside the 40rem block
+goes on beating the plain `.page` at 62rem for as long as the page is wide. The
+exceptions inside that block are therefore wrapped in `:where()`, which
+contributes nothing, and source order does the rest. Getting this wrong is
+silent: `grid-template-areas` named three columns while `grid-template-columns`
+sized one, the browser invented the other two at 0px, and the home page drew a
+99px-wide `<main>` on a desktop with every test still green.
 
 Two things stop it reading as the default serious-website answer:
 
@@ -97,7 +119,12 @@ Two things stop it reading as the default serious-website answer:
 
 The gutters are drawn rather than implied: the hairline sits in the middle of
 the gutter, so each column is pulled half a gutter left and pads the same amount
-back, and the text lands exactly where the grid puts it.
+back, and the text lands exactly where the grid puts it. Below 62rem there is
+one column and so no gutter between columns, but there is still a margin: the
+same hairline is painted down the middle of the page's own inline padding, so
+the motif survives the arrangement with no room for it, and every horizontal
+rule on the page visibly starts off it. Painted rather than bordered, so it
+costs the text no width at all.
 
 The `rail` slot is the one piece of page structure a page cannot write from
 inside `<main>`, because it is a sibling of it in that grid. It is filled
@@ -127,7 +154,8 @@ Anything here that a change would break is pinned by a test or a checker.
   container squeezes the card lists.
 - **Every page works at 320px first.** `pnpm check:responsive` drives a real
   browser over every page and viewport: standing controls ≥44px, body text
-  ≥16px on mobile, nothing under 12px, no sideways scroll.
+  ≥16px on mobile, nothing under 12px, no sideways scroll, the first heading on
+  the page is the `<h1>`, and `.page` sizes every column its areas name.
 - **Light only.** There is no dark palette and no `light-dark()` outside
   `src/admin/`, which is a tool surface rather than part of this design.
 - **No parallel stylesheet, no colour literals, no hardcoded type or space.**

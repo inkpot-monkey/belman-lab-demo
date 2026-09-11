@@ -96,11 +96,107 @@
     column-gap: var(--space-xl);
     row-gap: var(--space-s);
     grid-template-areas: 'identity' 'nav' 'main';
+    /*
+      The gutter, drawn, in the arrangement that has no gutters.
+
+      This is the motif — a grid you can see — and it lived entirely inside the
+      62rem query, so on a phone the design was one grotesque and a stack of
+      black rules, which is the template answer the whole thing was built to
+      avoid. Below 62rem there is one column and nothing between columns to
+      draw, but there is still a margin, and a rule down the margin is the same
+      claim: the page is measured, and the text starts where the grid says.
+
+      Painted rather than bordered, because a border would move the text and
+      alignment is the argument. The line sits in the middle of the page's own
+      inline padding, so every horizontal rule on the page now visibly starts
+      off it, which is what makes a grid read at all.
+    */
+    background: linear-gradient(var(--color-grid), var(--color-grid)) no-repeat
+      calc(var(--space-m) / 2) 0 / var(--rule) 100%;
   }
+
   .page:has(> .rail) {
     grid-template-areas: 'identity' 'nav' 'rail' 'main';
   }
   .page > main { margin-block-start: var(--space-s); }
+
+  /*
+    Between a phone and the module, the identity and the menu share a row.
+
+    The module opens at 62rem, and everything under it got the phone
+    arrangement — so an iPad held upright, or a window at half a laptop screen,
+    drew a full-width identity with five hundred pixels of nothing beside the
+    name, a full-width menu under it, and the page's own title four hundred and
+    fifty pixels down. The stack is the right answer when there is one column
+    of room and the wrong one as soon as there are two.
+
+    Not the home page: there the identity is the content of the first row, and
+    the menu belongs under it rather than beside it.
+
+    The identity keeps the fraction and the menu takes what it needs, so the
+    rule that closes the strapline stops short of the menu instead of running
+    the width of the page. Two rules of two lengths is the module's own
+    argument arriving early, which is the point of the step.
+  */
+  @media (min-width: 40rem) {
+    /*
+      Every exception here is wrapped in `:where()`, and that is load-bearing
+      rather than a style preference.
+
+      A breakpoint band only owns the widths between itself and the next one,
+      and the only thing that ends it is a later rule winning the cascade. A
+      media query does not change specificity, so `.page:has(h1.identity__name)`
+      — which `:has()` makes (0,2,1) — goes on beating the plain `.page` at
+      62rem for as long as the page is wide, whatever the query says. That is
+      how the home page came to name three columns in `grid-template-areas`
+      while sizing one in `grid-template-columns`: the browser invented the
+      other two at 0px and drew `<main>` ninety-nine pixels wide, silently, on
+      a desktop, while every check stayed green.
+
+      `:where()` contributes nothing, so each of these is (0,1,0) like the
+      `.page` above it. Within this block the later rule wins on order, which
+      is what carves the home page out; at 62rem the plain `.page` wins on
+      order for the same reason, which is what hands the band back.
+      `scripts/check-responsive.mjs` now compares the named areas against the
+      sized tracks on every page and width, because this is not a mistake you
+      can see by reading either rule.
+    */
+    .page {
+      align-items: start;
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas: 'identity nav' 'main main';
+    }
+    /*
+      `:has()` bare here, unlike the home rule below. This one has counterparts
+      at both ends - the same selector sets the stacked areas above and the
+      module's below - so it has to match their specificity exactly and let
+      source order pick the band. Wrapped in `:where()` it would lose to the
+      mobile rule instead and never apply at all, which is the same bug from
+      the other side: `pnpm check:responsive` caught that too.
+    */
+    .page:has(> .rail) {
+      grid-template-areas: 'identity nav' 'rail rail' 'main main';
+    }
+    /*
+      Level with the foot of the strapline, which is where the menu sits in the
+      column above 62rem. Anchored to the bottom of the row rather than the
+      top, so it keeps that relationship whatever the identity grows to.
+    */
+    .page > .site-nav {
+      align-self: end;
+      justify-content: flex-end;
+    }
+
+    /* The home page keeps the stack: there the identity is the row, not a label beside the menu. */
+    .page:where(:has(h1.identity__name)) {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: 'identity' 'nav' 'main';
+    }
+    .page:where(:has(h1.identity__name)) > .site-nav {
+      align-self: start;
+      justify-content: flex-start;
+    }
+  }
 
   @media (min-width: 62rem) {
     /*
@@ -112,6 +208,8 @@
     */
     .page {
       align-items: stretch;
+      /* Real gutters from here, so the margin rule that stood in for them goes. */
+      background: none;
       grid-template-columns: 14rem minmax(0, 1fr) 13rem;
       grid-template-areas:
         'identity main main'
@@ -169,7 +267,7 @@
       padding-block-end: var(--space-s);
     }
 
-    .site-nav { align-self: start; }
+    .page > .site-nav { align-self: start; }
     /*
       One item per line in the column, so the menu reads as an index, and it
       follows the reader down the page.
@@ -181,12 +279,19 @@
       in-page index on the other side of the content, so the two columns settle
       level with each other.
     */
-    .site-nav {
+    .page > .site-nav {
       flex-direction: column;
       gap: 0;
       inset-block-start: var(--space-m);
       position: sticky;
+      /*
+        Both undone from the 40rem step, where the menu was a row anchored to
+        the foot of the identity beside it. In a column `flex-end` would stack
+        the items against the bottom of the page instead.
+      */
+      justify-content: normal;
     }
+
     .page > main { margin-block-start: 0; }
 
     /*
@@ -269,12 +374,19 @@
     font-size: var(--step-4);
   }
 
-  @media (min-width: 62rem) {
-    /*
-      The masthead. Type takes the row; the portrait is a small plate hung off
-      the right of it, bottom-aligned to the strapline, so the first thing read
-      is still the name and the discipline rather than a face.
-    */
+  /*
+    The masthead. Type takes the row; the portrait is a small plate hung off
+    the right of it, bottom-aligned to the strapline, so the first thing read
+    is still the name and the discipline rather than a face.
+
+    From 40rem, not from 62rem. It sat inside the module's own query, so every
+    width below it stacked the portrait under the strapline instead — which on
+    a tablet held upright is a 9rem plate alone on a line with most of the page
+    empty beside it, and the first sentence of the site pushed half a screen
+    down. What this arrangement needs is a second column, not the whole module,
+    and 9rem beside a name fits from 640px on.
+  */
+  @media (min-width: 40rem) {
     .page:has(h1.identity__name) .identity {
       column-gap: var(--space-xl);
       display: grid;
@@ -292,10 +404,20 @@
       grid-template-rows: auto auto 1fr auto;
     }
     .page:has(h1.identity__name) .identity__lab { grid-area: lab; }
-    .page:has(h1.identity__name) .identity__name {
-      font-size: var(--step-5);
-      grid-area: name;
+    .page:has(h1.identity__name) .identity__name { grid-area: name; }
+    .page:has(h1.identity__name) .identity__meta { grid-area: meta; }
+    .page:has(h1.identity__name) .identity .social { grid-area: social; }
+    .page:has(h1.identity__name) .identity__photo {
+      align-self: end;
+      grid-area: photo;
+      justify-self: end;
+      margin-block-start: 0;
     }
+  }
+
+  @media (min-width: 62rem) {
+    /* The name has a whole row of the module to spend, so it takes the top step. */
+    .page:has(h1.identity__name) .identity__name { font-size: var(--step-5); }
     /*
       The identity fills the column and its last line is pinned to the foot of
       it, so ORCID, GitHub and Scholar sit at one height on every page in the
@@ -315,8 +437,6 @@
     .identity { block-size: 100%; }
     .identity .social { margin-block-start: auto; }
 
-    .page:has(h1.identity__name) .identity__meta { grid-area: meta; }
-    .page:has(h1.identity__name) .identity .social { grid-area: social; }
     .identity .social a { min-block-size: 0; }
     /*
       Off the home page the identity is a 14rem column, and the three links set
@@ -330,12 +450,6 @@
     */
     .page:not(:has(h1.identity__name)) .identity .social {
       column-gap: var(--space-xs);
-    }
-    .page:has(h1.identity__name) .identity__photo {
-      align-self: end;
-      grid-area: photo;
-      justify-self: end;
-      margin-block-start: 0;
     }
   }
   /*

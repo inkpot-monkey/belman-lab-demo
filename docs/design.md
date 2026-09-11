@@ -1,0 +1,131 @@
+# The design
+
+The site is set in one design, called **Record**. It was chosen from three
+candidates; the other two and the switcher that compared them are gone, and
+this is the record of what was picked and why.
+
+## What it argues
+
+The site is a record of the work, not an argument for it. One grotesque, a grid
+you can see, and colour used only where it carries information.
+
+**What it says about the lab.** That the science is the point and the reader's
+time matters more than the lab's personality. It reads as an institution rather
+than as a person.
+
+**What it costs.** Warmth, and memorability. Nothing here is recognisably hers:
+a visitor remembers the papers and not the page, and this is not a design
+anyone shares for its own sake. It is also the safe answer, so it has to be
+executed exactly right or it reads as a template. Every rule below is part of
+executing it right.
+
+**Where it comes from.** EMBL-EBI and Wellcome Sanger group pages;
+Müller-Brockmann's grid systems, where rules and alignment do the work that
+decoration does elsewhere.
+
+---
+
+## 1. Tokens — `src/lib/design.ts`
+
+`DESIGN` is one face, a Utopia type scale, a space scale, a colour set and five
+shape values. `src/components/Tokens.astro` turns it into custom properties on
+`:root`.
+
+Nothing that belongs there belongs in a stylesheet. A literal `2px` or
+`#f0f0f0` in `design.css` is a value that wants to be a token — that is what
+happened to the rule weights, which lived as nineteen copies of `2px` and `3px`
+before becoming `ruleStrong` and `ruleHeavy`.
+
+| Token group | Emitted as | Notes |
+| --- | --- | --- |
+| `fonts` | `--font-display`, `--font-body`, `--font-mono` | One family, Archivo, doing both jobs; mono is the system stack, for `<code>` |
+| `type` | `--step--1` … `--step-5` | Fluid, interpolating over 320–1240px. No `-2`: it resolves under 12px |
+| `space` | `--space-3xs` … `--space-3xl` | Multiples of one fluid base step |
+| `colors` | `--color-<name>` | Light only. Every grey is neutral, so the one hue always means something |
+| `shape` | `--radius`, `--rule`, `--rule-strong`, `--rule-heavy`, `--measure` | Three rule weights: divide a row, open a section, close a masthead |
+
+The accent is `#d6320f`, and it is reserved. In prose it marks the one word in
+a sentence that goes somewhere; in a list where every entry is a link, colouring
+them all would say nothing, so those take the heading colour with a grey
+underline and turn vermilion only under the cursor.
+
+## 2. Arrangement — `base.css` and `design.css`
+
+`base.css` declares the layer order once, and the grid:
+
+```css
+@layer reset, base, layout, components, utilities;
+```
+
+`design.css` extends those same layers and is imported after it. The split is
+by what a rule is about, not by which file got there first: `base.css` is the
+reset, the shared components and the default single-column arrangement;
+`design.css` is every choice this design made.
+
+`.page` has four named areas — `nav`, `identity`, `main` and an optional
+`rail`. Navigation, the identity block and `<main>` are emitted exactly once, in
+`BaseLayout`, and placed by grid-area, so the layout changes where things sit
+without changing the markup.
+
+```
+Below 62rem                 62rem and up
+
+┌───────────────┐           ┌────────┬──────┬──────┐
+│   identity    │           │identity│ main │ rail │
+├───────────────┤           ├────────┤      │      │
+│     nav       │           │  nav   │      │      │
+├───────────────┤           └────────┴──────┴──────┘
+│  rail (strip) │
+├───────────────┤           14rem / 1fr / 13rem
+│     main      │
+└───────────────┘
+```
+
+Two things stop it reading as the default serious-website answer:
+
+- **The module stays put across every page.** The third column exists whether
+  or not there is an index to put in it, and a page with no index widens its
+  content into it rather than moving the first two columns. The left edge of
+  the text never shifts as you move around the site.
+- **The home page spends its whole first row on a strapline** instead of a
+  hero, so the first thing read is who this is and what she does. It is the one
+  page whose subject is the person, which is also why its name is the `<h1>` —
+  `identityIsHeading` in `BaseLayout`, and `:has(h1.identity__name)` is what
+  the stylesheet reads to find it.
+
+The gutters are drawn rather than implied: the hairline sits in the middle of
+the gutter, so each column is pulled half a gutter left and pads the same amount
+back, and the text lands exactly where the grid puts it.
+
+The `rail` slot is the one piece of page structure a page cannot write from
+inside `<main>`, because it is a sibling of it in that grid. It is filled
+through `BaseLayout`'s named slot and rendered only when a page fills it.
+
+## 3. Naming — one element, one fact
+
+Most of what the design does is not new markup. It is an element named
+precisely enough to be styled for what it is: `.pub__year` is a paper's year
+lifted out of its citation, and it is railed down a 4rem margin. `.dateline` is
+the date on a dated page, and it is a tracked label over a rule.
+`.person__placeholder` says an entry is not a real person, and it is set in
+tracked capitals.
+
+Emit the fact once, in real text, and style it. Reaching the same element
+positionally instead — `p:first-of-type`, `p:last-of-type` — is how this goes
+wrong, and it broke the moment a third paragraph appeared.
+
+## Invariants
+
+Anything here that a change would break is pinned by a test or a checker.
+
+- **One `<nav>`, one identity block, one `<main>`, one `<h1>` per page** —
+  `test/single-emission.test.ts` and `pnpm check:responsive`.
+- **The measure constrains prose, not the column.** `--measure` applies to
+  paragraphs and headings, never to a grid container: applying it to the
+  container squeezes the card lists.
+- **Every page works at 320px first.** `pnpm check:responsive` drives a real
+  browser over every page and viewport: standing controls ≥44px, body text
+  ≥16px on mobile, nothing under 12px, no sideways scroll.
+- **Light only.** There is no dark palette and no `light-dark()` outside
+  `src/admin/`, which is a tool surface rather than part of this design.
+- **No parallel stylesheet, no colour literals, no hardcoded type or space.**

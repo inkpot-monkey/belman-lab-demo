@@ -1,11 +1,10 @@
 # Belman Lab site — design demo
 
-Three candidate designs for a research group site, rendered over one content
-model and real content, with a runtime switcher so they can be compared without
-losing your place.
+A research group site: one content model, one design, real content.
 
-This is a **demo repository**. It exists to choose a design. The winning design
-moves into `sophbel/sophbel.github.io`; this repo then gets archived.
+This is a **demo repository**. It existed to choose a design between three
+candidates; Record won, and the other two have been removed. The site moves
+into `sophbel/sophbel.github.io`; this repo then gets archived.
 
 ## Running it
 
@@ -15,10 +14,7 @@ pnpm install
 pnpm dev
 ```
 
-Then open <http://localhost:4321>. The design switcher is a collapsible panel
-in the bottom-right corner of every page. It holds the three candidates and,
-under a second heading, the three token-only designs the demo started from, so
-what the identity work bought is one click away rather than an argument.
+Then open <http://localhost:4321>.
 
 | Command | Does |
 | --- | --- |
@@ -27,7 +23,7 @@ what the identity work bought is one click away rather than an argument.
 | `pnpm test` | Unit tests (Vitest) |
 | `pnpm typecheck` | `tsc --noEmit` |
 | `pnpm sync:orcid` | Re-fetch the ORCID snapshot |
-| `pnpm check:responsive` | Drive a real browser over every page, viewport and theme (needs `pnpm preview` running) |
+| `pnpm check:responsive` | Drive a real browser over every page and viewport (needs `pnpm preview` running) |
 
 ## How it fits together
 
@@ -37,28 +33,29 @@ fail the build on a bad entry, and `scripts/generate-cms-config.ts` turns it
 into `public/admin/config.yml`, which decides what the CMS form offers. The CMS
 cannot offer a field the build would reject.
 
-**Six designs, one markup.** `src/lib/themes.ts` holds each design's tokens —
-fonts, colours, a Utopia type and space scale, a few shape values — and
-`src/components/Tokens.astro` emits all of them, scoped to a `data-theme`
-attribute. Beyond tokens, each of the three candidates has its own stylesheet in
-`src/styles/themes/`, extending the same cascade layers `base.css` declares, so
-a design can change arrangement and component detail rather than only tint. The
-three starting points have no stylesheet, which is the comparison: tokens over
-one shared arrangement against tokens plus a grammar of their own.
-What stays shared is the content, the routes and the markup, which is what the
-switcher relies on: it swaps an attribute, never a page.
+**One design, in two files.** `src/lib/design.ts` holds its tokens — one face,
+a Utopia type and space scale, a colour set, five shape values — and
+`src/components/Tokens.astro` emits them as custom properties on `:root`.
+`src/styles/base.css` is the reset, the shared components and the default
+single-column arrangement; `src/styles/design.css` extends the same cascade
+layers with everything that is a choice the design made. No literal colours or
+pixel weights live in the stylesheet: a value in there is a token that has not
+been named yet.
 
 Navigation, the identity block and `<main>` are each emitted exactly once, in
-`BaseLayout`. `test/single-emission.test.ts` pins that, because a per-design copy of one of them would put two "Primary"
-landmarks and every link twice into every page. Where a design needs markup the
-others do not have, it comes from `src/components/Themed.astro`, which ships
-every variant and lets the active design's stylesheet reveal its own. Hidden by
-default and revealed by name: the three starting points have no stylesheet, and
-shown-unless-hidden would give them every variant at once.
+`BaseLayout`, and placed by grid-area. `test/single-emission.test.ts` pins
+that, because a second copy of one of them would put two "Primary" landmarks
+and every link twice into every page.
 
-`docs/theme-architecture.md` is the fuller version: the five levers a design
-has, in the order you would reach for them, and the invariants that hold across
-all six.
+`docs/design.md` is the fuller version: what the design argues, what it costs,
+and the invariants that hold.
+
+**Most of the site is shelved.** Team, Software & data, Projects, News, Events,
+Gallery and Join us are still placeholder content, so nothing links to them and
+nothing builds them. Their pages keep their code under a leading underscore in
+`src/pages/`, which is Astro's "compile this, do not route it", and
+`src/lib/nav.ts` keeps their menu entries behind a `shelved` flag. Bringing one
+back is dropping the underscore and dropping the flag.
 
 **Publications come from ORCID.** `pnpm sync:orcid` writes
 `src/data/orcid-snapshot.json`; the build reads only that file, so builds are
@@ -72,11 +69,13 @@ and Drive folder later is a one-line swap for `fetchEvents()` / `fetchPhotos()`.
 
 ## What is real and what is not
 
-| Real | Placeholder |
+Everything the site publishes is real. Everything that is not is shelved.
+
+| On the site | Shelved |
 | --- | --- |
 | Home and Research prose | Everyone on the team except Sophie |
-| Publications (live ORCID record) | News, Projects |
-| Site details, footer, links | Events, Gallery |
+| Publications (live ORCID record) | News, Projects, Join us |
+| Site details, footer, links | Events, Gallery, Software & data |
 
 The publications page deliberately shows the ORCID record **as it currently
 stands**, which is missing at least six papers including a Lancet Microbe

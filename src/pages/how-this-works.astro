@@ -204,19 +204,35 @@ const sections = [
       </p>
 
       <p>
-        So the Publications page lists them explicitly. That block isn’t an error —
-        it’s a to-do list:
+        They’re listed here rather than on the Publications page itself. It’s a
+        to-do list for you, and on a page visitors read it would say nothing about
+        your work and quite a lot about the website.
       </p>
+
+      <div class="notice">
+        <p><strong>Not on your ORCID record, so not on the site:</strong></p>
+        <ol>
+          {missing.map((work) => (
+            <li>
+              {work.title}
+              {work.venue && <span class="muted"> — {work.venue}</span>}
+              {work.year && <span class="muted"> ({work.year})</span>}
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <p>To fix it:</p>
 
       <ol>
         <li>Go to <a href="https://orcid.org/my-works" rel="noopener">orcid.org</a> and sign in.</li>
-        <li>Add the works named in that list.</li>
+        <li>Add the works named above.</li>
       </ol>
 
       <p>
         That’s the whole job — there is no step where you tell anyone.
         The site re-reads your ORCID record every morning. If anything has changed
-        it republishes itself, and each paper drops off the to-do list as it
+        it republishes itself, and each paper drops off this list as it
         appears. Nobody has to remember to do anything, and the list can’t end up
         nagging you about something you’ve already fixed.
       </p>
@@ -231,9 +247,10 @@ const sections = [
 
       <p>
         Your name is picked out in bold in every author list, wherever you appear in
-        it. And where your record holds both a preprint and the published version of
-        the same work, the preprint is moved to its own section at the bottom rather
-        than appearing twice in the main list.
+        it. And no work is listed twice: a paper you’ve marked as selected appears
+        only under <cite>Selected publications</cite>, and where your record holds
+        both a preprint and the published version of the same work, only the
+        published version is shown.
       </p>
 
       <details>

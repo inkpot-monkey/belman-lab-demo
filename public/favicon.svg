@@ -1,5 +1,17 @@
+<!--
+  The lab mark: Archivo Bold "B", knocked out of the accent.
+
+  The letter is an outline rather than a <text> element, because a favicon is
+  rendered in a context that loads no webfonts - `font-family: Archivo` there
+  falls back to whatever the machine happens to have, which is how this mark
+  came to be set in Georgia. Drawn from the same file the site loads,
+  @fontsource-variable/archivo at wght 700, so the B in the tab strip is the B
+  in the masthead.
+
+  Square, because nothing on this site is rounded: the radius token is 0. The
+  cap height is 20 of 32 units, large enough to stay a letter at 16px.
+-->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Belman Lab">
-  <rect width="32" height="32" rx="7" fill="#7b4b8a" />
-  <text x="16" y="23" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
-        font-size="20" font-weight="700" fill="#fdfcfe">B</text>
+  <rect width="32" height="32" fill="#7b4b8a" />
+  <path fill="#ffffff" d="M7.23 26V6H18.66Q20.24 6 21.5 6.62Q22.77 7.23 23.5 8.34Q24.24 9.44 24.24 10.92Q24.24 12.13 23.79 13.06Q23.35 13.99 22.61 14.6Q21.86 15.21 20.93 15.52V15.63Q22.03 15.87 22.9 16.5Q23.77 17.14 24.27 18.15Q24.77 19.16 24.77 20.53Q24.77 22.34 23.95 23.56Q23.13 24.77 21.76 25.39Q20.39 26 18.69 26ZM11.59 22.46H17.83Q18.91 22.46 19.61 21.84Q20.3 21.23 20.3 19.93Q20.3 19.2 20.01 18.64Q19.71 18.08 19.13 17.77Q18.54 17.47 17.65 17.47H11.59ZM11.59 14.08H17.34Q18.13 14.08 18.67 13.78Q19.2 13.49 19.48 12.96Q19.76 12.44 19.76 11.78Q19.76 10.64 19.13 10.06Q18.5 9.49 17.5 9.49H11.59Z" />
 </svg>

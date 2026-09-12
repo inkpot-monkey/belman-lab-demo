@@ -16,6 +16,9 @@ result-*
 # Ignore automatically generated direnv output
 .direnv
 
+# Local environment overrides, which are nobody else's and may hold a token
+.env
+
 # Scratch space for design notes and working files
 .scratch/
 

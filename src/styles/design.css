@@ -305,6 +305,19 @@
         'identity main index'
         'nav      main index';
       /*
+        The wider setting, for the module and nowhere else.
+
+        The column here has a menu down one side and an index down the other,
+        and both edges of the text are drawn: the eye comes back to a hairline
+        rather than to the edge of the screen, and the line can be six
+        characters longer for it. `--measure` is declared on `.page` rather
+        than on `:root` because `Tokens.astro` emits the root block unlayered,
+        and an unlayered declaration beats every layer whatever it says. Set on
+        the element under it, it is simply inherited, and everything that keeps
+        a measure is inside `.page`.
+      */
+      --measure: var(--measure-wide);
+      /*
         `1fr` on the second row, not two auto rows. The content column spans
         both rows, and two auto rows would share its height between them —
         which puts the navigation halfway down a long page, below a gap the

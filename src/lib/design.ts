@@ -38,7 +38,15 @@ export interface DesignSpec {
    * so it has to say which rule is which - `rule` divides rows inside a list,
    * `ruleStrong` opens a section, `ruleHeavy` closes a masthead.
    */
-  shape: { radius: string; rule: string; ruleStrong: string; ruleHeavy: string; measure: string };
+  shape: {
+    radius: string;
+    rule: string;
+    ruleStrong: string;
+    ruleHeavy: string;
+    measure: string;
+    measureWide: string;
+    pageMax: string;
+  };
 }
 
 /*
@@ -109,7 +117,31 @@ export const DESIGN: DesignSpec = {
     linkRule: '#8a8a8a',
     grid: '#e4e4e4',
   },
-  shape: { radius: '0', rule: '1px', ruleStrong: '2px', ruleHeavy: '3px', measure: '60ch' },
+  /*
+   * Two measures, and one width the page is never wider than.
+   *
+   * `measure` is the setting for one column of text with nothing beside it,
+   * which is every width below the module. `measureWide` is the module's own,
+   * and it is wider because there the column has a menu on one side and an
+   * index on the other: the eye returns to a left edge that is marked by a
+   * drawn gutter rather than by the edge of the screen, and six characters
+   * more is a line the column can carry. `design.css` swaps one for the other
+   * at 62rem and nothing else knows which is in force.
+   *
+   * `pageMax` is what the module comes to when the text column is at
+   * `measureWide`: 14rem and 13rem of columns, two gutters, and the page's own
+   * padding either side. It is one number because the page and the footer
+   * under it have to stop at the same place, and they were two copies of it.
+   */
+  shape: {
+    radius: '0',
+    rule: '1px',
+    ruleStrong: '2px',
+    ruleHeavy: '3px',
+    measure: '60ch',
+    measureWide: '66ch',
+    pageMax: '82rem',
+  },
 };
 
 /** Fallbacks for anything the design does not name a face for. */

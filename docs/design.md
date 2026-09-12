@@ -27,8 +27,8 @@ decoration does elsewhere.
 
 ## 1. Tokens — `src/lib/design.ts`
 
-`DESIGN` is one face, a Utopia type scale, a space scale, a colour set and five
-shape values. `src/components/Tokens.astro` turns it into custom properties on
+`DESIGN` is one face, a Utopia type scale, a space scale, a colour set and
+seven shape values. `src/components/Tokens.astro` turns it into custom properties on
 `:root`.
 
 Nothing that belongs there belongs in a stylesheet. A literal `2px` or
@@ -42,7 +42,7 @@ before becoming `ruleStrong` and `ruleHeavy`.
 | `type` | `--step--1` … `--step-5` | Fluid, interpolating over 320–1240px. No `-2`: it resolves under 12px |
 | `space` | `--space-3xs` … `--space-3xl` | Multiples of one fluid base step |
 | `colors` | `--color-<name>` | Light only. Every grey is neutral, so the one hue always means something. Three draw lines, against different thresholds: `grid` is structure, `border` groups, `linkRule` identifies a control and so clears 3:1 |
-| `shape` | `--radius`, `--rule`, `--rule-strong`, `--rule-heavy`, `--measure` | Three rule weights: divide a row, open a section, close a masthead |
+| `shape` | `--radius`, `--rule`, `--rule-strong`, `--rule-heavy`, `--measure`, `--measure-wide`, `--page-max` | Three rule weights: divide a row, open a section, close a masthead. Two measures: one column of text, and the module's column with a drawn edge either side. `--page-max` is what the module comes to at the wider one, and the footer stops there too |
 
 The accent is `#7b4b8a` — the favicon's colour, and the colour of the site she
 had before this one, so a tab strip and a browser history still recognise her.
@@ -196,6 +196,17 @@ back, and the text lands exactly where the grid puts it. Below 62rem there is
 one column and so no gutter to draw: the motif is a desktop one, and the narrow
 arrangement says the same thing with the bar across its foot and the rules that
 open and close each block above it.
+
+**The measure is wider inside the module.** 60 characters below it and 66
+within, swapped on `.page` rather than on `:root` — `Tokens.astro` emits the
+root block unlayered, and an unlayered declaration beats every layer whatever
+it says, so the override is set on the element under it and inherited from
+there. It is wider because both edges of the column are drawn: below the module
+the eye comes back to the edge of the screen, and in the module it comes back
+to a hairline with a menu behind it, which is a line the column can carry six
+characters more of. `--page-max` is sized from it — 14rem and 13rem of columns,
+two gutters and the page's own padding either side — so the text column
+measures 66 characters exactly at the width the page stops growing.
 
 **The in-page index is the one piece of page structure `BaseLayout` cannot
 place.** It belongs between a page's title and the page, and both of those are

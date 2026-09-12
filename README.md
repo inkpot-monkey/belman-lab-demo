@@ -34,7 +34,7 @@ into `public/admin/config.yml`, which decides what the CMS form offers. The CMS
 cannot offer a field the build would reject.
 
 **One design, in two files.** `src/lib/design.ts` holds its tokens — one face,
-a Utopia type and space scale, a colour set, five shape values — and
+a Utopia type and space scale, a colour set, seven shape values — and
 `src/components/Tokens.astro` emits them as custom properties on `:root`.
 `src/styles/base.css` is the reset, the shared components and the default
 single-column arrangement; `src/styles/design.css` extends the same cascade

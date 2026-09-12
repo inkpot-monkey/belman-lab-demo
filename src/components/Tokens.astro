@@ -29,6 +29,8 @@ const staticTokens: Record<string, string> = {
   'rule-strong': DESIGN.shape.ruleStrong,
   'rule-heavy': DESIGN.shape.ruleHeavy,
   measure: DESIGN.shape.measure,
+  'measure-wide': DESIGN.shape.measureWide,
+  'page-max': DESIGN.shape.pageMax,
   ...Object.fromEntries(
     Object.entries(DESIGN.colors).map(([name, value]) => [`color-${name}`, value]),
   ),

@@ -269,23 +269,41 @@
     /*
       The module: a 14rem identity and navigation column, the content column,
       and a 13rem column for an in-page index. The three column positions are
-      the same on every page — a page with no index widens its content into the
-      third column rather than moving the first two, so the left edge of the
-      text never shifts as you move around the site.
+      the same on every page, so the left edge of the text never shifts as you
+      move around the site — and so is <main>, which is the middle column and
+      nothing else. A page with no index leaves the third one empty rather than
+      growing into it.
+
+      It used to grow, on the argument that an empty column is waste. What
+      that costs is visible on the home page, the one built page with no
+      index: <main> was two tracks wide, the prose inside it stopped at the
+      measure, and the rule that opens `## Education` ran two hundred and
+      seventy pixels past the last line of the paragraph above it — a rule
+      measuring a column no text was in. A rule crosses the whole column here,
+      so the column had better be the text column. It is also the same
+      argument as the one <main> already answers to below: it is the container
+      the justification threshold is measured against, and the element a
+      container query measures has to go on being the thing it claims to
+      measure.
+
+      The third area is named on every page and empty on some: the index is
+      positioned over that track rather than placed in it — see `The third
+      column, from inside <main>` — and naming it reserves the width either
+      way.
     */
     .page {
       align-items: stretch;
       /*
-        Read twice: here, and by <main> below, which divides the last two of
-        these again so the in-page index can sit in the third. One declaration,
-        so the two cannot drift apart into a column that is 13rem on one side
-        of the hairline and 12 on the other.
+        Read twice: here, and by <main> below, which measures the third column
+        from the right of the page. One declaration, so the two cannot drift
+        apart into a column that is 13rem on one side of the hairline and 12 on
+        the other.
       */
       --column-index: 13rem;
       grid-template-columns: 14rem minmax(0, 1fr) var(--column-index);
       grid-template-areas:
-        'identity main main'
-        'nav      main main';
+        'identity main index'
+        'nav      main index';
       /*
         `1fr` on the second row, not two auto rows. The content column spans
         both rows, and two auto rows would share its height between them —
@@ -317,21 +335,6 @@
       grid-template-rows: minmax(19.5rem, auto) 1fr;
     }
     /*
-      A page with an index keeps <main> in the middle column; a page without
-      one widens its content into the third, which is the rule above. The
-      third area is named and empty on purpose: the index is positioned over
-      it rather than placed in it - see `The third column, from inside <main>`
-      - and what this rule is for is reserving the track so the text column
-      stops where it always has. `grid-template-columns` sizes it either way,
-      so the page is the same three columns on every page.
-    */
-    .page:has(main > .section-index) {
-      grid-template-areas:
-        'identity main index'
-        'nav      main index';
-    }
-
-    /*
       The home page, and only the home page: the identity spends the whole
       first row as a masthead. It is the one page whose subject is the person,
       which is also why its name is the <h1> — `identityIsHeading` in
@@ -340,7 +343,7 @@
     .page:has(h1.identity__name) {
       grid-template-areas:
         'identity identity identity'
-        'nav      main     main';
+        'nav      main     index';
     }
 
     /*

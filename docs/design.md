@@ -172,9 +172,18 @@ sized one, the browser invented the other two at 0px, and the home page drew a
 Two things stop it reading as the default serious-website answer:
 
 - **The module stays put across every page.** The third column exists whether
-  or not there is an index to put in it, and a page with no index widens its
-  content into it rather than moving the first two columns. The left edge of
-  the text never shifts as you move around the site.
+  or not there is an index to put in it, and a page with no index leaves it
+  empty rather than growing into it. The left edge of the text never shifts as
+  you move around the site, and neither does the right one.
+
+  It did grow, on the argument that an empty column is waste, and the home page
+  is where that showed: `<main>` was two tracks wide, the prose inside it
+  stopped at the measure, and the rule that opens `## Education` ran 270px past
+  the last line of the paragraph above it — a rule measuring a column no text
+  was in. A rule crosses the whole column here, so the column has to be the
+  text column. It is the same argument `<main>` already answers to as the
+  container the justification threshold is measured against: the element a
+  container query measures has to go on being the thing it claims to measure.
 - **The home page spends its whole first row on a strapline** instead of a
   hero, so the first thing read is who this is and what she does. It is the one
   page whose subject is the person, which is also why its name is the `<h1>` —

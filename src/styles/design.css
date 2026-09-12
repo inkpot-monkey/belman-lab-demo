@@ -642,17 +642,71 @@
     */
     .identity { block-size: 100%; }
     /*
-      The auto margin takes the slack and the padding is the floor under it.
-      Stacked one per line the links are three times the height they were as a
-      row, so on a page whose column has little slack left they came to rest
-      hard against the last line of the address above them - an auto margin
-      pins a block to the foot of its container and promises nothing about
-      what it lands next to.
+      The auto margin takes whatever the address above has not claimed, which
+      on both arrangements is nothing: the address grows its own box to fill
+      the room, and this keeps the links against the foot of it.
+
+      It used to carry a `space-s` padding as a floor, because an auto margin
+      pins a block to the foot of its container and promises nothing about what
+      it lands next to, and the stacked links in the column had come to rest
+      against the last line of the address. The centring makes that promise
+      instead, and it makes it at both ends: a padding on top of it only pushes
+      the address back off centre by the height of the padding.
     */
     .identity .social {
       margin-block-start: auto;
-      padding-block-start: var(--space-s);
     }
+
+    /*
+      The address sits in the middle of the room it has, not at the top of it.
+
+      Both arrangements have room to give. The identity fills its row either
+      way - `block-size: 100%` above, against a row with a floor under it - so
+      whatever it does not spend on the lab name, the name and the links is
+      slack, and all of it used to fall under the address: three lines wedged
+      against the rule that closes the strapline, with a band of nothing
+      between them and the profile links. An auto margin top and bottom splits
+      the same slack in two, so the rule has something under it and the links
+      have something over them.
+
+      The two get different amounts of it, and that is the arrangement rather
+      than an oversight. The column sets the same address one line narrower, so
+      it stands 61px taller than the masthead before either of them has any
+      slack, and one floor serves both: 29px to divide in the column against 68
+      in the masthead, which lands them at 14 and 34. A full-width row carries
+      air a 14rem column would look empty holding, so that is the right way
+      round.
+
+      No number, and that is why the address is an element. A padding would be
+      a second measurement to keep in step with the height of the row, and the
+      height of the row is already a measurement of something else -
+      `grid-template-rows` on `.page` above, which is the tallest thing it has
+      to hold.
+
+      Two selectors, and at the weight of the pair at 42rem that brings this
+      block back on an inner page: that one says `display: block`, it is
+      (0,3,1) for the `:has()` in front of it, and a plain `.identity__meta`
+      here is (0,1,0) and loses at every width above it. Written to the same
+      weight, source order decides, which is what this file does everywhere the
+      two arrangements disagree about one name.
+    */
+    .page:has(h1.identity__name) .identity__meta,
+    .page:not(:has(h1.identity__name)) .identity__meta {
+      display: flex;
+      /*
+        The slack has to reach the address, and in the column it was taken
+        before it got there: `.identity` is a flex column, the links below
+        claim what is left with an auto margin, and a content-sized address
+        block has nothing to centre itself in. Growing this one lets the links
+        go on sitting at the foot - the box above them fills the room, so their
+        auto margin resolves to nothing - and hands the room to the address
+        inside it. In the masthead it is a grid item in the `1fr` row and
+        already stretched, and `flex` says nothing there.
+      */
+      flex: 1;
+      flex-direction: column;
+    }
+    .identity__address { margin-block: auto; }
 
     /*
       The taxonomy comes back. Here the identity is a column beside the

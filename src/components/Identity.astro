@@ -77,9 +77,21 @@ const profiles: { name: IconName; label: string; href: string }[] = [
   */}
   <div class="identity__meta">
     <p class="identity__discipline">{site.discipline}</p>
-    <p class="identity__affiliation">{site.jobTitle}</p>
-    <p class="identity__affiliation">{site.department}</p>
-    <p class="identity__affiliation">{site.institution}</p>
+    {/*
+      The three lines of where she works are one thing, so they are one
+      element. It is what lets the masthead centre the address in the room
+      under the rule without a number: the block has a top and a bottom of its
+      own to give an auto margin, where three sibling paragraphs have only the
+      gaps between them. Wrapping them is also the answer this design gives
+      everywhere else - reaching the same three with `p + p` is the positional
+      selector `docs/design.md` warns about, and it says nothing about what
+      they are.
+    */}
+    <div class="identity__address">
+      <p class="identity__affiliation">{site.jobTitle}</p>
+      <p class="identity__affiliation">{site.department}</p>
+      <p class="identity__affiliation">{site.institution}</p>
+    </div>
   </div>
   <div class="social">
     {profiles.map((profile) => (

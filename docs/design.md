@@ -242,6 +242,24 @@ the date on a dated page, and it is a tracked label over a rule.
 `.person__placeholder` says an entry is not a real person, and it is set in
 tracked capitals.
 
+Where it is new markup, it is because the fact has no element yet.
+`.identity__address` is the three lines of where she works, wrapped, and that
+is what lets both desktop arrangements centre them in the room under the
+strapline's rule with an auto margin and no number: a block has a top and a
+bottom to give away, where three sibling paragraphs have only the gaps between
+them. The alternative is a padding that has to be kept in step with the height
+of a row that is itself a measurement of something else.
+
+The two arrangements get different amounts of that room, and that is the
+arrangement rather than an oversight. The column sets the same address one line
+narrower, so it stands 61px taller than the masthead before either has any
+slack, and one row floor serves both: 29px to divide in the column against 68
+in the masthead, which lands them at 14 and 34. A full-width row carries air a
+14rem column would look empty holding. What both keep is the pinning — the
+profile links, the rule under them and the menu under that are at the same
+height on every page, because the address grows its box to fill the room rather
+than the links being pushed down into it.
+
 Emit the fact once, in real text, and style it. Reaching the same element
 positionally instead — `p:first-of-type`, `p:last-of-type` — is how this goes
 wrong, and it broke the moment a third paragraph appeared.

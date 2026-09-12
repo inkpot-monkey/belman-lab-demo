@@ -99,6 +99,23 @@ export function worksEqual(a: SnapshotWork[], b: SnapshotWork[]): boolean {
   return left.every((work, index) => work === right[index]);
 }
 
+/**
+ * ORCID hands back whatever URL the source registered, and one of Crossref's
+ * is still `http://dx.doi.org/...` - the pre-2016 spelling of the resolver.
+ * It reaches the paper, by a redirect, and in the meantime it is the one
+ * insecure link on the site. Both halves are safe to rewrite: `dx.doi.org` is
+ * an alias of `doi.org`, and neither has served plain HTTP for years.
+ *
+ * Deliberately narrow. Upgrading every `http://` a record might carry assumes
+ * something about hosts we have never seen; this assumes something about two
+ * we have.
+ */
+export function repairUrl(url: string | null): string | null {
+  return url === null
+    ? null
+    : url.replace(/^http:\/\/(dx\.)?doi\.org\//i, 'https://doi.org/');
+}
+
 /** Comparison key for matching two records of the same work. */
 const titleKey = (title: string): string => title.toLowerCase().replace(/[^a-z0-9]/g, '');
 
@@ -143,7 +160,7 @@ export function normalisePublications(snapshot: Snapshot): PublicationList {
       year: year === null || Number.isNaN(year) ? null : year,
       journal: work.journal,
       doi: work.doi,
-      url: work.url,
+      url: repairUrl(work.url),
       authors: work.authors,
       isPreprint: work.type === 'preprint',
       supersededBy: null,

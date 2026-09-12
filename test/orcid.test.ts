@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   repairTitle,
+  repairUrl,
   formatAuthors,
   normalisePublications,
   stillMissing,
@@ -61,6 +62,32 @@ describe('repairTitle', () => {
 
   it('returns an empty string unchanged', () => {
     expect(repairTitle('')).toBe('');
+  });
+});
+
+describe('repairUrl', () => {
+  it('upgrades the old dx.doi.org resolver to https', () => {
+    expect(repairUrl('http://dx.doi.org/10.1038/s41579-021-00664-y')).toBe(
+      'https://doi.org/10.1038/s41579-021-00664-y',
+    );
+  });
+
+  it('upgrades a plain http doi.org link', () => {
+    expect(repairUrl('http://doi.org/10.1234/abc')).toBe('https://doi.org/10.1234/abc');
+  });
+
+  it('leaves an https link alone', () => {
+    const https = 'https://doi.org/10.1038/s41586-024-07626-3';
+    expect(repairUrl(https)).toBe(https);
+  });
+
+  it('leaves a URL that is not the DOI resolver alone, http or not', () => {
+    const elsewhere = 'http://example.org/paper';
+    expect(repairUrl(elsewhere)).toBe(elsewhere);
+  });
+
+  it('passes a missing URL through', () => {
+    expect(repairUrl(null)).toBe(null);
   });
 });
 
